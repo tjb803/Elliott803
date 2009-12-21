@@ -5,9 +5,12 @@
  */
 package elliott803.view;
 
+import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -15,7 +18,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 
 import elliott803.hardware.Console;
 import elliott803.machine.Computer;
@@ -32,7 +34,7 @@ import elliott803.view.component.DisplayWord.Type;
  * operating the computer.  It is intended to look and work roughly like the real
  * console, but it is not meant to be a completely accurate simulation.
  */
-public class ConsoleView extends JInternalFrame implements ActionListener {
+public class ConsoleView extends JInternalFrame implements ActionListener, FocusListener {
     private static final long serialVersionUID = 1L;
 
     static final String CONSOLE_CLEAR = "Clear Store";
@@ -46,21 +48,24 @@ public class ConsoleView extends JInternalFrame implements ActionListener {
 
     ConsoleOperation function;
     ConsoleLight step, busy, overflow, fpOverflow;
+    JButton operate;
     DisplayWord wordgen;
 
     public ConsoleView(Console console) {
         super("Operator Console", false, false, false, true);
         this.console = console;
+        setFocusable(true);
+        addFocusListener(this);
 
         JPanel wg = new JPanel();
         wg.setLayout(new BoxLayout(wg, BoxLayout.Y_AXIS));
-        wg.add(new ConsoleButtons("Function 1", fnNames, 6, 39, this));
+        wg.add(new ConsoleButtons("Function 1", fnNames, 6, 39, console));
         wg.add(Box.createVerticalStrut(5));
-        wg.add(new ConsoleButtons("Address 1", adNames, 14, 33, this));
+        wg.add(new ConsoleButtons("Address 1", adNames, 14, 33, console));
         wg.add(Box.createVerticalStrut(5));
-        wg.add(new ConsoleButtons("Function 2", fnNames, 6, 19, this));
+        wg.add(new ConsoleButtons("Function 2", fnNames, 6, 19, console));
         wg.add(Box.createVerticalStrut(5));
-        wg.add(new ConsoleButtons("Address 2", adNames, 13, 13, this));
+        wg.add(new ConsoleButtons("Address 2", adNames, 13, 13, console));
         wg.add(Box.createVerticalGlue());
 
         JPanel wv = new JPanel();
@@ -109,26 +114,25 @@ public class ConsoleView extends JInternalFrame implements ActionListener {
         controls.add(function);
         controls.add(Box.createVerticalStrut(5));
 
-        JButton ob = new JButton(CONSOLE_OPERATE);
-        ob.setMaximumSize(cb.getMaximumSize());
-        ob.setPreferredSize(cb.getPreferredSize());
-        ob.setAlignmentX(CENTER_ALIGNMENT);
-        ob.addActionListener(this);
-        controls.add(ob);
+        operate = new JButton(CONSOLE_OPERATE);
+        operate.setMaximumSize(cb.getMaximumSize());
+        operate.setPreferredSize(cb.getPreferredSize());
+        operate.setAlignmentX(CENTER_ALIGNMENT);
+        operate.addActionListener(this);
+        controls.add(operate);
         controls.add(Box.createVerticalStrut(5));
         
         console.setView(this);
 
         Container content = getContentPane();
-        content.setLayout(new BoxLayout(content, BoxLayout.X_AXIS));
-        content.add(wg);
-        content.add(controls);
+        content.add(wg, BorderLayout.WEST);
+        content.add(controls, BorderLayout.EAST);
         pack();
         setVisible(true);
     }
 
     /*
-     * Console button actions.
+     * Console operation button actions.
      */
 
     public void actionPerformed(ActionEvent e) {
@@ -148,16 +152,15 @@ public class ConsoleView extends JInternalFrame implements ActionListener {
                 console.computer.run(Computer.ACT_STEP);
             else if (op.equals(ConsoleOperation.OPERATION_NORMAL))
                 console.computer.run(Computer.ACT_RUN);
-        } else {
-            // Must be a word generator button
-            int bit = Integer.parseInt(action);
-            if (((JRadioButton)e.getSource()).isSelected())
-                console.setWordGenBit(bit);
-            else
-                console.clearWordGenBit(bit);
         }
     }
 
+    public void focusGained(FocusEvent e) {
+        operate.requestFocusInWindow();
+    }
+
+    public void focusLost(FocusEvent e) {
+    }
 
     /*
      * GUI visualisation

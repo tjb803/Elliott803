@@ -29,9 +29,9 @@ public class ConsoleOperation extends JPanel implements ActionListener {
     public ConsoleOperation() {
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setAlignmentX(CENTER_ALIGNMENT);
-        ConsoleButton rb = new ConsoleButton(OPERATION_READ, true);
-        ConsoleButton nb = new ConsoleButton(OPERATION_NORMAL, false);
-        ConsoleButton ob = new ConsoleButton(OPERATION_OBEY, false);
+        ConsoleButton rb = new ConsoleButton(OPERATION_READ, ConsoleButton.BLACK, true);
+        ConsoleButton nb = new ConsoleButton(OPERATION_NORMAL, ConsoleButton.BLACK, false);
+        ConsoleButton ob = new ConsoleButton(OPERATION_OBEY, ConsoleButton.BLACK, false);
         ButtonGroup group = new ButtonGroup();
         group.add(rb);  group.add(nb);  group.add(ob);
         rb.addActionListener(this);

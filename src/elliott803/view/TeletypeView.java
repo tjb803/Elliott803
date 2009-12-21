@@ -5,6 +5,7 @@
  */
 package elliott803.view;
 
+import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Font;
 import java.io.File;
@@ -59,20 +60,19 @@ public class TeletypeView extends TapeDeviceView {
         JButton clear = new JButton("Clear");
         clear.setActionCommand(DEV_EJECT);
         clear.addActionListener(this);
-        JButton save = new JButton("Save...");
-        save.addActionListener(this);
+        open = new JButton("Save...");
+        open.addActionListener(this);
         actions.add(clear);
         actions.add(Box.createHorizontalStrut(5));
-        actions.add(save);
+        actions.add(open);
         actions.add(Box.createHorizontalGlue());
         actions.add(file);
 
         teletype.setView(this);
 
         Container content = getContentPane();
-        content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
-        content.add(scroll);
-        content.add(actions);
+        content.add(scroll, BorderLayout.NORTH);
+        content.add(actions, BorderLayout.SOUTH);
         pack();
         setVisible(true);
     }

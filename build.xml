@@ -37,7 +37,7 @@
 	</target>
 	
 	<!-- Build the runtime ZIP package -->
-	<target name="buildZip" depends="buildSamples">
+	<target name="buildZip" depends="buildSamples, buildJar">
 		<delete file="${zip-name}" quiet="true"/>
 		<zip destfile="${zip-name}">
 			<fileset file="license.txt"/>
@@ -63,12 +63,15 @@
 	
 	<!-- Build the samples -->
 	<target name="buildSamples" depends="buildJar">
-		<mkdir dir="build/tapes/samples"/>
-		<apply executable="java" dest="build/tapes/samples" verbose="true">
+		<property name="sample-src" value="samples/assembler"/>
+		<property name="sample-build" value="build/tapes/samples"/>
+		<delete dir="${sample-build}" quiet="true"/>
+		<mkdir dir="${sample-build}"/>
+		<apply executable="java" dest="${sample-build}" verbose="true">
 			<arg line="-cp ${jar-name} elliott803.utils.Assembler"/>
 			<srcfile/>
 			<targetfile/>
-			<fileset dir="samples/assembler"/>
+			<fileset dir="${sample-src}"/>
 			<mapper type="glob" from="*.a1" to="*.tape"/>
 		</apply>
 	</target>

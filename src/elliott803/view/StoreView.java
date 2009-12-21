@@ -5,6 +5,7 @@
  */
 package elliott803.view;
 
+import java.awt.BorderLayout;
 import java.awt.Container;
 
 import javax.swing.BorderFactory;
@@ -58,9 +59,8 @@ public class StoreView extends JInternalFrame {
         store.setView(this);
 
         Container content = getContentPane();
-        content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
-        content.add(p1);
-        content.add(p2);
+        content.add(p1, BorderLayout.NORTH);
+        content.add(p2, BorderLayout.SOUTH);
         pack();
         setVisible(true);
     }

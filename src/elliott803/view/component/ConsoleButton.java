@@ -17,16 +17,26 @@ import javax.swing.JRadioButton;
  */
 public class ConsoleButton extends JRadioButton {
     private static final long serialVersionUID = 1L;
+    
+    public static final Color RED = Color.RED.darker();
+    public static final Color BLACK = Color.black;
+    
+    int bit;
 
-    public ConsoleButton(String name, boolean selected) {
+    public ConsoleButton(String name, Color colour, boolean selected) {
         super(name, selected);
+        setFocusable(false);
+        setForeground(colour);
         setHorizontalTextPosition(CENTER);
         setVerticalTextPosition(BOTTOM);
     }
 
     public ConsoleButton(String name, Color colour, int bit) {
-        this(name, false);
-        setForeground(colour);
-        setActionCommand(Integer.toString(bit));
+        this(name, colour, false);
+        this.bit = bit;
+    }
+    
+    public int getBit() {
+        return bit;
     }
 }

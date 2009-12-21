@@ -48,14 +48,18 @@ public class Console {
 
     // Set a bit in the word generator, bit = 1 to 39
     public void setWordGenBit(int bit) {
-        wordGen |= 1L<<(bit-1);
-        viewWordGen();
+        if (bit > 0) {
+            wordGen |= 1L<<(bit-1);
+            viewWordGen();
+        }    
     }
 
     // Clear a bit in the word generator, bit = 1 to 39
     public void clearWordGenBit(int bit) {
-        wordGen &= ~(1L<<(bit-1));
-        viewWordGen();
+        if (bit > 0) {
+            wordGen &= ~(1L<<(bit-1));
+            viewWordGen();
+        }    
     }
 
     // Set status lights

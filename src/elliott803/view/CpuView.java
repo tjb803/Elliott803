@@ -101,7 +101,7 @@ public class CpuView extends JInternalFrame implements ActionListener {
         trace.addActionListener(this);
         p4.add(trace);
         
-        // dumpTimer handles 'unclicking' the dump buttom
+        // dumpTimer handles 'unclicking' the dump button
         dumpTimer = new Timer(250, this);
         dumpTimer.setRepeats(false);
 

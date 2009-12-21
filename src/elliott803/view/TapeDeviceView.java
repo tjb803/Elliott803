@@ -9,6 +9,8 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.io.File;
 
 import javax.swing.BorderFactory;
@@ -32,7 +34,7 @@ import elliott803.view.component.DisplayLight;
  *
  * @author Baldwin
  */
-public abstract class TapeDeviceView extends JInternalFrame implements ActionListener {
+public abstract class TapeDeviceView extends JInternalFrame implements ActionListener, FocusListener {
     private static final long serialVersionUID = 1L;
 
     static final String DEV_EJECT = "Eject";
@@ -43,6 +45,7 @@ public abstract class TapeDeviceView extends JInternalFrame implements ActionLis
     DeviceMode mode;
     DeviceLight wait, busy;
     JFileChooser select;
+    JButton open;
     DeviceModeSelect modeSelect;
     Timer busyTimer;
 
@@ -63,6 +66,8 @@ public abstract class TapeDeviceView extends JInternalFrame implements ActionLis
     // Default view used for readers and punches
     public TapeDeviceView(String name, String type, String operation, int id) {
         super(name + " " + id, false, false, false, true);
+        setFocusable(true);
+        addFocusListener(this);
 
         file = new JLabel(" ");
         mode = new DeviceMode(DeviceMode.MODE_ELLIOTT);
@@ -97,13 +102,13 @@ public abstract class TapeDeviceView extends JInternalFrame implements ActionLis
         JButton eb = new JButton(DEV_EJECT);
         eb.setAlignmentX(LEFT_ALIGNMENT);
         eb.addActionListener(this);
-        JButton ob = new JButton(operation + "...");
-        ob.setAlignmentX(LEFT_ALIGNMENT);
-        ob.setActionCommand(operation);
-        ob.addActionListener(this);
+        open = new JButton(operation + "...");
+        open.setAlignmentX(LEFT_ALIGNMENT);
+        open.setActionCommand(operation);
+        open.addActionListener(this);
         bp.add(eb);
         bp.add(Box.createVerticalStrut(5));
-        bp.add(ob);
+        bp.add(open);
 
         JPanel sp = new JPanel();
         sp.setLayout(new BoxLayout(sp, BoxLayout.Y_AXIS));
@@ -122,7 +127,6 @@ public abstract class TapeDeviceView extends JInternalFrame implements ActionLis
         action.add(sp);
 
         Container content = getContentPane();
-        content.setLayout(new BorderLayout());
         content.add(tape, BorderLayout.NORTH);
         content.add(action, BorderLayout.SOUTH);
         pack();
@@ -151,6 +155,13 @@ public abstract class TapeDeviceView extends JInternalFrame implements ActionLis
                 setTape(f, modeSelect.getMode(), modeSelect.getAscii());
             }
         }
+    }
+    
+    public void focusGained(FocusEvent e) {
+        open.requestFocusInWindow();
+    }
+
+    public void focusLost(FocusEvent e) {
     }
 
     /*
