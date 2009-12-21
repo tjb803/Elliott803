@@ -1,0 +1,81 @@
+QuickSort;
+
+BEGIN
+    COMMENT **                      **;
+    COMMENT * Elliott 803B simulator *;
+    COMMENT *                        *;
+    COMMENT * (C) Tim Baldwin 2009   *;
+    COMMENT **                      **;
+
+    COMMENT **                                           **;
+    COMMENT * A implementation of the QuickSort algorithm *;
+    COMMENT **                                           **;
+
+    INTEGER size, repeat;
+
+    COMMENT The recursive QUICKSORT procedure;
+    PROCEDURE quickSort(data, first, last);
+    VALUE first, last;  INTEGER first, last;  INTEGER ARRAY data;
+    BEGIN
+        INTEGER pivot, i, j, k;
+        SWITCH ss := loop;
+
+        IF first LESS last THEN BEGIN
+            pivot:=data[first];
+            j:=first;  k:=last;
+
+          loop:
+            FOR i:=0 WHILE data[j] LESS pivot AND j LESS last DO j:=j+1;
+            FOR i:=0 WHILE data[k] GREQ pivot AND k GR first DO k:=k-1;
+            IF j LESS k THEN BEGIN
+                i:=data[j];  data[j]:=data[k];  data[k]:=i;
+                GOTO loop;
+            END;
+
+            quickSort(data, first, k);
+            quickSort(data, k+1, last);
+        END;
+    END quickSort;
+
+    COMMENT Print data values;
+    PROCEDURE printData(s, data, size);
+    VALUE size;  STRING s;  INTEGER size;  INTEGER ARRAY data;
+    BEGIN
+        INTEGER i;
+        PRINT s;
+        FOR i:=1 STEP 1 UNTIL size DO
+            PRINT prefix(# ?), digits(3), data[i];
+    END printData;
+
+    COMMENT Decrement a variable;
+    INTEGER PROCEDURE dec(i); INTEGER i; dec := i := i-1;
+
+    READ repeat, size;
+
+    BEGIN
+        INTEGER i, d;  INTEGER ARRAY data[1:size];
+        SWITCH ss := next;
+
+      next:
+        punch(3);
+
+        COMMENT Generate some random numbers from 0 to 511 (9 bits);
+        FOR i:=1 STEP 1 UNTIL size DO BEGIN
+            d:=511;
+            elliott(7,2, 8000, 0, 2,3, d);
+            data[i]:=d;
+        END;
+
+        printData(##L?Original Data:?, data, size);
+
+        quickSort(data) from:(1) to:(size);
+
+        printData(##L?Sorted Data:  ?, data, size);
+        PRINT ##L2??;
+
+        IF dec(repeat) GR 0 THEN GOTO next;
+    END;
+END program;
+
+Repeat 3 times with 12 values
+Repeat 4 times with 10 values

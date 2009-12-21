@@ -9,7 +9,7 @@
 <project name="Elliott803" default="buildAll">
 	<property name="project-name" value="Elliott803"/>
     <property name="system-name" value="Elliott 803B"/>
-	<property name="system-version" value="0.5.0"/>
+	<property name="system-version" value="0.6.0"/>
 	<property name="system-author" value="(C) Copyright Tim Baldwin 2009"/>
 	
 	<property name="jar-name" value="elliott803-${system-version}.jar"/>
@@ -41,10 +41,12 @@
 		<delete file="${zip-name}" quiet="true"/>
 		<zip destfile="${zip-name}">
 			<fileset file="license.txt"/>
-			<fileset file="readme.html"/>
+			<fileset file="readme.txt"/>
 			<fileset file="${jar-name}"/>
 			<zipfileset dir="docs" prefix="docs"/>
+			<zipfileset dir="tapes" prefix="tapes"/>
 			<zipfileset dir="samples" prefix="samples"/>
+			<zipfileset dir="build/tapes" prefix="tapes"/>
 		</zip>	
 	</target>
 	
@@ -53,7 +55,7 @@
 		<delete file="${src-name}" quiet="true"/>
 		<zip destfile="${src-name}">
 			<fileset file="license.txt"/>
-			<fileset file="readme.html"/>
+			<fileset file="readme.txt"/>
 			<zipfileset dir="docs" prefix="docs"/>
 			<zipfileset dir="src" prefix="src"/>
 		</zip>
@@ -61,11 +63,12 @@
 	
 	<!-- Build the samples -->
 	<target name="buildSamples" depends="buildJar">
-		<apply executable="java" dest="samples/assembler/tapes" verbose="true">
+		<mkdir dir="build/tapes/samples"/>
+		<apply executable="java" dest="build/tapes/samples" verbose="true">
 			<arg line="-cp ${jar-name} elliott803.utils.Assembler"/>
 			<srcfile/>
 			<targetfile/>
-			<fileset dir="samples/assembler/src"/>
+			<fileset dir="samples/assembler"/>
 			<mapper type="glob" from="*.a1" to="*.tape"/>
 		</apply>
 	</target>

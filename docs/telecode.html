@@ -30,7 +30,7 @@ over-typing letter-shifts (character 31 or &quot;all holes&quot;) over
 unwanted characters.</p>
 <hr>
 <h2>Telecode Character Set</h2>
-<p>The 5 hole tape encoding used was pretty much unique to Elliotts.
+<p>The 5 hole tape encoding used was unique to Elliotts.
 It consisted of the following characters:</p>
 <table frame="box" rules="all" cellpadding="4">
 <tr><td></td>
@@ -84,7 +84,7 @@ It consisted of the following characters:</p>
 <hr>
 <h2 id="tcconv">Telecode to Java Character Conversion</h2>
 <p>In a number of places the simulator needs to convert between the standard Java 
-platform characters and the Elliott telecode characters.
+system characters and the Elliott telecode characters.
 This is done using some common conversion methods that convert according to the
 following rules.</p>
 <h3>Telecode To Java</h3>
@@ -92,13 +92,13 @@ following rules.</p>
 characters present in the telecode character set all convert easily to Java
 unicode characters.</p>
 <p>The only character that might cause any issues is the telecode figure-shift 26
-character which should be the GB currency pound sign '&pound'.
+character which should be the GB currency pound sign (<code>&pound;</code>).
 Since some character sets may not display this correctly most of the programs
 that perform telecode-to-Java conversion can take an option to force use of 
 only the basic US-ASCII codeset.  
 In this case the telecode figure-shit character 26 will be displayed as the
-number sign '#'.</p>
-<h3>Java to Telecode</h3>
+number sign (<code>#</code>).</p>
+<h3 id="jtotc">Java to Telecode</h3>
 <p>When converting from Java telecode it makes sense to allow a fairly liberal
 conversion of characters.
 In particular:</p>
@@ -106,19 +106,19 @@ In particular:</p>
 <li>All uppercase and lowercase letters 'A' to 'Z' are converted to the telecode 
 uppercase versions.</li>
 <li>Both <b><code>$</code></b> and <b><code>&amp;</code></b> convert to figure-shift 5 
-(some real teletypes used &amp; for this character)</li>
+(some real teletypes used &amp; for this character).</li>
 <li>Both <b><code>'</code></b> and <b><code>;</code></b> convert to figure-shift 9 
-(helps when writing Algol)</li>
+(helps when writing Algol).</li>
 <li>Both <b><code>(</code></b> and <b><code>[</code></b> convert to figure-shift 17 
-(helps when writing Algol)</li>
+(helps when writing Algol).</li>
 <li>Both <b><code>)</code></b> and <b><code>]</code></b> convert to figure-shift 18 
-(helps when writing Algol)</li>
-<li>Both <b><code>?</code></b> and <b><code>!</code></b> convert to figure-shift 20</li>
-<li>Both <b><code>/</code></b> and <b><code>\</code></b> convert to figure-shift 23</li>
+(helps when writing Algol).</li>
+<li>Both <b><code>?</code></b> and <b><code>!</code></b> convert to figure-shift 20.</li>
+<li>Both <b><code>/</code></b> and <b><code>\</code></b> convert to figure-shift 23.</li>
 <li>Both <b><code>&pound;</code></b> and <b><code>#</code></b> convert to figure-shift 26
-(helps on systems without a GB pound sign)</li>
+(helps on systems without a GB pound sign on the keyboard).</li>
 <li>The character <b><code>_</code></b> can be used to represent a blank character 
-(tape runout) if required.  
+(tape run-out) if required.  
 </ul>
 <p>All other characters are silently ignored.</p>
 <br><table border="1" frame="above" rules="none" width="100%">

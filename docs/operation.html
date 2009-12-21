@@ -30,7 +30,7 @@
 <hr>
 <h2 id="gui">Interactive GUI</h2>
 <p>The GUI interface can be started by running the simulator JAR file or by
-running the main View program within the JAR.</p>
+running the <code>elliott803.Main</code> program within the JAR.</p>
 <h3>Command</h3>
 <blockquote><pre>
    <code>java -jar elliott803-n.n.n.jar</code>
@@ -42,9 +42,13 @@ or <code>java <b>elliott803.Main</b> [options] [machinedef]</code>
 </dl></blockquote>
 <h4>Options</h4>
 <blockquote><dl>
-<dt><code>-look <i>lookandfeel</i></code></dt><dd>The name of the Java GUI look
-and feel to use.
-By default the standard platform look and feel will be used.</dd>
+<dt><code>-look <i>lookandfeel</i></code></dt><dd>The name of the Java GUI 
+look-and-feel to use.
+By default the standard platform look-and-feel will be used.
+Other look-and-feels that may be available (depending on operating system
+and Java version) include: <code>metal</code>, <code>windows</code>, 
+<code>classic</code>, <code>motif</code>, <code>gtk</code> and <code>nimbus</code>.
+</dd>
 </dl></blockquote>
 <p>The GUI interface displays a main window containing several smaller internal
 windows representing the various hardware and devices that form the Elliott
@@ -75,8 +79,9 @@ The <i>Obey</i> function obeys the next instruction then returns to step-by-step
 mode.
 The <i>Normal</i> function obeys the next instruction and continues executing
 instructions normally.</p>
-<p>So a typical sequence of operations to cause a jump to the initial instructions
-at location zero (to load a program from the tape reader) would be:</p>
+<p id="boot">So a typical sequence of operations to cause a jump to the 
+<a href="#initns">initial instructions</a> at location zero (to load a program 
+from the tape reader) would be:</p>
 <ul compact>
 <li>Set the instruction <b>40 0 : 00 0</b> on the word generator (this just needs
 the top left-most button pressed).</li>
@@ -92,10 +97,10 @@ running normally.</li>
 for a tape to loaded in a tape reader or punch.</li>
 <li><b>Floating Point Overflow</b> a floating point operation has oveflowed.
 Execution stops if this occurs.</li>
-<li><b>Step by Step</b> the system is stopped waiting for operation action.
+<li><b>Step by Step</b> the system is stopped waiting for operator action.
 This is the condition on start up or after the <i>Reset</i> key is pressed.</li>
-<li><b>Overflow</b> the overflow condition is set.  This will usually flicker
-on and off as programs are loaded or run.</li>
+<li><b>Overflow</b> the overflow condition is set.  
+This will usually flicker on and off as programs are loaded or run.</li>
 </ul>
 <p>This window is supposed to look and operate somewhat like the real Elliott
 803 operator console</p>
@@ -151,7 +156,7 @@ will also clear any current teletype output.</p>
 <img src="image/oppch.jpg" alt="Tape Punch" align="right"/>
 <p>The paper tape readers and paper tape punches are the primary means
 of input/output for the computer.
-&quot;Tapes&quot; are held in files on the host PC system and the <i>Load</i>
+&quot;Tapes&quot; are held as files on the host PC system and the <i>Load</i>
 and <i>Save</i> buttons on the tape devices produce a file selection dialog
 that allows the tape files to be selected.</p>
 <p>When selecting a tape file you will need to choose an appropriate
@@ -177,7 +182,7 @@ Tapes can be in <i>Elliott</i> format or in <i>System</i> format.</p>
 <li><i>Elliott</i> format tapes are either binary program tapes or tapes
 whose characters are encoded as Elliott telecode.</li>
 <li><i>System</i> tapes are text tapes (such as program source code or
-program data) that are encoded as normal system text files on the PC.</li>
+program data) that are encoded as normal text files on the PC.</li>
 </ul>
 <img src="image/tmode.jpg" alt="Tape Format" align="right"/>
 <p>The file selection dialogs contain a panel on the right hand side that allows
@@ -196,16 +201,17 @@ be writing binary data (such as compiler output tapes).
 If the output is text it will be encoded in telecode and can be converted
 to the system character set using the
 <a href=utilites.html#tprint">TapePrint</a> utility</dd>
-<dt><b>System</b></dt><dd>Te tape is in system format.
+<dt><b>System</b></dt><dd>The tape is in standard system format.
 This is the default format for teleprinter output.
-This is only suitable for text input or output: the characters read or
+This is only suitable for text input or output - the characters read or
 written to the tape will be automatically converted from or to telecode
 as necessary.</dd>
 <dt><b>US-ASCII</b></dt><dd>This option is only available with the <b>System</b>
 output format.
 It ensures that only characters from the US-ASCII character set are used
 when converting from telecode to system characters, in particular the
-GB pound sign character will be written as the number sign '#'.</dd>
+GB pound sign character (<code>&pound;</code>) will be written as the number 
+sign (<code>#</code>).</dd>
 </dl>
 <hr>
 <h2 id="pload">Loading Programs</h2>
@@ -213,37 +219,42 @@ GB pound sign character will be written as the number sign '#'.</dd>
 a complete program and run it using only the operator's console.
 If you want to try, here's a very simple two line program that will print
 a series of 'A's to the teletype:</p>
-<blockquote><pre><code>128:  74 4127 : 74 4097
-129:  40  128 : 00    0</code></pre></blockquote>
+<blockquote><pre><code>128:  74 4127 : 74 4097          * Print a letter shift and an 'A'    
+129:  40  128 : 00    0          * Jump to location 128 to repeat</code></pre></blockquote>
 <p>This could be entered and run using the following sequence of operations:</p>
 <table frame="box" rules="all" cellpadding="3">
 <tr><th>Word Generator</th><th>Operation</th><th>Notes</th></tr>
 <tr><td colspan="3">Reset the computer ready for use</td></tr>
 <tr><td></td><td><i>Reset</i></td><td>The &quot;Step by step&quot; light should now be on.</td></tr>
 <tr><td colspan="3">Load the short program into store</td></tr>
-<tr><td><b>70&nbsp;0&nbsp;:&nbsp;00&nbsp;0</code></b></td><td><i>Read</i>,&nbsp;<i>Operate</i></td>
-<td>Put the instruction 70 0 (read the word generator to the accumulator) into the
+<tr><td><b><code>70&nbsp;0&nbsp;:&nbsp;00&nbsp;0</code></b></td>
+<td><i>Read</i>,&nbsp;<i>Operate</i></td>
+<td>Put the instruction 70&nbsp;0 (read the word generator to the accumulator) into the
 instruction register ready to be obeyed (but not run yet)</td></tr>
-<tr><td><b>74&nbsp;4127&nbsp;:&nbsp;74&nbsp;4097</b></td><td><i>Obey</i>,&nbsp;<i>Operate</i></td>
-<td>Obey the previous 70 0 instruction so the accumulator now contains the
-instruction 74 4127 : 74 4097)
+<tr><td><b><code>74&nbsp;4127&nbsp;:&nbsp;74&nbsp;4097</code></b></td>
+<td><i>Obey</i>,&nbsp;<i>Operate</i></td>
+<td>Obey the previous 70&nbsp;0 instruction so the accumulator now contains the
+instruction 74&nbsp;4127&nbsp;:&nbsp;74&nbsp;4097)
 <br>(Hint: 4127 = 4096 + 31, 4097 = 4096 + 1)</td></tr>
-<tr><td><b>20&nbsp;128&nbsp;:&nbsp;00&nbsp;0</b></td>
+<tr><td><b><code>20&nbsp;128&nbsp;:&nbsp;00&nbsp;0</code></b></td>
 <td><i>Read</i>, <i>Operate</i>, <i>Obey</i>, <i>Operate</i></td>
-<td>Put the instruction 20 128 (store accumulator to location 128) into the instruction
+<td>Put the instruction 20&nbsp;128 (store accumulator to location 128) into the instruction
 register and obey it.</td></tr>
-<tr><td><b>70&nbsp;0&nbsp;:&nbsp;00&nbsp;0</b></td><td><i>Read</i>, <i>Operate</i></td>
-<td>Get the 70 0 instruction ready to be obeyed again</td></tr>
-<tr><td><b>40&nbsp;128&nbsp;:&nbsp;00&nbsp;0</b></td><td><i>Obey</i>, <i>Operate</i></td>
-<td>Obey the previous instruction so the accumulator now contains 40 128 : 00 0</td></tr>
-<tr><td><b>20&nbsp;129&nbsp;:&nbsp;00&nbsp;0</b></td>
+<tr><td><b><code>70&nbsp;0&nbsp;:&nbsp;00&nbsp;0</code></b></td>
+<td><i>Read</i>, <i>Operate</i></td>
+<td>Get the 70&nbsp;0 instruction ready to be obeyed again</td></tr>
+<tr><td><b><code>40&nbsp;128&nbsp;:&nbsp;00&nbsp;0</code></b></td>
+<td><i>Obey</i>, <i>Operate</i></td>
+<td>Obey the previous instruction so the accumulator now contains 
+40&nbsp;128&nbsp;:&nbsp;00&nbsp;0</td></tr>
+<tr><td><b><code>20&nbsp;129&nbsp;:&nbsp;00&nbsp;0</code></b></td>
 <td><i>Read</i>, <i>Operate</i>, <i>Obey</i>, <i>Operate</i></td>
-<td>Put the instruction 20 129 (store accumulator to location 129) into the instruction
+<td>Put the instruction 20&nbsp;129 (store accumulator to location 129) into the instruction
 register and obey it.</td></tr>
 <tr><td colspan="3">Run the program</td></tr>
-<tr><td><b>40&nbsp;128&nbsp;:&nbsp;00&nbsp;0</b></td>
+<tr><td><b><code>40&nbsp;128&nbsp;:&nbsp;00&nbsp;0</code></b></td>
 <td><i>Read</i>, <i>Operate</i>, <i>Normal</i>, <i>Operate</i></td>
-<td>Reads and executes a 40 128 (jump to location 128) instruction and continues
+<td>Reads and executes a 40&nbsp;128 (jump to location 128) instruction and continues
 running normally, i.e. fetching and executing instructions from store.
 <br>The short program should run and print continuous 'A' characters to the
 output teletype.</td></tr>
@@ -251,6 +262,7 @@ output teletype.</td></tr>
 <tr><td></td><td><i>Reset</i></td><td>Output should stop and the system return to
 &quot;Step by step&quot; mode.</td></tr>
 </table>
+<h3 id="initins">Initial Instructions</h3>
 <p>Clearly this method of loading and running programs is impractical for any program
 of any size, so the 803 provides a better solution.
 Storage locations 0 through to 3 contain hard-wired instructions called the <i>Initial
@@ -261,14 +273,14 @@ characters for each word of store.</p>
 <p>For interest, the initial instructions are these:</p>
 <blockquote><pre><code>0:  26 4 : 06 0
 1:  22 4 / 16 3
-2:  55 5 / 71 0
+2:  55 5 : 71 0
 3:  43 1 : 40 2</code>
 </pre></blockquote>
 <p>They use just one extra word (location 4) of working storage and can load
 the program into any location in store - the first word read from the tape 
 defines the load address for the rest of the data.
 You might like to try to figure out how it works!</p>
-<p>This means the standard wya of loading a program is to put the program tape
+<p>This means the standard way of loading a program is to put the program tape
 into the reader and execute a jump to location 0 to invoke the initial instructions.</p>
 <hr>
 <h2 id="cmd">Command Line Interface</h2>
@@ -299,10 +311,10 @@ This will be ignored for a self-triggering program tape.</dd>
 </dl></blockquote>
 <p>As an example the sample <a href="samples.html#charset">Character Set</a> program
 can be run with this command.
-This will rewult in the telecode character set being printed to the terminal or
+This will result in the telecode character set being printed to the terminal or
 command line session.</p>
 <blockquote><pre>
-<code>java elliott803.Run -ascii samples/assembler/tapes/charset.tape</code>
+<code>java elliott803.Run -ascii tapes/samples/charset.tape</code>
 </pre></blockquote>
 <br/><table border="1" frame="above" rules="none" width="100%">
 <tr><td align="left">Tim Baldwin<br>December 2009

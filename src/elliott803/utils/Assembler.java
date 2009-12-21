@@ -64,10 +64,11 @@ import elliott803.telecode.Telecode;
  *                =128                 * Load starting at address 128
  *
  *       loop:   22 index / 30 hello   * Get next character
- *               46 end   : 20 char    * Check for zero at end of string or save character
+ *               42 end   : 20 char    * Check for zero at end of string or save character
  *               00 char  / 74 4096    * Write character to teletype
- *       end:    40 loop  : 74 4125    * Loop or write CR ...
- *               74 4126  : 72 8191    * ... LF and exit
+ *               40 loop               * Loop until done  
+ *       end:    74 4125  : 74 4126    * Write a CR and LF
+ *               72 8191               * And exit
  *
  *       char:    0                    * Character workspace
  *       index:  -1                    * index into string

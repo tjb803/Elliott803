@@ -6,6 +6,7 @@
 package elliott803;
 
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.Map;
 
@@ -99,16 +100,19 @@ public class Main implements Runnable {
 
     public Main(Computer computer, ComputerView view, ViewDefinition def) {
         computerView = view;
+        
+        Toolkit tk = Toolkit.getDefaultToolkit();
+        Image icon = tk.createImage(getClass().getResource("803-32.gif"));
 
         frame = new JFrame(computer.name + " simulation (v" + computer.version + ")");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setIconImage(icon);
         frame.setContentPane(view);
 
         // Layout the contents of the frame according to the view definition and
         // set the frame size and position
         view.layout(def);
         if (def.empty) {
-            Toolkit tk = Toolkit.getDefaultToolkit();
             Dimension screen = tk.getScreenSize();
             frame.setLocation((screen.width-def.viewWidth)/2, (screen.height-def.viewHeight)/2);
         }

@@ -5,7 +5,6 @@
  */
 package elliott803.machine;
 
-
 /**
  * Constants and utility functions to manipulate a single instruction
  *

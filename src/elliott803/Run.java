@@ -46,11 +46,11 @@ public class Run {
     public static void main(String[] args) throws Exception {
         // Handle parameters
         Map<String,String> options = Args.optionMap();
-        options.put("reader1", "inputtape");
-        options.put("reader2", "inputtape\n");
-        options.put("punch1", "outputtape");
-        options.put("punch2", "outputtape\n");
-        options.put("teletype", "outputfile\n");
+        options.put("reader1", "inputtape+");
+        options.put("reader2", "inputtape");
+        options.put("punch1", "outputtape+");
+        options.put("punch2", "outputtape");
+        options.put("teletype", "outputfile");
         options.put("ascii", null);
         options.put("dump", null);
         options.put("trace", null);

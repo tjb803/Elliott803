@@ -50,8 +50,6 @@ public class Computer extends Thread {
 
     /**
      * Construct a computer
-     *
-     * @param normal True for normal execution, false if execution should stop on a "busy" condition.
      */
     public Computer() {
         // Get name and version information from manifest, or set default
@@ -171,7 +169,7 @@ public class Computer extends Thread {
         // Lower the priority of the CPU thread a little.  803 programs often used tight
         // spin loops to wait for console input or when they end and we don't want these
         // tight loops to make the GUI seem unresponsive.
-        setPriority(Math.max(Thread.MIN_PRIORITY, getPriority()-1));
+        setPriority(Math.max(Thread.MIN_PRIORITY, getPriority()/2));
 
         while (true) {
             int act = ACT_WAIT;
@@ -221,5 +219,12 @@ public class Computer extends Thread {
             cpu.trace(null);
             trace.write();
         }
+    }
+    
+    /*
+     * Dummy constructor for unit tests
+     */
+    public Computer(boolean test) {
+        // Dummy for unit tests only
     }
 }

@@ -8,8 +8,8 @@
 <table border="2" frame="box" rules="none" cellpadding="10" width="100%">
 <tr align="center"><td><img src="image/e803.gif" alt="Elliott 803"/></td></tr>
 </table>
-<h1>Sample Programs</h1>
-<p>The following sample programs are provided with the simulator.</p>
+<h1>Sample Assembler Programs</h1>
+<p>The following sample assembler programs are provided:</p>
 <ul compact>
 <li><a href="#hello1">Hello World 1</a></li>
 <li><a href="#hello2">Hello World 2</a></li>
@@ -18,17 +18,19 @@
 <li><a href="#random">Random Storage</a></li>
 </ul>
 <p>Note: the sample assembler programs have been written and assembled using a
-simple <a href="utils.html#assembler">Assembler Utility</a> provided with the simulator.
-This similar though not identical to the original 803 assembler.  
+simple <a href="utils.html#assembler">assembler utility</a> provided with the simulator.
+This is similar though not identical to the original 803 assembler.  
 In addition they often use one of the special <a href="extras.htlm#control">simulator
 control</a> instructions to exit in a clean way.</p>
-<hr></hr>
+<p>Some sample programs that can be used with the <a href="algol.html">ALGOL</a>
+compiler are also provided and documented separately.</p>
+<hr>
 <h2 id="hello1">Hello World 1</h2>
 <table frame="box" rules="all" border="1" cellpadding="4">
 <tr><td><b>Source Code</b></td>
-<td><a href="../samples/assembler/src/hello1.a1"><samp>samples/assembler/src/hello1.a1</samp></a></td></tr>
+<td><a href="../samples/assembler/hello1.a1"><samp>samples/assembler/hello1.a1</samp></a></td></tr>
 <tr><td><b>Program Tape</b></td>
-<td><samp>samples/assembler/tapes/hello1.tape</samp></td></tr>
+<td><samp>tapes/samples/hello1.tape</samp></td></tr>
 </table>
 <p>This is a very simple assembler &quot;hello world&quot; program.
 It just prints a short message to the output teletype and exits.
@@ -39,9 +41,9 @@ This program is used in the <a href="quickstart.html">Quick Start Guide</a>.</p>
 <h2 id="hello2">Hello World 2</h2>
 <table frame="box" rules="all" border="1" cellpadding="4">
 <tr><td><b>Source Code</b></td>
-<td><a href="../samples/assembler/src/hello2.a1"><samp>samples/assembler/src/hello2.a1</samp></a></td></tr>
+<td><a href="../samples/assembler/hello2.a1"><samp>samples/assembler/hello2.a1</samp></a></td></tr>
 <tr><td><b>Program Tape</b></td>
-<td><samp>samples/assembler/tapes/hello2.tape</samp></td></tr>
+<td><samp>tapes/samples/hello2.tape</samp></td></tr>
 </table>
 <p>This is a minor variation on the <a href="#hello1">Hello World 1</a> sample.
 The program is compiled to a binary tape that can be loaded using the initial 
@@ -64,9 +66,9 @@ control.</p>
 <h2 id="charset">Character Set</h2>
 <table frame="box" rules="all" border="1" cellpadding="4">
 <tr><td><b>Source Code</b></td>
-<td><a href="../samples/assembler/src/charset.a1"><samp>samples/assembler/src/charset.a1</samp></a></td></tr>
+<td><a href="../samples/assembler/charset.a1"><samp>samples/assembler/charset.a1</samp></a></td></tr>
 <tr><td><b>Program Tape</b></td>
-<td><samp>samples/assembler/tapes/charset.tape</samp></td></tr>
+<td><samp>tapes/samples/charset.tape</samp></td></tr>
 </table>
 <p>This program prints the all 64 telecode characters - the 32 letter-shift versions  
 and the 32 figure-shift versions - to the output teletype then exits.
@@ -78,9 +80,9 @@ by the initial instructions.</p>
 <h2 id="charset">Tape Printer</h2>
 <table frame="box" rules="all" border="1" cellpadding="4">
 <tr><td><b>Source Code</b></td>
-<td><a href="../samples/assembler/src/print.a1"><samp>samples/assembler/src/print.a1</samp></a></td></tr>
+<td><a href="../samples/assembler/print.a1"><samp>samples/assembler/print.a1</samp></a></td></tr>
 <tr><td><b>Program Tape</b></td>
-<td><samp>samples/assembler/tapes/print.tape</samp></td></tr>
+<td><samp>tapes/samples/print.tape</samp></td></tr>
 </table>
 <p>This program will print the contents of the tape in Reader 2 to the output 
 teletype.
@@ -94,9 +96,9 @@ the <a href="utils.html#tapeprint">TapePrint</a> utility program.</p>
 <h2 id="random">Random Storage</h2>
 <table frame="box" rules="all" border="1" cellpadding="4">
 <tr><td><b>Source Code</b></td>
-<td><a href="../samples/assembler/src/random.a1"><samp>samples/assembler/src/random.a1</samp></a></td></tr>
+<td><a href="../samples/assembler/random.a1"><samp>samples/assembler/random.a1</samp></a></td></tr>
 <tr><td><b>Program Tape</b></td>
-<td><samp>samples/assembler/tapes/random.tape</samp></td></tr>
+<td><samp>tapes/samples/random.tape</samp></td></tr>
 </table>
 <p>This program writes random numbers (from 0 to 3) to random storage locations,
 avoiding overwriting the program itself which is loaded into the very top of

@@ -89,9 +89,8 @@ public class PrintCore {
             long word = store[i];
             if (i == addr+length-1 || word != lastWord) {
                 if (duplicates > 0) {
-                    printLine(i-duplicates, lastWord);
-                    if (duplicates < 6) {
-                        while (--duplicates > 0) {
+                    if (duplicates < 5 || (lastWord != 0 && duplicates < 8)) {
+                        while (duplicates-- > 0) {
                             printLine(i-duplicates, lastWord);
                         }
                     } else {

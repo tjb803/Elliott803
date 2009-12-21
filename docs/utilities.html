@@ -41,24 +41,24 @@ It's syntax is loosely based on a real 803 assembler but it is not intended to b
 identical (mostly because I can't remember the real syntax):</p>
 <ul>
 <li>The assembler source consists of a set of lines.  
-Blank lines are ignored and any characters following a '*' are comments and 
+Blank lines are ignored and any characters following a &quot;*&quot; are comments and 
 are also ignored.</li>
-<li>A line may start with a label (an identifier followed by a ':') and this
+<li>A line may start with a label (an identifier followed by a &quot;:&quot;) and this
 will assign the address of the next instruction to that label.</li>
 <li>A line may define a pair of instructions in the form
 <br><kbd><b>op1 addr1 b op2 addr</b></kbd>
 <br>where <b>op1</b> and <b>op2</b> are two digit octal instruction op-codes and 
 <b>addr1</b> and <b>addr2</b> are either integer storage addresses or labels.
-<b>b</b> is either the character ':' or '/'.</li>
+<b>b</b> is either the character &quot;:&quot; or &quot;/&quot;.</li>
 <li>A line may be a constant which is a positive or negative integer.</li>
-<li>A line may contain a string in 'single quote' characters which will be
+<li>A line may contain a string in &apos;single quote&apos; characters which will be
 turned into a sequence of telecode characters (including any necessary 
 shift characters) one character per subsequent words.</li>
-<li>A directive <b>=nnnn</b> (where nnnn is a storage address) can be used to 
+<li>A directive <b>=nnnn</b> (where <i>nnnn</i> is a storage address) can be used to 
 define the load address of the program.
 If this is omitted the program will be loaded into the high end of store.</li>
-<li>A directive <b>@addr</b> (where 'addr' is either a storage address or label) can 
-be used to define an entry point.
+<li>A directive <b>@addr</b> (where <i>addr</i> is either a storage address or label) 
+can be used to define an entry point.
 A trigger will be generated at the end of the tape to jump to the entry point.</li>
 </ul>
 <p>Here is an example of the assembler source, showing just about all the function:</p>
@@ -71,10 +71,11 @@ A trigger will be generated at the end of the tape to jump to the entry point.</
                    
      entry:                        * Program entry point	
      loop:   22 index / 30 hello   * Get next character 
-             46 end   : 40 write   * Check for zero at end of string or write char 
+             42 end   : 40 write   * Check for zero at end of string or write char 
      write:  20 char  / 74 4096    * Write character to teletype
-     end:    40 loop  : 74 4125    * Loop or write CR ...  
-             74 4126  : 72 8191    * ... LF and exit        
+             40 loop               * Loop back to next character  
+     end:    74 4125  : 74 4126    * Write CR and LF to finish line   
+     done:   72 8191               * Exit when finished         
               
      char:    0                    * Character workspace
      index:  -1                    * index into string 
@@ -82,7 +83,7 @@ A trigger will be generated at the end of the tape to jump to the entry point.</
               0                    * zero marks end of string   
 </pre>
 <p>Note: This exmaple uses the <a href="extras.html#control">simulator control</a> 
-instruction <b>72 8191</b> to cause the simuation to stop.</p>
+instruction <b><code>72&nbsp;8191</code></b> to cause the simuation to stop.</p>
 <hr><h2 id="tprint">Telecode Tape Printer</h2>
 <h3>Command</h3>
 <blockquote><pre>
@@ -103,8 +104,8 @@ Defaults to the standard platform encoding.</dd>
 <p>This will print out the contents of an Elliott telecode encoded tape, as
 defined by the <a href="telecode.html#tcconv">telecode conversion</a> methods.
 If the <code>-ascii</code> is used only characters from the US-ASCII code set
-will be used when printing, in particular the GB-pound sign (telecode character
-figure-shift 26) will be printed as the number sign '#'.</p>
+will be used when printing, in particular the GB-pound sign (<code>&pound;</code>)
+(telecode character figure-shift 26) will be printed as the number sign (<code>#</code>).</p>
 <hr><h2 id="twrite">Telecode Tape Writer</h2>
 <h3>Command</h3>
 <blockquote><pre>
@@ -152,14 +153,14 @@ small amount of runout between each tape as it is copied.</p>
 Defaults to standard out.</dd> 
 </dl></blockquote>
 <p>This will format and print the output of a simulator core dump file.
-These files usually have a name like 
+The core dump files usually have a name like 
 <code>elliott&#8209;yyyyMMdd&#8209;HHmmss&#8209;SSS.core</code></p>
 <p>The formatted core output shows the state of the machine registers and
-flags when the system dump was performed, followed by th full 8K words
+flags when the system dump was performed, followed by the full 8K words
 of store.  
 To save space any consecutive words with the same value are omitted.</p>
 <p>Core dump files can be produced by using the special  
-<a href=extras.html#control">simuator control</a> instruction, or by pressing
+<a href=extras.html#control">simulator control</a> instruction, or by pressing
 the <i>Dump</i> button on the CPU view window.</p>
 <hr><h2 id="ptrace">Trace File Formatter</h2>
 <h3>Command</h3>
@@ -173,7 +174,7 @@ the <i>Dump</i> button on the CPU view window.</p>
 Defaults to standard out.</dd> 
 </dl></blockquote>
 <p>This will format and print the output of a simulator instruction trace file.
-These files usually have a name like 
+The instruction trace files usually have a name like 
 <code>elliott&#8209;yyyyMMdd&#8209;HHmmss&#8209;SSS.trace</code></p>
 <p>The output of the trace formatter will be something like this:</p>
 <pre><code>
@@ -189,7 +190,7 @@ This is followed by the pair of instructions themselves.</p>
 as '-' for no overflow and 'O' for overflow) and the value of the 
 accumulator (in octal and in decimal) before execution of the instruction(s).</p>
 <p>Trace files can be produced by using the special  
-<a href=extras.html#control">simuator control</a> instructions, or by selecting
+<a href=extras.html#control">simulator control</a> instructions, or by selecting
 the <i>Trace</i> action on the CPU view window.</p>
 <hr><h2 id="pt1">Binary Tape Formatter</h2>
 <h3>Command</h3>
@@ -198,12 +199,12 @@ the <i>Trace</i> action on the CPU view window.</p>
 </pre></blockquote>
 <h4>Parameters</h4>
 <blockquote><dl>
-<dt><code>binarttapefile</code></dt><dd>The name of binary program tape file.</dd>
+<dt><code>binarytapefile</code></dt><dd>The name of binary program tape file.</dd>
 <dt><code>outputfile</code></dt><dd>The name of an output file.  
 Defaults to standard out.</dd> 
 </dl></blockquote>
 <p>This will format and print the contents of a binary program tape.
-This is a tape that can be loaded using the initial instructions.</p>
+a binary program tape is a tape that can be loaded using the initial instructions.</p>
 <br><table border="1" frame="above" rules="none" width="100%">
 <tr><td align="left">Tim Baldwin<br>December 2009
 <br><a href="mailto:tjb803@tinymail.co.uk">tjb803@tinymail.co.uk</a></td>

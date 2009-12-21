@@ -161,17 +161,26 @@ public class Args {
             System.err.println("  " + name + " " + parms + "\n");
         } else {
             System.err.println("  " + name + " [options] " + parms + "\n");
-            System.err.print("options:");
+            String hdr = "options:";
             for (String opt : opts.keySet()) {
-                System.err.print(" -" + opt);
+                System.err.print(hdr + " -" + opt);
+                hdr = "        ";
                 String value = opts.get(opt);
                 if (value != null) {
-                    System.err.print(" " + value);
-                    if (value.endsWith("\n"))
-                        System.err.print("        ");
+                    if (value.endsWith("-")) {
+                        hdr = ",";
+                    } else {
+                        if (value.endsWith("+")) {
+                            value = value.substring(0, value.length()-1);
+                            hdr = "";
+                        }
+                        System.err.print(" " + value);
+                    }    
                 }
-            }
-            System.err.println("\n");
+                if (hdr.length() > 1) {
+                    System.err.println();
+                }    
+            }    
         }
         System.exit(1);
     }

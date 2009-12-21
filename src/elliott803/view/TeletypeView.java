@@ -67,8 +67,7 @@ public class TeletypeView extends TapeDeviceView {
         actions.add(Box.createHorizontalGlue());
         actions.add(file);
 
-        if (teletype != null)
-            teletype.setView(this);
+        teletype.setView(this);
 
         Container content = getContentPane();
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));

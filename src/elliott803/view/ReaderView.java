@@ -29,9 +29,7 @@ public class ReaderView extends TapeDeviceView {
     public ReaderView(Reader reader, int id) {
         super("Reader", "Input", TapeDeviceView.DEV_LOAD, id);
         this.reader = reader;
-
-        if (reader != null)
-            reader.setView(this);
+        reader.setView(this);
     }
 
     // Need to implement setTape to handle new tape loaded

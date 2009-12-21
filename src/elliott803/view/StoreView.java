@@ -54,9 +54,8 @@ public class StoreView extends JInternalFrame {
         p2.add(lastAddr);
         p2.add(Box.createHorizontalStrut(5));
         p2.add(lastValue);
-
-        if (store != null)
-            store.setView(this);
+        
+        store.setView(this);
 
         Container content = getContentPane();
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));

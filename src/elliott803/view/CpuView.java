@@ -16,6 +16,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.Timer;
 
 import elliott803.hardware.CPU;
 import elliott803.view.component.DeviceLight;
@@ -31,9 +32,6 @@ import elliott803.view.component.DisplayWord;
 public class CpuView extends JInternalFrame implements ActionListener {
     private static final long serialVersionUID = 1L;
 
-    static final String CPU_DUMP = "Dump";
-    static final String CPU_TRACE = "Trace";
-
     CPU cpu;
 
     DisplayWord acc;
@@ -43,6 +41,9 @@ public class CpuView extends JInternalFrame implements ActionListener {
     DisplayWord ir;
     DeviceLight overflow;
     DeviceLight fpOverflow;
+    JRadioButton dump;
+    JCheckBox trace;
+    Timer dumpTimer;
 
     public CpuView(CPU cpu) {
         super("CPU", false, false, false, true);
@@ -92,16 +93,19 @@ public class CpuView extends JInternalFrame implements ActionListener {
         p4.setLayout(new BoxLayout(p4, BoxLayout.X_AXIS));
         p4.setBorder(BorderFactory.createTitledBorder("Debug"));
         p4.setAlignmentX(LEFT_ALIGNMENT);
-        JRadioButton db = new JRadioButton(CPU_DUMP);
-        db.addActionListener(this);
-        p4.add(db);
+        dump = new JRadioButton("Dump");
+        dump.addActionListener(this);
+        p4.add(dump);
         p4.add(Box.createHorizontalGlue());
-        JCheckBox tb = new JCheckBox(CPU_TRACE);
-        tb.addActionListener(this);
-        p4.add(tb);
+        trace = new JCheckBox("Trace");
+        trace.addActionListener(this);
+        p4.add(trace);
+        
+        // dumpTimer handles 'unclicking' the dump buttom
+        dumpTimer = new Timer(250, this);
+        dumpTimer.setRepeats(false);
 
-        if (cpu != null)
-            cpu.setView(this);
+        cpu.setView(this);
 
         Container content = getContentPane();
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
@@ -119,11 +123,15 @@ public class CpuView extends JInternalFrame implements ActionListener {
      */
 
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equals(CPU_DUMP)) {
-            cpu.computer.dump();
-            ((JRadioButton)e.getSource()).setSelected(false);
-        } else if (e.getActionCommand().equals(CPU_TRACE)) {
-            if (((JCheckBox)e.getSource()).isSelected())
+        if (e.getSource() == dumpTimer) {
+            dump.setSelected(false);
+        } else if (e.getSource() == dump) {
+            if (dump.isSelected()) { 
+                cpu.computer.dump();
+                dumpTimer.start();
+            }    
+        } else if (e.getSource() == trace) {
+            if (trace.isSelected())
                 cpu.computer.traceStart();
             else
                 cpu.computer.traceStop();

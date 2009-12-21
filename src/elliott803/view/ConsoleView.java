@@ -71,7 +71,6 @@ public class ConsoleView extends JInternalFrame implements ActionListener {
         wv.add(wordgen);
         wg.add(wv);
 
-
         JPanel lights = new JPanel();
         lights.setLayout(new BoxLayout(lights, BoxLayout.Y_AXIS));
         step = new ConsoleLight("Step by Step", null);
@@ -87,7 +86,7 @@ public class ConsoleView extends JInternalFrame implements ActionListener {
         lights.add(Box.createVerticalStrut(10));
         lights.add(overflow);
         lights.add(Box.createVerticalGlue());
-
+     
         JPanel controls = new JPanel();
         controls.setLayout(new BoxLayout(controls, BoxLayout.Y_AXIS));
         controls.add(Box.createVerticalStrut(5));
@@ -117,9 +116,8 @@ public class ConsoleView extends JInternalFrame implements ActionListener {
         ob.addActionListener(this);
         controls.add(ob);
         controls.add(Box.createVerticalStrut(5));
-
-        if (console != null)
-            console.setView(this);
+        
+        console.setView(this);
 
         Container content = getContentPane();
         content.setLayout(new BoxLayout(content, BoxLayout.X_AXIS));

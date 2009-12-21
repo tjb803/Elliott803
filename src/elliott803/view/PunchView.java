@@ -29,9 +29,7 @@ public class PunchView extends TapeDeviceView {
     public PunchView(Punch punch, int id) {
         super("Punch ", "Output", TapeDeviceView.DEV_SAVE, id);
         this.punch = punch;
-
-        if (punch != null)
-            punch.setView(this);
+        punch.setView(this);
     }
 
     // Need to implement setTape to handle new tape loaded
