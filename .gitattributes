@@ -1,1 +1,6 @@
 * text=auto !eol
+/.classpath -text
+/.project -text
+/build.xml -text
+/license.txt -text
+/readme.html -text
