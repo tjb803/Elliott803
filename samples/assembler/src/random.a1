@@ -1,0 +1,27 @@
+**
+* Elliott Model 803B Simulator
+*
+* (C) Copyright Tim Baldwin 2009
+**
+
+**
+* Random number example
+*
+* Writes random values to random storage locations
+**
+                @entry
+
+start:          start                   * Marks the start of this program
+abits:          8191                    * Address bits mask
+dbits:          3                       * Data value mask
+temp:           0                       * Working storage
+
+entry:          72 8000 : 03 abits      * Get a random address
+                20 temp : 05 start      * Make sure we don't overwrite the code!
+                41 good : 40 entry
+
+good:           72 8000 : 03 dbits      * Get a random value (0 to 3)
+                00 temp / 20 0          * Store in random location
+                40 entry                * And repeat forever
+
+

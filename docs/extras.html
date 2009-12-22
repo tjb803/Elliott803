@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Elliott 803 Simulator - Extras</title>
+</head>
+<body>
+<table border="2" frame="box" rules="none" cellpadding="10" width="100%">
+<tr align="center"><td><img src="image/e803.gif" alt="Elliott 803"/></td></tr>
+</table>
+<h1>Additional Function</h1>
+<p>Since this is a simulation of an Elliott 803, not a real computer, it is possible
+to provide some additional useful function, that can help show the working of the 
+computer, help with programming and help with debugging.</p>
+<p>The following extra function is provided:</p>
+<ul>
+<li><a href="#visual">Hardware Visualisation</a></li>
+<li><a href="#dump">Core Dump Facility</a></li>
+<li><a href="#trace">Instruction Trace Facility</a></li>
+<li><a href="#control">Simulator Control Device</a></li>
+<li><a href="#random">Random Number Generator Device</a></li>
+</ul>
+<hr>
+<h2 id="visual">Hardware Visualisation</h2>
+<p>The simulator's <a href="operation.hml#gui">interactive interface</a> has 
+a number of windows that show the state of the various hardware components.
+This includes a view of the state of the <a href="operation.html#opcpu">CPU</a>
+and <a href="operation.html#opcore">Core Store</a> components, as well as
+the more obvious items such as the output <a href="operation.html#optele">teletype</a></p> 
+<hr>
+<h2>Debug Functions</h2>
+<p>The simulator is able to produce a <a href="#dump">core dump</a> (which includes 
+the currentCPU register values) and an <a href="#trace">instruction trace.</a></p>
+<h3 id="dump">Core Dump</h3>
+<p>The core dump is a snapshot image containing the current CPU registers
+and flags and the complete 8K words of store.</p>
+<p>Core dumps can be produced using the special <a href="#control">control device</a>
+instructions (from within a running program), by pressing the <i>Dump</i> button
+on the <a href="operation.html#opcpu">CPU</a> display window or by command
+parameters on some execution commands.</p>
+<p>Core dump files are named something like
+<b><code>elliott&#8209;yyyyMMdd&#8209;HHmmss&#8209;SSS.core</code></b> and are 
+in an internal and compressed format.
+The files can be formatted using the <a href=utilities.html#pcore>Core File
+Formatter</a> utility.</p>
+<h3 id="trace">Instruction Trace</h3>
+<p>The instruction trace contains a log of each (pair) of instructions executed 
+by the CPU together with the accumulator and some other important CPU status
+values.</p>
+<p>Instruction trace can be enabled and disabled using the special
+<a href="#control">control device</a> instructions (from within a running 
+program), by selecting the <i>Trace</i> setting on the 
+<a href="operation.html#opcpu">CPU</a> display window or by command parameters
+on some execution commands.</p>
+<p>Instruction trace files are named something like
+<b><code>elliott&#8209;yyyyMMdd&#8209;HHmmss&#8209;SSS.trace</code></b> and are 
+in an internal and compressed format.
+The files can be formatted using the <a href=utilities.html#ptrace>Instruction
+Trace Formatter</a> utility.</p>
+<p>Note: instructions traces can be large, especially if you end up tracing a
+tight spin-loop!</p>
+<hr>
+<h2>Additional Devices</h2>
+<p>The 803 architecture and instruction set enable additional devices to be 
+attached to the machine fairly easily.
+These can be handled using the <b>72</b> instructions for what I call the 
+<i>Control</i> devices and the <b>75</b>, <b>76</b> and <b>77</b> instructions
+for the <i>Block</i> devices.</p>
+<p>In the simulator I have included two additional control devices that 
+respond to <b>72</b> instructions with specific addresses.
+These are a <a href="#control">simulator control</a> device and a 
+<a href="#random">random number generator</a> device.</p>
+<h3 id="control">Simulator Control Device</h3>
+<p>The simulator control device allows 803 programs to control some of the 
+simulator function by executing special <b>72</b> instructions.
+The instructions provided are:</p>
+<table frame="box" rules="all" cellpadding="3">
+<tr><td><b>72 8191</b></td>
+<td>Stop CPU and exit or return to &quot;Step by step&quot; mode.</td></tr>
+<tr><td><b>72 8190</b></td>
+<td>Produce a <a href="#dump">core dump</a>.</td></tr>
+<tr><td><b>72 8189</b></td>
+<td>Enable <a href="#trace">instruction trace</a>.</td></tr>
+<tr><td><b>72 8188</b></td>
+<td>Disable <a href="#trace">instruction trace</a>.</td></tr>
+</table>
+<h3 id="random">Random Number Generator Device</h3>
+<p>The random number generator device will write a random positive integer 
+to the accumulator by executing a special <b>72</b> instruction.</p>
+<table frame="box" rules="all" cellpadding="3">
+<tr><td><b>72 8000</b></td>
+<td>Write random 38 bit (positive) integer to the accumulator.</td></tr>
+</table>
+<br><table border="1" frame="above" rules="none" width="100%">
+<tr><td align="left">Tim Baldwin<br>December 2009
+<br><a href="mailto:tjb803@tinymail.co.uk">tjb803@tinymail.co.uk</a></td>
+<td align="right">Return to <a href="index.html">index</a>
+<br><br>&copy; Tim Baldwin 2009</td></tr>
+</table>
+</body>
+</html>
