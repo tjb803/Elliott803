@@ -28,7 +28,7 @@ public class ConsoleButtons extends JPanel implements ActionListener {
     
     Console console;
     
-    ConsoleButton clear;
+    ConsoleButton release;
     ConsoleButton[] buttons;
     
     public ConsoleButtons(String title, String[] names, int len, int bit, Console console) {
@@ -37,9 +37,9 @@ public class ConsoleButtons extends JPanel implements ActionListener {
         setAlignmentX(LEFT_ALIGNMENT);
         setBorder(BorderFactory.createTitledBorder(title));
         
-        clear = new ConsoleButton("clear", ConsoleButton.RED, false);
-        clear.addActionListener(this);
-        add(clear);
+        release = new ConsoleButton("R", ConsoleButton.RED, true);
+        release.addActionListener(this);
+        add(release);
         add(Box.createHorizontalStrut(3));
         
         buttons = new ConsoleButton[len];
@@ -57,17 +57,17 @@ public class ConsoleButtons extends JPanel implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         ConsoleButton b = (ConsoleButton)e.getSource();
-        if (b == clear) {
-            for (ConsoleButton c : buttons) {
-                c.setSelected(false);
-                console.clearWordGenBit(c.getBit());
-            }
-            clear.setSelected(false);
+        if (!b.isSelected()) {
+            b.setSelected(true);
         } else {
-            if (!b.isSelected()) {
-                b.setSelected(true); 
+            if (b == release) {
+                for (ConsoleButton c : buttons) {
+                    console.clearWordGenBit(c.getBit());
+                    c.setSelected(false);
+                }
             } else {
                 console.setWordGenBit(b.getBit());
+                release.setSelected(false);
             }
         }
     }

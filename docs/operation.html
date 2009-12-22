@@ -65,6 +65,9 @@ There are 39 buttons on the left hand side called the <i>Word Generator</i>.
 These buttons are used to form complete machine words, typically instructions.
 For convenience the value of the instruction currently formed by the buttons on
 the word generator is shown at the bottom of the window.</p>
+<p><b>Note:</b> When one of these 39 buttons is pressed it will stay pressed down.
+You can release the button, and all other buttons in the same group, by pressing 
+the red release button (marked with an <i>R</i>) at the far left of the row.</p>
 <p>On the right hand side are the various operation buttons and indicator lights.
 The <i>Clear Store</i> button sets all storage locations to zero.  The <i>Reset</i>
 button stops any current execution, clears any &quot;busy&quot; condition and
@@ -87,7 +90,7 @@ from the tape reader) would be:</p>
 the top left-most button pressed).</li>
 <li>Select <i>Read</i>, <i>Operate</i> to load up that <b>40 0</b> instruction
 ready to be run.</li>
-<li>Select <i>Normal</i>, <i>Operate</i> to run the jump instuction and to continue
+<li>Select <i>Normal</i>, <i>Operate</i> to run the jump instruction and to continue
 running normally.</li>
 </ul>
 <p>The indicator lights show the following conditions:</p>
@@ -95,7 +98,7 @@ running normally.</li>
 <ul compact>
 <li><b>Busy</b> the system is waiting for input or output - typically waiting
 for a tape to loaded in a tape reader or punch.</li>
-<li><b>Floating Point Overflow</b> a floating point operation has oveflowed.
+<li><b>Floating Point Overflow</b> a floating point operation has overflowed.
 Execution stops if this occurs.</li>
 <li><b>Step by Step</b> the system is stopped waiting for operator action.
 This is the condition on start up or after the <i>Reset</i> key is pressed.</li>
@@ -149,7 +152,7 @@ New output will be appended to the end of any existing log file.
 The log file will be closed if the <i>Clear</i> button is pressed and this
 will also clear any current teletype output.</p>
 <p>When selecting a log file you will need to choose an appropriate
-<a href="#tmode">Tape Format</a> for the resulting log file.</p>
+<a href="#tmode">tape format</a> for the resulting log file.</p>
 <br clear="left">
 <h3 id="optape">The Paper Tape Readers and Punches</h3>
 <img src="image/oprdr.jpg" alt="Tape Reader" align="left"/>
@@ -160,7 +163,7 @@ of input/output for the computer.
 and <i>Save</i> buttons on the tape devices produce a file selection dialog
 that allows the tape files to be selected.</p>
 <p>When selecting a tape file you will need to choose an appropriate
-<a href="#tmode">Tape Format</a> for the file.</p>
+<a href="#tmode">tape format</a> for the file.</p>
 <br clear="left">
 There are two lights on the tape devices to show their current status
 <ul>

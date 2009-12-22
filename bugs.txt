@@ -1,0 +1,12 @@
+Elliott 803 Simulation - Current Known Bugs
+===========================================
+
+v0.5.0, v0.6.0
+--------------
+  - Read and Obey buttons should enter step-by-step mode when pressed
+    (currently need to press Reset key first)
+  - Obey function (press Operate with Obey selected) should single step instructions
+    (currently single steps pairs of instructions)
+  - Manual Data function missing - needs new button on console
+    (should cause a busy wait on 70 instruction, press Operate to continue)    
+
