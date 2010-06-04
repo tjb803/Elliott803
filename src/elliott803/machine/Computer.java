@@ -218,6 +218,7 @@ public class Computer extends Thread {
         if (trace != null) {
             cpu.trace(null);
             trace.write();
+            trace = null;
         }
     }
     

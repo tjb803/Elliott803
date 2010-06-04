@@ -123,13 +123,13 @@ public class ALU {
 
     public long longShr(long n1, long nx, int n) {
         BigInteger result = makeBig(n1, nx).shiftRight(n);
-        overflow = (result.bitLength() > 75);
+        overflow = (result.bitLength() > 76);
         return makeLong2(result);
     }
 
     public long longShl(long n1, long nx, int n) {
         BigInteger result = makeBig(n1, nx).shiftLeft(n);
-        overflow = (result.bitLength() > 75);
+        overflow = (result.bitLength() > 76);
         return makeLong2(result);
     }
 

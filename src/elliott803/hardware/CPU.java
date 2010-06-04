@@ -175,8 +175,8 @@ public class CPU {
         }
 
         if (jump) {                         // Jump required
-            scr = addr;                     // Set new sequence control address
-            scr2 = (op & 007) >> 2;         // And set first/second instruction indication
+            scr = addr;                     //   set new sequence control address
+            scr2 = (op & 007) >> 2;         //   and set first/second instruction indication
         }
         return 0;
     }
@@ -189,15 +189,15 @@ public class CPU {
             switch (op & 007) {
                 case 1: acc = computer.alu.shr(acc, addr);  ar = 0;  break;
                 case 5: acc = computer.alu.shl(acc, addr);  ar = 0;  break;
-                case 3: acc = computer.alu.mul(acc, n);  b = n;  break;
-                case 7: acc = ar;  ar = 0;  break;
+                case 3: acc = computer.alu.mul(acc, n);  b = n;  ar = 0;  break;
+                case 7: acc = ar;  break;  // Note: does NOT clear aux register
             }
         } else {
             switch (op & 007) {
                 case 0: acc = computer.alu.longShr(acc, ar, addr);  break;
                 case 4: acc = computer.alu.longShl(acc, ar, addr);  break;
                 case 2: acc = computer.alu.longMul(acc, n);  b = n;  break;
-                case 6: acc = computer.alu.longDiv(acc, ar, n);  b = n;  break;
+                case 6: acc = computer.alu.longDiv(acc, ar, n);  b = n;  ar = 0;  break;
             }
             ar = computer.alu.getExtension();
         }
@@ -288,6 +288,7 @@ public class CPU {
     // Trace
     public void trace(Trace trace) {
         this.trace = trace;
+        viewTrace();
     }
 
     // Mainly for debugging
@@ -315,6 +316,12 @@ public class CPU {
         if (view != null) {
             view.updateRegisters(acc, ar, br, scr, ir);
             view.updateFlags(overflow, fpOverflow);
+        }
+    }
+    
+    void viewTrace() {
+        if (view != null) {
+            view.updateTrace(trace != null);
         }
     }
 }

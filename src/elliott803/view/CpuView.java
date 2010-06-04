@@ -154,4 +154,8 @@ public class CpuView extends JInternalFrame implements ActionListener {
         overflow.setValue(over);
         fpOverflow.setValue(fpOver);
     }
+    
+    public void updateTrace(boolean enabled) {
+        trace.setSelected(enabled);
+    }
 }
