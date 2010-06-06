@@ -40,6 +40,7 @@ public abstract class TapeDeviceView extends JInternalFrame implements ActionLis
     static final String DEV_EJECT = "Eject";
     static final String DEV_LOAD = "Load";
     static final String DEV_SAVE = "Save";
+    static final String DEV_OPEN = "Open";      // Internal load or save operation
 
     JLabel file;
     DeviceMode mode;
@@ -104,7 +105,7 @@ public abstract class TapeDeviceView extends JInternalFrame implements ActionLis
         eb.addActionListener(this);
         open = new JButton(operation + "...");
         open.setAlignmentX(LEFT_ALIGNMENT);
-        open.setActionCommand(operation);
+        open.setActionCommand(DEV_OPEN);
         open.addActionListener(this);
         bp.add(eb);
         bp.add(Box.createVerticalStrut(5));
@@ -147,7 +148,7 @@ public abstract class TapeDeviceView extends JInternalFrame implements ActionLis
         } else  if (e.getActionCommand().equals(DEV_EJECT)) {
             file.setText(" ");
             setTape(null, null, false);
-        } else {
+        } else if (e.getActionCommand().equals(DEV_OPEN)){
             if (select.showDialog(this, e.getActionCommand()) == JFileChooser.APPROVE_OPTION) {
                 File f = select.getSelectedFile();
                 file.setText(f.getName());
