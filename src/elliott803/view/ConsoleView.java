@@ -41,8 +41,8 @@ public class ConsoleView extends JInternalFrame implements ActionListener, Focus
     static final String CONSOLE_RESET = "Reset";
     static final String CONSOLE_OPERATE = "Operate";
 
-    static final String[] fnNames = { "4", "2", "1", "4", "2", "1" };
-    static final String[] adNames = { "4096", "2048", "1024", "512", "256", "128", "64", "32", "16", "8", "4", "2", "1", "B" };
+    static final String[] FN_NAMES = { "4", "2", "1", "4", "2", "1" };
+    static final String[] ADDR_NAMES = { "4096", "2048", "1024", "512", "256", "128", "64", "32", "16", "8", "4", "2", "1", "B" };
 
     Console console;
 
@@ -59,13 +59,13 @@ public class ConsoleView extends JInternalFrame implements ActionListener, Focus
 
         JPanel wg = new JPanel();
         wg.setLayout(new BoxLayout(wg, BoxLayout.Y_AXIS));
-        wg.add(new ConsoleButtons("Function 1", fnNames, 6, 39, console));
+        wg.add(new ConsoleButtons("Function 1", FN_NAMES, 6, 39, console));
         wg.add(Box.createVerticalStrut(5));
-        wg.add(new ConsoleButtons("Address 1", adNames, 14, 33, console));
+        wg.add(new ConsoleButtons("Address 1", ADDR_NAMES, 14, 33, console));
         wg.add(Box.createVerticalStrut(5));
-        wg.add(new ConsoleButtons("Function 2", fnNames, 6, 19, console));
+        wg.add(new ConsoleButtons("Function 2", FN_NAMES, 6, 19, console));
         wg.add(Box.createVerticalStrut(5));
-        wg.add(new ConsoleButtons("Address 2", adNames, 13, 13, console));
+        wg.add(new ConsoleButtons("Address 2", ADDR_NAMES, 13, 13, console));
         wg.add(Box.createVerticalGlue());
 
         JPanel wv = new JPanel();
@@ -110,7 +110,7 @@ public class ConsoleView extends JInternalFrame implements ActionListener, Focus
         controls.add(rb);
         controls.add(Box.createVerticalStrut(5));
 
-        function = new ConsoleOperation();
+        function = new ConsoleOperation(console);
         controls.add(function);
         controls.add(Box.createVerticalStrut(5));
 

@@ -12,6 +12,8 @@ import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 
+import elliott803.hardware.Console;
+
 /**
  * Group of console buttons that define the "operation", i.e. Read/Normal/Obey
  *
@@ -24,9 +26,12 @@ public class ConsoleOperation extends JPanel implements ActionListener {
     public static final String OPERATION_NORMAL = "Normal";
     public static final String OPERATION_OBEY = "Obey";
 
+    Console console;
+    
     String action = OPERATION_READ;
 
-    public ConsoleOperation() {
+    public ConsoleOperation(Console console) {
+        this.console = console;
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setAlignmentX(CENTER_ALIGNMENT);
         ConsoleButton rb = new ConsoleButton(OPERATION_READ, ConsoleButton.BLACK, true);
@@ -51,5 +56,6 @@ public class ConsoleOperation extends JPanel implements ActionListener {
      */
     public void actionPerformed(ActionEvent e) {
         action = e.getActionCommand();
+        console.computer.cpu.stop();
     }
 }

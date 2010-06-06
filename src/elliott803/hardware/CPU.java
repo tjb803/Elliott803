@@ -51,16 +51,15 @@ public class CPU {
 
     // Reset the CPU - clears overflow and busy states and stops execution
     public void reset() {
-        running = false;
-        jump = true;
+        stop();
         overflow = fpOverflow = false;
         computer.console.setOverflow(overflow, fpOverflow);
-        computer.console.setStep(true);
         computer.busyClear();
     }
 
     // Stop execution
     public void stop() {
+        computer.console.setStep(true);
         running = false;
         jump = true;
     }
@@ -74,31 +73,39 @@ public class CPU {
         }
     }
 
-    // Obey the current instruction pair in the instruction register.  The scr2 register
-    // will indicate if execution starts with the first or second instruction.
+    // Obey the next instruction from the instruction register.  The scr2 register
+    // will indicate if we should execute the first or second instruction of the pair.
     public void obey() {
-        if (trace != null)
-            trace.trace(scr, scr2, ir, acc, overflow);
+        if (trace != null) {
+            // Only trace following a jump or starting a new pair of instructions
+            if (jump || scr2 == 0)
+                trace.trace(scr, scr2, ir, acc, overflow);
+        }    
 
         jump = false;
+        
+        // Get the instruction to be executed and apply any B-digit modification
+        // if executing the second instruction.
+        int instruction;
         if (scr2 == 0) {
-            int instruction = Word.getInstr1(ir);
-            execute(instruction);
-        }
-
-        if (!jump) {
-            scr2 = 1;
-            int instruction = Word.getInstr2(ir);
+            instruction = Word.getInstr1(ir);
+        } else {
+            instruction = Word.getInstr2(ir);
             if (Word.getB(ir) == 1) {
-                instruction = instruction + Word.getInstr2(br);
+                instruction += Word.getInstr2(br);
             }
-            execute(instruction);
         }
-
-        // Unless there was a jump step to the next instruction
+        execute(instruction);
+        
+        // Step to the next instruction, unless we had jump in which case the 
+        // new address will already be set in scr/scr2.
         if (!jump) {
-            scr = (scr + 1) & Instruction.ADDR_BITS;
-            scr2 = 0;
+            if (scr2 == 0) {
+                scr2 = 1;
+            } else {
+                scr2 = 0;
+                scr = (scr + 1) & Instruction.ADDR_BITS;
+            }
         }
 
         // Fetch the next instruction and display the current register state

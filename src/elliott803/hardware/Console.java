@@ -84,8 +84,9 @@ public class Console {
         computer.cpu.reset();
     }
 
-    // Set the next action to be performed S
+    // Set the next action to be performed
     public void setAction(int value) {
+        computer.cpu.stop();
         action = value;
     }
 
