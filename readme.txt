@@ -58,10 +58,12 @@ the simulation and can hopefully be added in a future release:
 Acknowledgements
 ----------------
 Many thanks to the following people for providing a huge amount of
-information both on the web and via email: 
+information, both on the web and via email, and for much testing
+and debugging: 
 
    Bill Purvis
    Peter Onion
+   Bob Firth
 
 Release History
 ---------------

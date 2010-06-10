@@ -7,6 +7,12 @@ v0.5.0, v0.6.0
     (currently need to press Reset key first)
   - Obey function (press Operate with Obey selected) should single step instructions
     (currently single steps pairs of instructions)
+  - Incorrect overflow detection on some double length arithmetic functions  
+    
+v0.7.0
+------
   - Manual Data function missing - needs new button on console
-    (should cause a busy wait on 70 instruction, press Operate to continue)    
+    (should cause a busy wait on 70 instruction, press Operate bar to continue)    
+  - Floating point overflow should stop processor and continue (with undefined
+    results) when Operate bar is pressed
 

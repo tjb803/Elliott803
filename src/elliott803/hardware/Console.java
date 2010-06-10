@@ -5,6 +5,7 @@
  */
 package elliott803.hardware;
 
+import elliott803.hardware.device.Device;
 import elliott803.machine.Computer;
 import elliott803.machine.Word;
 import elliott803.view.ConsoleView;
@@ -16,16 +17,15 @@ import elliott803.view.ConsoleView;
  * @author Baldwin
  */
 
-public class Console {
+public class Console extends Device {
 
     public static final int CONSOLE_READ = 1;
     public static final int CONSOLE_OBEY = 2;
     public static final int CONSOLE_NORMAL = 3;
 
-    public  Computer computer;  // The owning computer
-
     long wordGen;           // Word generator
     int action;             // Next action (Read/Obey/Normal)
+    boolean manualData;     // In manual data mode
 
     boolean busy;           // Status lights
     boolean step;
@@ -33,6 +33,15 @@ public class Console {
 
     public Console(Computer computer) {
         this.computer = computer;
+    }
+
+    // Read the word generator as as device.  This will cause a wait if the 
+    // manual data mode is set.
+    public long read() {
+        if (manualData) {
+            suspend();
+        }    
+        return wordGen;
     }
 
     // Read the current value of the word generator
@@ -61,6 +70,11 @@ public class Console {
             viewWordGen();
         }    
     }
+    
+    // Set manual data status
+    public void setManualData(boolean isManualData) {
+        manualData = isManualData;
+    }
 
     // Set status lights
     public void setBusy(boolean isBusy) {
@@ -78,6 +92,11 @@ public class Console {
         step = isStep;
         viewLights();
     }
+    
+    // Enter a wait state until the Operate bar is pressed
+    public void suspend() {
+        deviceWait();
+    }
 
     // Perform a reset
     public void reset() {
@@ -92,11 +111,15 @@ public class Console {
 
     // Operate - perform the last selected action
     public void operate() {
-        switch (action) {
-            case CONSOLE_READ:   computer.cpu.setInstruction(wordGen);  break;
-            case CONSOLE_OBEY:   computer.cpu.obey();  break;
-            case CONSOLE_NORMAL: computer.cpu.run();   break;
-        }
+        if (deviceBusy()) {
+            deviceReady();
+        } else {
+            switch (action) {
+                case CONSOLE_READ:   computer.cpu.setInstruction(wordGen);  break;
+                case CONSOLE_OBEY:   computer.cpu.obey();  break;
+                case CONSOLE_NORMAL: computer.cpu.run();   break;
+            }
+        }    
     }
 
     // Mainly for debugging

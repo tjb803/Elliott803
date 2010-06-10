@@ -29,6 +29,7 @@ public class ConsoleButton extends JRadioButton {
         setForeground(colour);
         setHorizontalTextPosition(CENTER);
         setVerticalTextPosition(BOTTOM);
+        setIconTextGap(1);
     }
 
     public ConsoleButton(String name, Color colour, int bit) {

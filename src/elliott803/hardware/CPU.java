@@ -134,7 +134,10 @@ public class CPU {
         // Update console lights to track overflow states
         computer.console.setOverflow(overflow, fpOverflow);
         if (fpOverflow) {
-            stop();
+            // Floating point overflow should wait for Operate before continuing
+            computer.console.suspend();
+            fpOverflow = false;
+            computer.console.setOverflow(overflow, fpOverflow);
         }
     }
 
@@ -246,7 +249,7 @@ public class CPU {
         switch (op & 007) {
             // 70 and 73 are standard instructions
             case 0:
-                acc = computer.console.readWordGen();
+                acc = computer.console.read();
                 break;
             case 3:
                 // According to Bill Purvis (on his incredible web pages about the 803 Algol compiler),

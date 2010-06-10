@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 
 import elliott803.hardware.Console;
 import elliott803.machine.Computer;
+import elliott803.view.component.ConsoleButton;
 import elliott803.view.component.ConsoleButtons;
 import elliott803.view.component.ConsoleLight;
 import elliott803.view.component.ConsoleOperation;
@@ -40,6 +41,7 @@ public class ConsoleView extends JInternalFrame implements ActionListener, Focus
     static final String CONSOLE_CLEAR = "Clear Store";
     static final String CONSOLE_RESET = "Reset";
     static final String CONSOLE_OPERATE = "Operate";
+    static final String CONSOLE_MANUAL = "Manual Data";
 
     static final String[] FN_NAMES = { "4", "2", "1", "4", "2", "1" };
     static final String[] ADDR_NAMES = { "4096", "2048", "1024", "512", "256", "128", "64", "32", "16", "8", "4", "2", "1", "B" };
@@ -48,6 +50,7 @@ public class ConsoleView extends JInternalFrame implements ActionListener, Focus
 
     ConsoleOperation function;
     ConsoleLight step, busy, overflow, fpOverflow;
+    ConsoleButton manualData;
     JButton operate;
     DisplayWord wordgen;
 
@@ -102,9 +105,14 @@ public class ConsoleView extends JInternalFrame implements ActionListener, Focus
         controls.add(Box.createVerticalStrut(15));
         controls.add(lights);
         controls.add(Box.createVerticalStrut(15));
+        
+        manualData = new ConsoleButton(CONSOLE_MANUAL, ConsoleButton.BLACK, false);
+        manualData.setAlignmentX(CENTER_ALIGNMENT);
+        manualData.addActionListener(this);
+        controls.add(manualData);
+        controls.add(Box.createVerticalStrut(5));
+        
         JButton rb = new JButton(CONSOLE_RESET);
-        rb.setMaximumSize(cb.getMaximumSize());
-        rb.setPreferredSize(cb.getPreferredSize());
         rb.setAlignmentX(CENTER_ALIGNMENT);
         rb.addActionListener(this);
         controls.add(rb);
@@ -145,13 +153,20 @@ public class ConsoleView extends JInternalFrame implements ActionListener, Focus
             // "Operate" bar pressed.  Need to use the methods on Computer to perform
             // these actions (rather than using the Console) as we need to ensure the
             // long running simulations don't happen on the event dispatch thread.
-            String op = function.getOperation();
-            if (op.equals(ConsoleOperation.OPERATION_READ))
-                console.computer.setInstruction(console.readWordGen());
-            else if (op.equals(ConsoleOperation.OPERATION_OBEY))
-                console.computer.run(Computer.ACT_STEP);
-            else if (op.equals(ConsoleOperation.OPERATION_NORMAL))
-                console.computer.run(Computer.ACT_RUN);
+            // TODO: Messy - this should only invoke 'console' methods!
+            if (console.deviceBusy()) {
+                console.operate();
+            } else {
+                String op = function.getOperation();
+                if (op.equals(ConsoleOperation.OPERATION_READ))
+                    console.computer.setInstruction(console.readWordGen());
+                else if (op.equals(ConsoleOperation.OPERATION_OBEY))
+                    console.computer.run(Computer.ACT_STEP);
+                else if (op.equals(ConsoleOperation.OPERATION_NORMAL))
+                    console.computer.run(Computer.ACT_RUN);
+            }    
+        } else if (action.equals(CONSOLE_MANUAL)) {
+            console.setManualData(manualData.isSelected());
         }
     }
 

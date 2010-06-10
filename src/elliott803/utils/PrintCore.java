@@ -78,7 +78,7 @@ public class PrintCore {
         output.println("   IR: " + Word.toInstrString(dump.ir));
         output.println();
         output.println("  Overflow:   " + dump.overflow);
-        output.println("  FP Oveflow: " + dump.fpOverflow);
+        output.println("  FP Overflow: " + dump.fpOverflow);
     }
 
     // Format storage.  Multiple lines of zeros are compressed.

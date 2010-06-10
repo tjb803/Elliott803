@@ -55,12 +55,12 @@ public class CpuView extends JInternalFrame implements ActionListener {
         scr = new DisplayAddr();
         ir = new DisplayWord(DisplayWord.Type.INSTRUCTION);
         overflow = new DeviceLight("Overflow", DisplayLight.CYAN);
-        fpOverflow = new DeviceLight("FP Oveflow", DisplayLight.CYAN);
+        fpOverflow = new DeviceLight("FP Overflow", DisplayLight.CYAN);
 
         JPanel p0 = new JPanel();
         p0.setLayout(new BoxLayout(p0, BoxLayout.X_AXIS));
         p0.setAlignmentX(LEFT_ALIGNMENT);
-        p0.setBorder(BorderFactory.createTitledBorder("Regsiters"));
+        p0.setBorder(BorderFactory.createTitledBorder("Registers"));
         JPanel p1 = new JPanel();
         p1.setLayout(new BoxLayout(p1, BoxLayout.Y_AXIS));
         p1.setAlignmentX(LEFT_ALIGNMENT);
