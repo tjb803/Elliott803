@@ -22,7 +22,7 @@ public abstract class Telecode {
      *  2       B       2
      *  3       C       *           (asterisk)
      *  4       D       4
-     *  5       E       $ (or &)    (dollar or ampersand)
+     *  5       E       $ (or &)    (dollar (sometimes ampersand))
      *  6       F       =           (equals)
      *  7       G       7
      *  8       H       8
@@ -57,9 +57,10 @@ public abstract class Telecode {
     public static final byte TELE_LF = 30;
     public static final byte TELE_LS = 31;
 
-    public static final char GBP = '\u00a3';       // British pound sign
+    public static final char GBP = '\u00a3';        // British pound sign
+    public static final char NUM = '#';             // Number sign
 
-    public static final int CHAR_MASK = 0x1F;      // 5 bits
+    public static final int CHAR_MASK = 0x1F;       // 5 bits
 
     /*
      * Simple translation from telecode to Java characters.  For more sophisticated

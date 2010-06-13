@@ -58,7 +58,7 @@ public class TelecodeToChar extends Telecode {
                 isFigure = true;
             } else {
                 char ch = (isFigure) ? figureShift.charAt(tc) : letterShift.charAt(tc);
-                if (ch == '#' && !useASCII) {
+                if (ch == NUM && !useASCII) {
                     ch = GBP;
                 }
                 output[outputSize++] = ch;

@@ -20,7 +20,6 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.text.BadLocationException;
 
 import elliott803.hardware.Punch;
 import elliott803.telecode.Telecode;
@@ -72,7 +71,7 @@ public class TeletypeView extends TapeDeviceView {
         teletype.setView(this);
 
         Container content = getContentPane();
-        content.add(scroll, BorderLayout.NORTH);
+        content.add(scroll, BorderLayout.CENTER);
         content.add(actions, BorderLayout.SOUTH);
         pack();
         setVisible(true);
@@ -80,8 +79,6 @@ public class TeletypeView extends TapeDeviceView {
 
     public void setChar(char ch) {
         paper.append(Character.toString(ch));
-        if (ch == '\n')
-            lineEnd();
         paper.setCaretPosition(paper.getDocument().getLength());
     }
 
@@ -90,8 +87,6 @@ public class TeletypeView extends TapeDeviceView {
             paper.setText(null);
         } else {
             paper.append(text);
-            if (!text.endsWith("\n"))
-               lineEnd();
         }
         paper.setCaretPosition(paper.getDocument().getLength());
     }
@@ -100,12 +95,24 @@ public class TeletypeView extends TapeDeviceView {
      * Action button handling - comes via setTape method
      */
     void setTape(File lfile, String mode, boolean ascii) {
-        if (lfile == null) {         // Clear button
+        if (lfile == null) {        // Clear button
             setText(null);          // - clear text and close any output stream
             teletype.setTape(null);
         } else {                    // Otherwise Save, so set new output stream
             try {                   // in append mode.
-                OutputStream output = new TelecodeOutputStream(new FileWriter(lfile, true), ascii);
+                // Open output file and write anything we have so far.  This is written
+                // from the JTextArea, so it is a Java String. 
+                FileWriter foutput = new FileWriter(lfile, true);
+                String text = paper.getText();
+                if (text != null) {
+                    if (ascii) 
+                        text = text.replace(Telecode.GBP, Telecode.NUM);
+                    foutput.write(text);
+                }
+                
+                // Wrap the output stream in a TelecodeOutputStream and set it as the 
+                // teletype output tape for any subsequent output.
+                OutputStream output = new TelecodeOutputStream(foutput, ascii);
                 teletype.setTape(output);
                 file.setText("Output log: " + lfile.getName());
             } catch (IOException e) {
@@ -113,18 +120,6 @@ public class TeletypeView extends TapeDeviceView {
             }
         }
     }
-
-    private void lineEnd() {
-        // At the end of a line discard some lines if we have printed more than 100.
-        try {
-            int lines = paper.getLineCount();
-            if (lines > 100)
-                paper.replaceRange(null, 0, paper.getLineStartOffset(lines-100));
-        } catch (BadLocationException e) {
-            System.err.println(e);
-        }
-    }
-
 
     /*
      * GUI Visualisation
