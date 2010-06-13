@@ -61,6 +61,7 @@ public class TeletypeView extends TapeDeviceView {
         clear.setActionCommand(DEV_EJECT);
         clear.addActionListener(this);
         open = new JButton("Save...");
+        open.setActionCommand(DEV_OPEN);
         open.addActionListener(this);
         actions.add(clear);
         actions.add(Box.createHorizontalStrut(5));

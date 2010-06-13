@@ -159,7 +159,7 @@ public abstract class TapeDeviceView extends JInternalFrame implements ActionLis
     }
     
     public void focusGained(FocusEvent e) {
-        open.requestFocusInWindow();
+        getRootPane().setDefaultButton(open);
     }
 
     public void focusLost(FocusEvent e) {

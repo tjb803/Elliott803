@@ -171,7 +171,7 @@ public class ConsoleView extends JInternalFrame implements ActionListener, Focus
     }
 
     public void focusGained(FocusEvent e) {
-        operate.requestFocusInWindow();
+        getRootPane().setDefaultButton(operate);
     }
 
     public void focusLost(FocusEvent e) {
