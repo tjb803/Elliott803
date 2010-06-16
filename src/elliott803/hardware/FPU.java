@@ -20,9 +20,10 @@ import elliott803.machine.Word;
  */
 public class FPU  {
 
-    public Computer computer;                 // The owning computer
+    public Computer computer;               // The owning computer
 
-    boolean overflow = false;                 // Overflow indicator
+    boolean overflow = false;               // Overflow indicators
+    boolean fpOverflow = false;           
 
     public FPU(Computer computer) {
         this.computer = computer;
@@ -48,7 +49,12 @@ public class FPU  {
     }
 
     public long div(long n1, long n2) {
-        double result = Word.getDouble(n1) / Word.getDouble(n2);
+        double result = 0;
+        if (n2 != 0) {
+            result = Word.getDouble(n1) / Word.getDouble(n2);
+        } else {    // Divide by zero
+            overflow = fpOverflow = true;
+        }
         return makeFloat(result);
     }
 
@@ -76,18 +82,22 @@ public class FPU  {
     }
 
     /*
-     * Return Floating point overflow state
+     * Return overflow states
      */
     public boolean isOverflow() {
         return overflow;
+    }
+    
+    public boolean isFpOverflow() {
+        return fpOverflow;
     }
 
     // Make a floating point result value, checking for overflow
     long makeFloat(double value) {
         long result = Word.asFloat(value);
-        overflow = false;
+        overflow = fpOverflow = false;
         if (result == Word.NOTHING) {
-            overflow = true;
+            fpOverflow = true;
             result = 0;
         }
         return result;

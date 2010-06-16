@@ -109,13 +109,12 @@ public class ALU {
     }
 
     public long longDiv(long n1, long nx, long n2) {
-        long n;
+        long n = 0;
         if (n2 != 0) {
             BigInteger result = makeBig(n1, nx).divide(makeBig(n2));
             overflow = (result.bitLength() > 76);
             n = makeLong1(result);
-        } else {
-            n = 0;                 // Divide by zero
+        } else {    // Divide by zero
             overflow = true;
         }
         return n;

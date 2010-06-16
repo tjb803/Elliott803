@@ -237,8 +237,9 @@ public class CPU {
                 case 7: acc = computer.fpu.sqrt(acc);     break;
             }
 
-            // Set floating point overflow overflow flag
-            fpOverflow |= computer.fpu.isOverflow();
+            // Set the overflow flags
+            overflow |= computer.fpu.isOverflow();
+            fpOverflow |= computer.fpu.isFpOverflow();
         }
         return n;
     }
