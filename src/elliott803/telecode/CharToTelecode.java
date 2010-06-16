@@ -25,7 +25,7 @@ package elliott803.telecode;
 public class CharToTelecode extends Telecode {
 
     static final String figureShift = "12*4$=78',+:-.%0()3?56/@9" + Character.toString(GBP);
-    static final String figureAlt   = "    &   ;       [] !  \\ " + Character.toString(NUM);
+    static final String figureAlt   = "    &   ;       [] !  \\  " + Character.toString(NUM);
     static final String letterUpper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     static final String letterLower = "abcdefghijklmnopqrstuvwxyz";
 
