@@ -74,4 +74,8 @@ public class StoreView extends JInternalFrame {
         lastAddr.setValue(addr);
         lastValue.setValue(value);
     }
+    
+    public void updateCore(long[] store) {
+        coreStore.setValues(store);
+    }
 }

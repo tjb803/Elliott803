@@ -7,6 +7,7 @@ package elliott803.machine;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -80,14 +81,24 @@ public class Dump implements Serializable {
     public static Dump readDump(String filename) {
         Dump dump = null;
         try {
-            FileInputStream fin = new FileInputStream(filename);
-            InflaterInputStream zin = new InflaterInputStream(fin);
-            ObjectInputStream in = new ObjectInputStream(zin);
-            dump = (Dump)in.readObject();
-            in.close();
+            FileInputStream stream = new FileInputStream(filename);
+            dump = readDump(stream);
+            stream.close();
         } catch (Exception e) {
             e.printStackTrace(System.err);
         }
         return dump;
+    }
+    
+    public static Dump readDump(InputStream stream) {
+        Dump dump = null;
+        try {
+            InflaterInputStream zin = new InflaterInputStream(stream);
+            ObjectInputStream in = new ObjectInputStream(zin);
+            dump = (Dump)in.readObject();
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
+        }
+        return dump; 
     }
 }

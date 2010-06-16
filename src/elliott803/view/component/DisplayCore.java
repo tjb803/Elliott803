@@ -41,6 +41,14 @@ public class DisplayCore extends JPanel {
             g.fillRect(BLOCKSIZE*j, BLOCKSIZE*i, BLOCKSIZE, BLOCKSIZE);
         }
     }
+    
+    public void setValues(long[] core) {
+        for (int addr = 4; addr < core.length; addr++) {
+            int i = addr/ROWSIZE, j = addr%ROWSIZE;
+            store[i][j] = (core[addr] == 0) ? 0 : 1;
+        }
+        invalidate();
+    }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);

@@ -1,0 +1,9 @@
+Elliott 803 Simulation - Possible New Features
+==============================================
+
+ - add some kind of sound 
+ - add timing information to all instructions
+    - either add pauses to run a correct original speed
+    - display simulator speed compared to real speed (percentage maybe?)
+ - add a 'Reload' button to tape readers (eject and reload same tape)
+    

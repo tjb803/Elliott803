@@ -88,6 +88,11 @@ public class Store {
     public void dump(Dump dump) {
         dump.core = store;
     }
+    
+    public void restore(Dump dump) {
+        System.arraycopy(dump.core, STORE_START, store, STORE_START, STORE_SIZE-STORE_START);
+        viewStore(store);
+    }
 
     // Mainly for debugging
     public String toString() {
@@ -109,5 +114,10 @@ public class Store {
     void viewWord(int addr, long value) {
         if (view != null)
             view.updateCore(addr, value);
+    }
+    
+    void viewStore(long[] store) {
+        if (view != null)
+            view.updateCore(store);
     }
 }

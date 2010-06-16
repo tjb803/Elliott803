@@ -26,6 +26,7 @@ docs/quickstart.html -text
 docs/samples.html -text
 docs/telecode.html -text
 docs/utilities.html -text
+/features.txt -text svneol=unset#text/plain
 /license.txt -text
 /readme.txt -text svneol=unset#text/plain
 samples/algol/hello.algol -text
@@ -36,6 +37,7 @@ samples/assembler/hello1.a1 -text
 samples/assembler/hello2.a1 -text
 samples/assembler/print.a1 -text
 samples/assembler/random.a1 -text
+samples/machines/algol.803 -text
 src/elliott803/803-32.gif -text
 src/elliott803/Main.java -text
 src/elliott803/Run.java -text

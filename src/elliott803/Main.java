@@ -8,6 +8,8 @@ package elliott803;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.Map;
 
 import javax.swing.JFrame;
@@ -16,6 +18,7 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 import elliott803.machine.Computer;
+import elliott803.machine.Dump;
 import elliott803.utils.Args;
 import elliott803.view.ComputerView;
 import elliott803.view.ViewDefinition;
@@ -46,16 +49,30 @@ public class Main implements Runnable {
         // Set the Swing look and feel
         setLookAndFeel(parms.getOption("look"));
 
-        // TODO: Load any saved view definition
-        ViewDefinition definition = new ViewDefinition();
+        // Get machine image to restore
+        File imageFile = parms.getInputFile(1);
 
         // Create a new 803 simulation and view and start the simulator thread
         Computer computer = new Computer();
         ComputerView view = new ComputerView(computer);
         computer.start();
+        
+        // Restore saved state
+        ViewDefinition viewdef = new ViewDefinition();
+        if (imageFile != null) {
+            FileInputStream image = new FileInputStream(imageFile);
+            
+            // First object in the saved image is a full system dump.  For the 
+            // time being we just restore the store contents from the dump.
+            Dump dump = Dump.readDump(image);
+            computer.core.restore(dump);
+        
+            // TODO: restore window positions via a saved ViewDefintion? 
+            image.close();
+        }
 
         // Fire up the GUI
-        Main gui = new Main(computer, view, definition);
+        Main gui = new Main(computer, view, viewdef);
         SwingUtilities.invokeLater(gui);
     }
 
