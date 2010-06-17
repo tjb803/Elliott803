@@ -1,20 +1,30 @@
-Elliott 803 Simulation - Current Known Bugs
-===========================================
+Elliott 803 Simulation - Bug fixes and known bugs
+=================================================
 
 v0.5.0, v0.6.0
 --------------
-  - Read and Obey buttons should enter step-by-step mode when pressed
-    (currently need to press Reset key first)
-  - Obey function (press Operate with Obey selected) should single step instructions
-    (currently single steps pairs of instructions)
-  - Incorrect overflow detection on some double length arithmetic functions  
-  - Manual Data function missing - needs new button on console
-    (should cause a busy wait on 70 instruction, press Operate bar to continue)    
-  - Floating point overflow should stop processor and continue (with undefined
-    results) when Operate bar is pressed
-  - Teletype window does not resize properly  
+  First releases
     
 v0.7.0
 ------
-
-
+  Improvements:
+    - Manual Data button added to console - will cause a wait for the Operate
+      bar to be pressed when a 70 0 instruction is issued.
+    - Simulator can be started with a 'machine image' file to restore a 
+      previous state
+         - note: 'machine definition' is simply a core dump and currently only
+                 the contents of the store will be restored.   
+         - a pre-loaded Algol image is provided   
+    - Teletype 'Save' button will save all existing output as well as any new
+      output            
+  
+  Main bug fixes:
+    - Read and Obey buttons enter step-by-step mode when pressed
+	- Obey function (press Operate with Obey selected) correctly single steps 
+	  single instructions
+	- Overflow detection corrected for some double length arithmetic functions
+	- Floating point overflow now stops and waits for Operate bar before 
+	  continuing (with undefined results)
+	- Floating point 'divide-by-zero' sets arithmetic overflow as well as floating
+	  point overflow  
+	- Teletype window resizes correctly     

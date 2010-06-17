@@ -53,7 +53,7 @@ the simulation and can hopefully be added in a future release:
  - Sound
  - Film Handlers
  - Plotter output
- - Ability to save and restore machine state between runs
+ - Ability to fully save and restore machine state between runs
 
 Acknowledgements
 ----------------
@@ -69,6 +69,7 @@ Release History
 ---------------
 v0.5.0  December 2009    First public release
 v0.6.0  December 2009    Includes Algol compiler and samples
+v0.7.0  June 2010        Bug fixes and small improvements
 
 ===========
 Tim Baldwin

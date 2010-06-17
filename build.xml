@@ -1,16 +1,16 @@
-<!--                                -->
-<!-- Elliott Model 803B Simulator   -->
-<!--                                -->
-<!-- (C) Copyright Tim Baldwin 2009 -->
-<!--                                -->
+<!--                                     -->
+<!--    Elliott Model 803B Simulator     -->
+<!--                                     -->
+<!-- (C) Copyright Tim Baldwin 2009,2010 -->
+<!--                                     -->
 
 <!-- Build the runtime and source JARs and ZIPs -->
 
 <project name="Elliott803" default="buildAll">
 	<property name="project-name" value="Elliott803"/>
     <property name="system-name" value="Elliott 803B"/>
-	<property name="system-version" value="0.6.1"/>
-	<property name="system-author" value="(C) Copyright Tim Baldwin 2009"/>
+	<property name="system-version" value="0.7.0"/>
+	<property name="system-author" value="(C) Copyright Tim Baldwin 2009,2010"/>
 	
 	<property name="jar-name" value="elliott803-${system-version}.jar"/>
 	<property name="zip-name" value="elliott803-${system-version}.zip"/>
