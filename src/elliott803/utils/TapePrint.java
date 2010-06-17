@@ -7,6 +7,7 @@ package elliott803.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.Map;
 
@@ -60,14 +61,14 @@ public class TapePrint {
             else
                 output = new TelecodeOutputStream(new PrintWriter(outputFile, encoding), useASCII);
         } else {
-            output = new TelecodeOutputStream(System.out, useASCII);
+            if (encoding == null)
+                output = new TelecodeOutputStream(System.out, useASCII);
+            else 
+                output = new TelecodeOutputStream(new OutputStreamWriter(System.out, encoding), useASCII);
         }
 
         // Print the input to the output
-        for (int ch = input.read(); ch != -1; ch = input.read()) {
-            output.write(ch);
-        }
+        output.write(input);
         output.close();
-        input.close();
     }
 }

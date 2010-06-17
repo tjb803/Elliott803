@@ -7,6 +7,7 @@ package elliott803.telecode;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
@@ -80,5 +81,15 @@ public class TelecodeOutputStream extends OutputStream {
 
     public void close() throws IOException {
         outputWriter.close();
+    }
+    
+    /*
+     * Extra useful methods
+     */
+    
+    public void write(InputStream input) throws IOException {
+        for (int ch = input.read(); ch != -1; ch = input.read())
+            write(ch);
+        input.close();
     }
 }

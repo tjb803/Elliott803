@@ -57,10 +57,7 @@ public class TapeWrite {
         }
 
         // Write the input to the output
-        for (int tc = input.read(); tc != -1; tc = input.read()) {
-            output.write(tc);
-        }
+        input.write(output);
         output.close();
-        input.close();
     }
 }

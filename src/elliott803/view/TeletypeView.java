@@ -11,7 +11,7 @@ import java.awt.Font;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.StringReader;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -23,6 +23,7 @@ import javax.swing.JTextArea;
 
 import elliott803.hardware.Punch;
 import elliott803.telecode.Telecode;
+import elliott803.telecode.TelecodeInputStream;
 import elliott803.telecode.TelecodeOutputStream;
 import elliott803.telecode.TelecodeToChar;
 
@@ -102,17 +103,11 @@ public class TeletypeView extends TapeDeviceView {
             try {                   // in append mode.
                 // Open output file and write anything we have so far.  This is written
                 // from the JTextArea, so it is a Java String. 
-                FileWriter foutput = new FileWriter(lfile, true);
-                String text = paper.getText();
-                if (text != null) {
-                    if (ascii) 
-                        text = text.replace(Telecode.GBP, Telecode.NUM);
-                    foutput.write(text);
-                }
-                
-                // Wrap the output stream in a TelecodeOutputStream and set it as the 
-                // teletype output tape for any subsequent output.
-                OutputStream output = new TelecodeOutputStream(foutput, ascii);
+                TelecodeOutputStream output = new TelecodeOutputStream(new FileWriter(lfile, true), ascii);
+                TelecodeInputStream input = new TelecodeInputStream(new StringReader(paper.getText()));
+                output.write(input);
+
+                // Set the teletype output tape for any subsequent output.
                 teletype.setTape(output);
                 file.setText("Output log: " + lfile.getName());
             } catch (IOException e) {
