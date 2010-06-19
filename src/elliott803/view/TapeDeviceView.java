@@ -52,7 +52,7 @@ public abstract class TapeDeviceView extends JInternalFrame implements ActionLis
 
     // Simple view used by Teletype
     public TapeDeviceView(String name) {
-        super(name, true, false, false, true);
+        super(name, true, false, true, true);
 
         file = new JLabel();
         mode = new DeviceMode(DeviceMode.MODE_SYSTEM);
@@ -114,11 +114,8 @@ public abstract class TapeDeviceView extends JInternalFrame implements ActionLis
         JPanel sp = new JPanel();
         sp.setLayout(new BoxLayout(sp, BoxLayout.Y_AXIS));
         sp.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        busy.setAlignmentX(RIGHT_ALIGNMENT);
-        wait.setAlignmentX(RIGHT_ALIGNMENT);
-        mode.setAlignmentX(RIGHT_ALIGNMENT);
         sp.add(busy);
-        sp.add(Box.createVerticalGlue());
+        sp.add(Box.createVerticalStrut(3));
         sp.add(wait);
         sp.add(Box.createVerticalGlue());
         sp.add(mode);

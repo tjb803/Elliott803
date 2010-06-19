@@ -5,6 +5,8 @@
  */
 package elliott803.hardware.device;
 
+import elliott803.machine.Word;
+
 /**
  * This is the base class for all Control devices.  These are the non-block-transfer
  * type devices that respond to the 72 instructions.
@@ -28,7 +30,9 @@ public abstract class ControlDevice extends Device {
      * accumulator and can return a value which will be stored in the accumulator.
      * Or it can return Word.NOTHING to leave the accumulator unchanged.
      *
-     * Subclasses must override this method.
+     * Subclasses should override this method.
      */
-    public abstract long control(int addr, long acc);
+    public long control(int addr, long acc) {
+        return Word.NOTHING;
+    }
 }

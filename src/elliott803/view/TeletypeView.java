@@ -38,7 +38,6 @@ public class TeletypeView extends TapeDeviceView {
     Punch teletype;
 
     JTextArea paper;
-    JScrollPane scroll;
 
     public TeletypeView(Punch teletype) {
         super("Teletype");
@@ -49,8 +48,7 @@ public class TeletypeView extends TapeDeviceView {
         paper.setLineWrap(true);
         paper.setEditable(false);
 
-        scroll = new JScrollPane(paper);
-        scroll.setAlignmentX(LEFT_ALIGNMENT);
+        JScrollPane scroll = new JScrollPane(paper);
         scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
         JPanel actions = new JPanel();

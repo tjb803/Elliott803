@@ -28,13 +28,13 @@ public class DeviceLight extends JPanel {
     public DeviceLight(String name, Color colour) {
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setAlignmentX(RIGHT_ALIGNMENT);
-        setAlignmentY(CENTER_ALIGNMENT);
 
         light = new DisplayLight(size, colour);
 
         add(new JLabel(name + ":"));
         add(Box.createHorizontalStrut(5));
         add(light);
+        setMaximumSize(getMinimumSize());
     }
 
     public void setValue(boolean on) {

@@ -40,10 +40,22 @@ provided as a single ZIP file archive.  Download the latest package from
 the SourceForge download link and unzip to a suitable directory on your
 system.
 
-The program can be run by executing the elliott803-n.n.n.jar file.
+The program can be run by executing the 'elliott803-n.n.n.jar' file.
 
-For further details refer to the "Quick Start" and "Operation" guides in
-the documentation.
+For further details refer to the 'Quick Start' and 'Operation' sections
+in the documentation.
+   
+Latest Improvements
+-------------------
+The latest release will always include various minor bug fixes.  In 
+addition the following are notable improvements:
+
+ - Added 'Manual Data' button to the console
+ - Teletype window resizes correctly
+ - Teletype 'Save' button saves current output as well as any subsequent
+   output
+ - A saved 'machine image' can be provided on startup as a quick way to 
+   restore the core-store contents   
 
 Future Work
 -----------

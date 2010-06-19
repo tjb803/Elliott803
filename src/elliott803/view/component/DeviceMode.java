@@ -42,6 +42,7 @@ public class DeviceMode extends JPanel {
         add(new JLabel("Mode:"));
         add(Box.createHorizontalStrut(5));
         add(mode);
+        setMaximumSize(getMinimumSize());
     }
 
     public void setMode(String style) {
