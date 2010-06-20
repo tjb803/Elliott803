@@ -40,6 +40,11 @@ public class CPU {
     public CPU(Computer computer) {
         this.computer = computer;
     }
+    
+    // Set the accumulator
+    public void setAccumulator(long value) {
+        acc = value;
+    }
 
     // Set the next instruction to be executed - only the first instruction
     // can be set.
@@ -252,6 +257,7 @@ public class CPU {
             case 0:
                 acc = computer.console.read();
                 break;
+                
             case 3:
                 // According to Bill Purvis (on his incredible web pages about the 803 Algol compiler),
                 // the 73 instruction puts the address in the upper and lower half of the storage word.
@@ -274,12 +280,12 @@ public class CPU {
                 computer.devices.controlWrite(addr, acc);
                 break;
             case 5:
-                acc = computer.devices.controlRead(addr);
+                computer.devices.controlRead(addr, this);
                 break;
 
             // 76 and 77 access the 'block' mode devices
             case 6: case 7:
-                // TODO
+                // TODO: block devices not implemented yet!
                 break;
         }
         return n;

@@ -5,9 +5,10 @@
  */
 package elliott803.machine;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Collection;
 
+import elliott803.hardware.CPU;
 import elliott803.hardware.device.ControlDevice;
 
 /**
@@ -22,11 +23,11 @@ public class DeviceManager {
 
     public Computer computer;
 
-    Set<ControlDevice> controlDevices;
+    Collection<ControlDevice> controlDevices;
 
     public DeviceManager(Computer computer) {
         this.computer = computer;
-        controlDevices = new HashSet<ControlDevice>();
+        controlDevices = new ArrayList<ControlDevice>();
     }
 
     /*
@@ -41,22 +42,26 @@ public class DeviceManager {
      * Find the device that handles an specific address and invoke it.
      */
     public void controlWrite(int addr, long acc) {
-        for (ControlDevice device : controlDevices) {
-            if ((addr & device.addressMask()) == device.addressBase()) {
-                device.controlWrite(addr, acc);
-                break;
-            }
-        }
+        ControlDevice device = findDevice(addr);
+        if (device != null)
+            device.controlWrite(addr, acc);
     }
     
-    public long controlRead(int addr) {
-        long acc = 0;
-        for (ControlDevice device : controlDevices) {
-            if ((addr & device.addressMask()) == device.addressBase()) {
-                acc = device.controlRead(addr);
+    public void controlRead(int addr, CPU cpu) {
+        ControlDevice device = findDevice(addr);
+        if (device != null)
+            cpu.setAccumulator(device.controlRead(addr));
+    }
+    
+    // TODO: Not very efficient, but we don't expect many devices
+    private ControlDevice findDevice(int addr) {
+        ControlDevice device = null;
+        for (ControlDevice dev : controlDevices) {
+            if ((addr & dev.addressMask()) == dev.addressBase()) {
+                device = dev;
                 break;
             }
         }
-        return acc;
+        return device;
     }
 }
