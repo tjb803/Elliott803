@@ -7,11 +7,12 @@ package elliott803.hardware;
 
 import elliott803.hardware.device.ControlDevice;
 import elliott803.machine.Computer;
-import elliott803.machine.Word;
+import elliott803.view.PlotterView;
 
 /**
  * The CalComp plotter.  The plotter has paper 11 inches wide and can move the pen
- * in 1/100 inch increments in each direction (including diagonals).
+ * in 1/100 inch increments in each direction (including diagonals).  The basic 
+ * plotter device doesn't really do anything, the GUI viewer does all the work.
  *
  * Not sure whether the pen starts in the middle or at the left?
  *
@@ -25,6 +26,7 @@ public class Plotter extends ControlDevice {
     final static int PEN_S = 0x8;
     final static int PEN_UP = 0x10;
     final static int PEN_DOWN = 0x20;
+    final static int PEN_MASK = 0x2F;
 
     public Plotter(Computer computer) {
         this.computer = computer;
@@ -38,8 +40,22 @@ public class Plotter extends ControlDevice {
         return 0x1FC0;          // 0b1111111000000
     }
 
-    public long control(int addr, long acc) {
-        // TODO: Plotter not yet implemented
-        return Word.NOTHING;
+    public void controlWrite(int addr, long acc) {
+//        viewPen(addr & PEN_MASK);
     }
+    
+    /*
+     * GUI visualisation
+     */
+
+//    PlotterView view;
+//
+//    public void setView(PlotterView view) {
+//        this.view = view;
+//    }
+//    
+//    void viewPen(int command) {
+//        if (view != null) 
+//            view.updatePen(command);
+//    }
 }

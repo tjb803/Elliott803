@@ -62,7 +62,7 @@ BEGIN
         COMMENT Generate some random numbers from 0 to 511 (9 bits);
         FOR i:=1 STEP 1 UNTIL size DO BEGIN
             d:=511;
-            elliott(7,2, 8000, 0, 2,3, d);
+            elliott(7,5, 8000, 0, 2,3, d);
             data[i]:=d;
         END;
 

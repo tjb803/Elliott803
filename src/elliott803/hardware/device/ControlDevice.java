@@ -5,11 +5,10 @@
  */
 package elliott803.hardware.device;
 
-import elliott803.machine.Word;
 
 /**
  * This is the base class for all Control devices.  These are the non-block-transfer
- * type devices that respond to the 72 instructions.
+ * type devices that respond to the 72 and 75 instructions.
  *
  * @author Baldwin
  */
@@ -27,12 +26,22 @@ public abstract class ControlDevice extends Device {
     /*
      * This method is invoked when a 72 instruction with an address in the range
      * declared by the device is executed.  It is passed the current value in the
-     * accumulator and can return a value which will be stored in the accumulator.
-     * Or it can return Word.NOTHING to leave the accumulator unchanged.
-     *
-     * Subclasses should override this method.
+     * accumulator.
+     * 
+     * Subclasses cab override this method.
      */
-    public long control(int addr, long acc) {
-        return Word.NOTHING;
+    public void controlWrite(int addr, long acc) {
+        return;
+    }
+    
+    /*
+     * This method is invoked when a 75 instruction with an address in the range
+     * declared by the device is executed.  It should return a value which is 
+     * placed in the accumulator.
+     * 
+     * Subclasses can override this method.
+     */
+    public long controlRead(int addr) {
+        return 0;
     }
 }

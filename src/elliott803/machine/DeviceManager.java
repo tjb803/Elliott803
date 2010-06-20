@@ -40,14 +40,23 @@ public class DeviceManager {
     /*
      * Find the device that handles an specific address and invoke it.
      */
-    public long control(int addr, long acc) {
-        long word = Word.NOTHING;
+    public void controlWrite(int addr, long acc) {
         for (ControlDevice device : controlDevices) {
             if ((addr & device.addressMask()) == device.addressBase()) {
-                word = device.control(addr, acc);
+                device.controlWrite(addr, acc);
                 break;
             }
         }
-        return word;
+    }
+    
+    public long controlRead(int addr) {
+        long acc = 0;
+        for (ControlDevice device : controlDevices) {
+            if ((addr & device.addressMask()) == device.addressBase()) {
+                acc = device.controlRead(addr);
+                break;
+            }
+        }
+        return acc;
     }
 }

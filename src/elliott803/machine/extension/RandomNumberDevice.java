@@ -13,9 +13,9 @@ import elliott803.hardware.device.ControlDevice;
  * This is a special control device that can set the accumulator to a
  * random positive integer from 0 to 2^38-1.
  *
- * It responds to the following '72' instruction:
+ * It responds to the following '75' instruction:
  *
- *  72 8000  - Set ACC to random positive integer
+ *  75 8000  - Set ACC to random positive integer
  *
  * I think the machine I used actually had some custom hardware installed that
  * could do this (or something very much like it).
@@ -31,10 +31,10 @@ public class RandomNumberDevice extends ControlDevice {
     }
 
     public int addressMask() {
-        return 0x1FFF;
+        return 8000;
     }
-
-    public long control(int addr, long acc) {
+    
+    public long controlRead(int addr) {
         return random.nextInteger();
     }
 

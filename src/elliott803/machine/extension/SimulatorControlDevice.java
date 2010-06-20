@@ -6,7 +6,6 @@
 package elliott803.machine.extension;
 
 import elliott803.hardware.device.ControlDevice;
-import elliott803.machine.Word;
 
 /**
  * This is a special control device that can perform actions on the
@@ -37,13 +36,12 @@ public class SimulatorControlDevice extends ControlDevice {
     }
 
     // Device control actions
-    public long control(int addr, long acc) {
+    public void controlWrite(int addr, long acc) {
         switch (addr) {
             case STOP:      computer.cpu.reset();   break;
             case DUMP:      computer.dump();        break;
             case TRACE_ON:  computer.traceStart();  break;
             case TRACE_OFF: computer.traceStop();   break;
         }
-        return Word.NOTHING;
     }
 }

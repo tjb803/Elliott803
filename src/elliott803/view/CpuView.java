@@ -77,6 +77,7 @@ public class CpuView extends JInternalFrame implements ActionListener {
         overflow.setAlignmentX(LEFT_ALIGNMENT);
         fpOverflow.setAlignmentX(RIGHT_ALIGNMENT);
         p2.add(overflow);
+        p2.add(Box.createHorizontalStrut(10));
         p2.add(Box.createHorizontalGlue());
         p2.add(fpOverflow);
 

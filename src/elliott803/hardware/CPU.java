@@ -269,15 +269,16 @@ public class CPU {
                 computer.pts.write(addr);
                 break;
 
-            // 72 access the 'control' mode devices
+            // 72 and 75 write and read the 'control' mode devices
             case 2:
-                long a = computer.devices.control(addr, acc);
-                if (a != Word.NOTHING)
-                    acc = a;
+                computer.devices.controlWrite(addr, acc);
+                break;
+            case 5:
+                acc = computer.devices.controlRead(addr);
                 break;
 
-            // 75, 76 and 77 access the 'block' mode devices
-            case 5: case 6: case 7:
+            // 76 and 77 access the 'block' mode devices
+            case 6: case 7:
                 // TODO
                 break;
         }

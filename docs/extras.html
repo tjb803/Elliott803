@@ -63,11 +63,11 @@ tight spin-loop!</p>
 <h2>Additional Devices</h2>
 <p>The 803 architecture and instruction set enable additional devices to be 
 attached to the machine fairly easily.
-These can be handled using the <b>72</b> instructions for what I call the 
-<i>Control</i> devices and the <b>75</b>, <b>76</b> and <b>77</b> instructions
-for the <i>Block</i> devices.</p>
+These can be handled using the <b>72</b> and <b>75</b> instructions for what I 
+call the <i>Control</i> devices and the additional <b>76</b> and <b>77</b> 
+instructions for the <i>Block</i> devices.</p>
 <p>In the simulator I have included two additional control devices that 
-respond to <b>72</b> instructions with specific addresses.
+respond to <b>72</b> or <b>75</b> instructions with specific addresses.
 These are a <a href="#control">simulator control</a> device and a 
 <a href="#random">random number generator</a> device.</p>
 <h3 id="control">Simulator Control Device</h3>
@@ -86,9 +86,9 @@ The instructions provided are:</p>
 </table>
 <h3 id="random">Random Number Generator Device</h3>
 <p>The random number generator device will write a random positive integer 
-to the accumulator by executing a special <b>72</b> instruction.</p>
+to the accumulator by executing a special <b>75</b> instruction.</p>
 <table frame="box" rules="all" cellpadding="3">
-<tr><td><b>72 8000</b></td>
+<tr><td><b>75 8000</b></td>
 <td>Write random 38 bit (positive) integer to the accumulator.</td></tr>
 </table>
 <br><table border="1" frame="above" rules="none" width="100%">
