@@ -119,7 +119,7 @@ public class Main implements Runnable {
         computerView = view;
         
         Toolkit tk = Toolkit.getDefaultToolkit();
-        Image icon = tk.createImage(getClass().getResource("803-32.gif"));
+        Image icon = tk.createImage(getClass().getResource("icon/803-32.png"));
 
         frame = new JFrame(computer.name + " Simulation (v" + computer.version + ")");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
