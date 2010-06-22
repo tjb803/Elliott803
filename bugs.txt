@@ -16,7 +16,8 @@ v0.7.0
                  the contents of the store will be restored.   
          - a pre-loaded Algol image is provided   
     - Teletype 'Save' button will save all existing output as well as any new
-      output            
+      output   
+    - Icon image files added to package           
   
   Main bug fixes:
     - Read and Obey buttons enter step-by-step mode when pressed
