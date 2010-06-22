@@ -53,6 +53,9 @@ src/elliott803/hardware/Teletype.java -text
 src/elliott803/hardware/device/BlockDevice.java -text
 src/elliott803/hardware/device/ControlDevice.java -text
 src/elliott803/hardware/device/Device.java -text
+src/elliott803/icon/803-32.png -text
+src/elliott803/icon/803-48.png -text
+src/elliott803/icon/803.ico -text
 src/elliott803/machine/Computer.java -text
 src/elliott803/machine/DeviceManager.java -text
 src/elliott803/machine/Dump.java -text
