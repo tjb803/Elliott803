@@ -43,6 +43,8 @@
 			<fileset file="license.txt"/>
 			<fileset file="readme.txt"/>
 			<fileset file="${jar-name}"/>
+			<fileset file="src/elliott803/803-32.ico"/>
+			<fileset file="src/elliott803/803-32.gif"/>
 			<zipfileset dir="docs" prefix="docs"/>
 			<zipfileset dir="tapes" prefix="tapes"/>
 			<zipfileset dir="samples" prefix="samples"/>

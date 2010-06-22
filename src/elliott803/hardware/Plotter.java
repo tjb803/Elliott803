@@ -7,7 +7,7 @@ package elliott803.hardware;
 
 import elliott803.hardware.device.ControlDevice;
 import elliott803.machine.Computer;
-import elliott803.view.PlotterView;
+//import elliott803.view.PlotterView;
 
 /**
  * The CalComp plotter.  The plotter has paper 11 inches wide and can move the pen

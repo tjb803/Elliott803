@@ -8,7 +8,6 @@ package elliott803.machine;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import elliott803.hardware.CPU;
 import elliott803.hardware.device.ControlDevice;
 
 /**
@@ -47,10 +46,12 @@ public class DeviceManager {
             device.controlWrite(addr, acc);
     }
     
-    public void controlRead(int addr, CPU cpu) {
+    public long controlRead(int addr) {
+        long acc = Word.NOTHING;
         ControlDevice device = findDevice(addr);
         if (device != null)
-            cpu.setAccumulator(device.controlRead(addr));
+            acc = device.controlRead(addr);
+        return acc;
     }
     
     // TODO: Not very efficient, but we don't expect many devices

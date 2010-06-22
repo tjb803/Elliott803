@@ -41,11 +41,6 @@ public class CPU {
         this.computer = computer;
     }
     
-    // Set the accumulator
-    public void setAccumulator(long value) {
-        acc = value;
-    }
-
     // Set the next instruction to be executed - only the first instruction
     // can be set.
     public void setInstruction(long instruction) {
@@ -125,17 +120,15 @@ public class CPU {
         int addr = Instruction.getAddr(instruction);
 
         // Perform the operation
-        if (op >= 000 && op <= 037) {
-            br = group0123(op, addr);
-        } else if (op >= 040 && op <= 047) {
-            br = group4(op, addr);
-        } else if (op >= 050 && op <= 057) {
-            br = group5(op, addr);
-        } else if (op >= 060 && op <= 067) {
-            br = group6(op, addr);
-        } else if (op >= 070 && op <= 077) {
-            br = group7(op, addr);
+        switch (op >> 3) {
+            case 0: case 1: case 2: 
+            case 3: br = group0123(op, addr);  break;
+            case 4: br = group4(op, addr);  break;
+            case 5: br = group5(op, addr);  break;
+            case 6: br = group6(op, addr);  break;
+            case 7: br = group7(op, addr);  break;
         }
+
         // Update console lights to track overflow states
         computer.console.setOverflow(overflow, fpOverflow);
         if (fpOverflow) {
@@ -170,11 +163,11 @@ public class CPU {
 
         // Destination of result depends on opcode group
         long b = 0;
-        switch (op & 070) {
-            case 000: acc = result;  b = n;  break;
-            case 010: acc = result;  b = a;  break;
-            case 020: acc = a;  b = result;  break;
-            case 030: acc = n;  b = result;  break;
+        switch (op >> 3) {
+            case 0: acc = result;  b = n;  break;
+            case 1: acc = result;  b = a;  break;
+            case 2: acc = a;  b = result;  break;
+            case 3: acc = n;  b = result;  break;
         }
         computer.core.write(addr, b);
         return b;
@@ -280,7 +273,9 @@ public class CPU {
                 computer.devices.controlWrite(addr, acc);
                 break;
             case 5:
-                computer.devices.controlRead(addr, this);
+                long a = computer.devices.controlRead(addr);
+                if (a != Word.NOTHING)
+                    acc = a;
                 break;
 
             // 76 and 77 access the 'block' mode devices
@@ -314,7 +309,7 @@ public class CPU {
         StringBuffer sb = new StringBuffer();
         sb.append("CPU:");
         sb.append(" acc=").append(Word.toOctalString(acc));
-        sb.append(" scr=").append(scr).append("/").append(scr2);
+        sb.append(" scr=").append(scr).append(".").append(scr2);
         sb.append(" ir=\"").append(Word.toInstrString(ir)).append("\"");
         sb.append(" overflow=").append(overflow);
         return sb.toString();
