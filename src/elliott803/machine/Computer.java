@@ -129,6 +129,22 @@ public class Computer extends Thread {
     public void setInstruction(long instruction) {
         cpu.setInstruction(Word.asWord(instruction));
     }
+    
+    public void setConsoleState(long wordgen, boolean manualdata) {
+        console.setWordGen(wordgen);
+        console.setManualData(manualdata);
+    }
+    
+    // Attempt to simulate pressing a button on the keyboard.  We need to allow
+    // one "70 0" instruction to read the current state before we change the state 
+    // of the requested button and allow a second "70 0".  This method is expected
+    // to be called after a console busy wait has occurred.
+    public void pressConsoleButton(int button) {
+        console.setManualDataDelay();
+        cpu.run();
+        console.toggleWordGenBit(40 - button);
+        console.setManualData(false);
+    }
 
     /*
      * Run the simulation on the current thread, stopping if the system

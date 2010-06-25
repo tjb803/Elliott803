@@ -143,20 +143,29 @@ public class CpuView extends JInternalFrame implements ActionListener {
      * GUI Visualisation
      */
 
+    // These updates slow down processing a lot, so ensure they do nothing if the
+    // view window is not displayed.
+    
     public void updateRegisters(long a, long x, long b, int pc, long instr) {
-        acc.setValue(a);
-        ar.setValue(x);
-        br.setValue(b);
-        scr.setValue(pc);
-        ir.setValue(instr);
+        if (!isIcon()) {
+            acc.setValue(a);
+            ar.setValue(x);
+            br.setValue(b);
+            scr.setValue(pc);
+            ir.setValue(instr);
+        }
     }
 
     public void updateFlags(boolean over, boolean fpOver) {
-        overflow.setValue(over);
-        fpOverflow.setValue(fpOver);
+        if (!isIcon()) {
+            overflow.setValue(over);
+            fpOverflow.setValue(fpOver);
+        }
     }
     
     public void updateTrace(boolean enabled) {
-        trace.setSelected(enabled);
+        if (!isIcon()) {
+            trace.setSelected(enabled);
+        }
     }
 }

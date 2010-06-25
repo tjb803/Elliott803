@@ -41,10 +41,10 @@ public class Store {
 
         // Set the initial instructions.  The first four word of store contain some
         // hard-wired instructions.
-        store[0] = Word.asInstr(Instruction.asInstr(026, 4), 0, Instruction.asInstr(006, 0));
-        store[1] = Word.asInstr(Instruction.asInstr(022, 4), 1, Instruction.asInstr(016, 3));
-        store[2] = Word.asInstr(Instruction.asInstr(055, 5), 0, Instruction.asInstr(071, 0));
-        store[3] = Word.asInstr(Instruction.asInstr(043, 1), 0, Instruction.asInstr(040, 2));
+        store[0] = Word.parseInstr("26 4 : 06 0");
+        store[1] = Word.parseInstr("22 4 / 16 3");
+        store[2] = Word.parseInstr("55 5 : 71 0");
+        store[3] = Word.parseInstr("43 1 : 40 2");
     }
 
     // Clear store

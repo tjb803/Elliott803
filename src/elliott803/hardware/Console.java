@@ -23,11 +23,12 @@ public class Console extends Device {
     public static final int CONSOLE_OBEY = 2;
     public static final int CONSOLE_NORMAL = 3;
 
-    long wordGen;           // Word generator
-    int action;             // Next action (Read/Obey/Normal)
-    boolean manualData;     // In manual data mode
+    long wordGen;               // Word generator
+    int action;                 // Next action (Read/Obey/Normal)
+    boolean manualData;         // In manual data mode
+    boolean manualDataDelay;    // Delay setting manual data
 
-    boolean busy;           // Status lights
+    boolean busy;               // Status lights
     boolean step;
     boolean overflow, fpOverflow;
 
@@ -36,11 +37,14 @@ public class Console extends Device {
     }
 
     // Read the word generator as as device.  This will cause a wait if the 
-    // manual data mode is set.
+    // manual data mode is set.  
     public long read() {
         if (manualData) {
             suspend();
-        }    
+        } else if (manualDataDelay) {
+            manualData = true;
+            manualDataDelay = false;
+        }
         return wordGen;
     }
 
@@ -57,7 +61,7 @@ public class Console extends Device {
 
     // Set a bit in the word generator, bit = 1 to 39
     public void setWordGenBit(int bit) {
-        if (bit > 0) {
+        if (bit > 0 && bit < 40) {
             wordGen |= 1L<<(bit-1);
             viewWordGen();
         }    
@@ -65,15 +69,29 @@ public class Console extends Device {
 
     // Clear a bit in the word generator, bit = 1 to 39
     public void clearWordGenBit(int bit) {
-        if (bit > 0) {
+        if (bit > 0 && bit < 40) {
             wordGen &= ~(1L<<(bit-1));
             viewWordGen();
         }    
     }
     
+    // Toggle a bit in the word generator, bit = 1 to 39
+    public void toggleWordGenBit(int bit) {
+        if (bit > 0 && bit < 40) {
+            wordGen ^= 1L<<(bit-1);
+            viewWordGen();
+        }
+    }
+    
     // Set manual data status
     public void setManualData(boolean isManualData) {
         manualData = isManualData;
+    }
+    
+    // Set manual data on, but only after the next read 
+    public void setManualDataDelay() {
+        manualData = false;
+        manualDataDelay = true;
     }
 
     // Set status lights

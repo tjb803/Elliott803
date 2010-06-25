@@ -5,6 +5,8 @@
  */
 package elliott803.machine;
 
+import java.util.StringTokenizer;
+
 /**
  * Constants and utility functions to manipulate the 39-bit words.
  *
@@ -89,6 +91,18 @@ public abstract class Word {
         result.append((getB(word) == 0) ? " : " : " / ");
         result.append(Instruction.toInstrString(getInstr2(word)));
         return result.toString();
+    }
+    
+    public static final long parseInstr(String s) {
+        int instr1 = 0, instr2 = 0, b = 0;
+        StringTokenizer t = new StringTokenizer(s, ":/", true);
+        if (t.hasMoreTokens())
+            instr1 = Instruction.parseInstr(t.nextToken());
+        if (t.hasMoreTokens())
+            b = t.nextToken().equals("/") ? 1 : 0;
+        if (t.hasMoreTokens())
+            instr2 = Instruction.parseInstr(t.nextToken());
+        return asInstr(instr1, b, instr2);
     }
 
     /*

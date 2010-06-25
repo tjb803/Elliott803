@@ -139,6 +139,10 @@ public class Args {
     public int getInteger(int position) {
         return getIntegerValue(getParameter(position));
     }
+    
+    public int getInteger(String option) {
+        return getIntegerValue(getOption(option));
+    }
 
     private int getIntegerValue(String value) {
         int result = -1;

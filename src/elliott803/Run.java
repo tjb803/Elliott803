@@ -16,6 +16,7 @@ import java.util.Map;
 import elliott803.hardware.TapeDevice;
 import elliott803.machine.Computer;
 import elliott803.machine.PaperTapeStation;
+import elliott803.machine.Word;
 import elliott803.telecode.TelecodeOutputStream;
 import elliott803.utils.Args;
 
@@ -35,6 +36,8 @@ import elliott803.utils.Args;
  *   -punch1 outputtape: output tape file for punch 1
  *   -punch2 outputtape: output tape file for punch 2
  *   -teletype outputfile: output file for teletype (defaults to System.out)
+ *   -wordgen instruction: instruction pair to set on the word generator
+ *   -press button: word generator button to press on a console wait
  *   -ascii: use only US-ASCII character set
  *   -dump: produce a system dump on exit
  *   -trace: produce a full instruction trace
@@ -51,6 +54,8 @@ public class Run {
         options.put("punch1", "outputtape+");
         options.put("punch2", "outputtape");
         options.put("teletype", "outputfile");
+        options.put("wordgen", "\"instruction\"+");
+        options.put("press", "button");
         options.put("ascii", null);
         options.put("dump", null);
         options.put("trace", null);
@@ -61,6 +66,8 @@ public class Run {
         File outputFile1 = parms.getOutputFile("punch1");
         File outputFile2 = parms.getOutputFile("punch2");
         File outputFile3 = parms.getOutputFile("teletype");
+        String wgInstruction = parms.getOption("wordgen");
+        int button = parms.getInteger("press");
         boolean instrTrace = parms.getFlag("trace");
         boolean dumpOnExit = parms.getFlag("dump");
         boolean useASCII = parms.getFlag("ascii");
@@ -91,6 +98,11 @@ public class Run {
             outputTeletype = new TelecodeOutputStream(new FileWriter(outputFile3), useASCII);
         else
             outputTeletype = new TelecodeOutputStream(System.out, useASCII);
+        
+        // Anything to set on the word generator?
+        long wordgen = 0;
+        if (wgInstruction != null)
+            wordgen = Word.parseInstr(wgInstruction);
 
         // Create computer and set initial program tape and output tapes
         Computer computer = new Computer();
@@ -98,11 +110,14 @@ public class Run {
         computer.setOutputTape(PaperTapeStation.PUNCH1, outputTape1);
         computer.setOutputTape(PaperTapeStation.PUNCH2, outputTape2);
         computer.setOutputTape(PaperTapeStation.TELETYPE, outputTeletype);
+        
+        // Set console options
+        computer.setConsoleState(wordgen, (button > 0));
 
         // Jump to the initial instructions to load the program
         computer.runInitialInstructions();
 
-        // If system enters a busy wait, load the data tapes into the readers and punches
+        // If system enters a busy wait, load the data tapes into the readers 
         computer.setInputTape(PaperTapeStation.READER1, inputTape1);
         computer.setInputTape(PaperTapeStation.READER2, inputTape2);
 
@@ -115,6 +130,13 @@ public class Run {
         } else {
             computer.runInstructions();
         }
+        
+        // If we enter a wait on the console, we need to simulate a button press to try
+        // to continue.
+        if (computer.console.deviceBusy()) {
+            computer.pressConsoleButton(button);
+            computer.runInstructions();
+        }    
 
         if (instrTrace)
             computer.traceStop();

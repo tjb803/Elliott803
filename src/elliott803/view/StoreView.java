@@ -69,13 +69,20 @@ public class StoreView extends JInternalFrame {
      * GUI Visualisation
      */
 
+    // These updates slow down processing a lot, so ensure they do nothing if the
+    // view window is not displayed.
+    
     public void updateCore(int addr, long value) {
-        coreStore.setValue(addr, value);
-        lastAddr.setValue(addr);
-        lastValue.setValue(value);
+        if (!isIcon()) {
+            coreStore.setValue(addr, value);
+            lastAddr.setValue(addr);
+            lastValue.setValue(value);
+        }
     }
     
     public void updateCore(long[] store) {
-        coreStore.setValues(store);
+        if (!isIcon()) {
+            coreStore.setValues(store);
+        }
     }
 }

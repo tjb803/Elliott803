@@ -28,4 +28,10 @@ v0.7.0
 	  continuing (with undefined results)
 	- Floating point 'divide-by-zero' sets arithmetic overflow as well as floating
 	  point overflow  
-	- Teletype window resizes correctly     
+	- Teletype window resizes correctly    
+	
+v0.7.x
+------
+  Improvements
+    - Increase speed considerably when CPU and/or Store view is minimized
+    - Add Paper Tape Station view allowing swapping for readers and punches

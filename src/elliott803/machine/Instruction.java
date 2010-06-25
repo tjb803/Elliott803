@@ -5,6 +5,8 @@
  */
 package elliott803.machine;
 
+import java.util.StringTokenizer;
+
 /**
  * Constants and utility functions to manipulate a single instruction
  *
@@ -68,5 +70,18 @@ public abstract class Instruction {
         result.append("00", 0, 2-text1.length()).append(text1);
         result.append("     ", 0, 5-text2.length()).append(text2);
         return result.toString();
+    }
+    
+    /*
+     * Parse the "oo nnnn" String form to an integer.
+     */
+    public static final int parseInstr(String s) {
+        int op = 0, addr = 0;
+        StringTokenizer t = new StringTokenizer(s, " ");
+        if (t.hasMoreTokens())
+            op = Integer.parseInt(t.nextToken(), 8);
+        if (t.hasMoreTokens())
+            addr = Integer.parseInt(t.nextToken());
+        return asInstr(op, addr);
     }
 }
