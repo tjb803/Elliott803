@@ -126,8 +126,8 @@ public class Computer extends Thread {
         pts.setPunchTape(id, tape);
     }
 
-    public void setInstruction(long instruction) {
-        cpu.setInstruction(Word.asWord(instruction));
+    public void setInstruction(int instruction) {
+        cpu.setInstruction(instruction);
     }
     
     public void setConsoleState(long wordgen, boolean manualdata) {
@@ -156,7 +156,7 @@ public class Computer extends Thread {
     }
 
     public void runInstructions(int addr) {
-        setInstruction(Word.asInstr1(Instruction.asInstr(040, addr)));
+        setInstruction(Instruction.asInstr(040, addr));
         runInstructions();
     }
 

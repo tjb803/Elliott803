@@ -28,7 +28,7 @@ import elliott803.view.ViewDefinition;
  * view of computer and allow it to be operated.
  *
  * Usage:
- *   View [options] [machine]
+ *   Main [options] [machine]
  *
  * where:
  *   machine: a previously saved machine definition
@@ -66,8 +66,11 @@ public class Main implements Runnable {
             // time being we just restore the store contents from the dump.
             Dump dump = Dump.readDump(image);
             computer.core.restore(dump);
-        
-            // TODO: restore window positions via a saved ViewDefintion? 
+            
+            // Second object is an optional ViewDefinition containing saved window
+            // sizes and positions.
+            viewdef = ViewDefinition.readViewDef(image);
+ 
             image.close();
         }
 
@@ -82,6 +85,11 @@ public class Main implements Runnable {
 
         // Look for an exact match first, then a likely match
         if (look != null) {
+            if (look.equals("LIST")) {
+                for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels())
+                    System.err.println("look: " + info.getName());
+            }
+            
             for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if (info.getName().equals(look)) {
                     lafClass = info.getClassName();

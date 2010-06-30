@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 
 import elliott803.hardware.Console;
 import elliott803.machine.Computer;
+import elliott803.machine.Word;
 import elliott803.view.component.ConsoleButton;
 import elliott803.view.component.ConsoleButtons;
 import elliott803.view.component.ConsoleLight;
@@ -159,7 +160,7 @@ public class ConsoleView extends JInternalFrame implements ActionListener, Focus
             } else {
                 String op = function.getOperation();
                 if (op.equals(ConsoleOperation.OPERATION_READ))
-                    console.computer.setInstruction(console.readWordGen());
+                    console.computer.setInstruction(Word.getInstr1(console.readWordGen()));
                 else if (op.equals(ConsoleOperation.OPERATION_OBEY))
                     console.computer.run(Computer.ACT_STEP);
                 else if (op.equals(ConsoleOperation.OPERATION_NORMAL))

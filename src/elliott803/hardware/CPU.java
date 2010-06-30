@@ -24,7 +24,7 @@ public class CPU {
     // CPU registers and flags
     long acc;               // Accumulator register
     long ar;                // Auxiliary register
-    long br;                // Last stored value
+    long br;                // B-line modification value
     boolean overflow;       // Overflow flag
     boolean fpOverflow;     // Floating point overflow
 
@@ -43,8 +43,8 @@ public class CPU {
     
     // Set the next instruction to be executed - only the first instruction
     // can be set.
-    public void setInstruction(long instruction) {
-        ir = Word.asInstr(Word.getInstr1(instruction), 0, 0);
+    public void setInstruction(int instruction) {
+        ir = Word.asInstr1(instruction);
         scr2 = 0;
         viewState();
     }
@@ -81,21 +81,23 @@ public class CPU {
             if (jump || scr2 == 0)
                 trace.trace(scr, scr2, ir, acc, overflow);
         }    
-
-        jump = false;
         
         // Get the instruction to be executed and apply any B-digit modification
-        // if executing the second instruction.
+        // if executing the second instruction.  A jump to the second instruction
+        // does not do any B-digit modification.
         int instruction;
         if (scr2 == 0) {
             instruction = Word.getInstr1(ir);
         } else {
             instruction = Word.getInstr2(ir);
-            if (Word.getB(ir) == 1) {
+            if (Word.getB(ir) == 1 && !jump) {
                 instruction += Word.getInstr2(br);
             }
         }
-        execute(instruction);
+        
+        // Execute the instruction and store any potential B-line modification
+        long n = execute(instruction);
+        br = (scr2 == 0) ? n : 0;
         
         // Step to the next instruction, unless we had jump in which case the 
         // new address will already be set in scr/scr2.
@@ -104,7 +106,7 @@ public class CPU {
                 scr2 = 1;
             } else {
                 scr2 = 0;
-                scr = (scr + 1) & Instruction.ADDR_BITS;
+                scr = Instruction.getAddr(scr + 1);
             }
         }
 
@@ -115,18 +117,19 @@ public class CPU {
     }
 
     // Execute a single instruction
-    void execute(int instruction) {
+    long execute(int instruction) {
         int op = Instruction.getOp(instruction);
         int addr = Instruction.getAddr(instruction);
 
         // Perform the operation
+        jump = false;
         switch (op >> 3) {
             case 0: case 1: case 2: 
-            case 3: br = group0123(op, addr);  break;
-            case 4: br = group4(op, addr);  break;
-            case 5: br = group5(op, addr);  break;
-            case 6: br = group6(op, addr);  break;
-            case 7: br = group7(op, addr);  break;
+            case 3: group0123(op, addr);  break;
+            case 4: group4(op, addr);  break;
+            case 5: group5(op, addr);  break;
+            case 6: group6(op, addr);  break;
+            case 7: group7(op, addr);  break;
         }
 
         // Update console lights to track overflow states
@@ -137,10 +140,13 @@ public class CPU {
             fpOverflow = false;
             computer.console.setOverflow(overflow, fpOverflow);
         }
+        
+        // Return the final value from the storage address
+        return computer.core.read(addr);
     }
 
     // Execute a group 0 to group 3 arithmetic/storage instruction
-    long group0123(int op, int addr) {
+    void group0123(int op, int addr) {
         // We need the current content of the storage address and, for some instructions
         // either the store value or the accumulator.
         long a = acc;
@@ -162,19 +168,17 @@ public class CPU {
         overflow |= computer.alu.isOverflow();
 
         // Destination of result depends on opcode group
-        long b = 0;
         switch (op >> 3) {
-            case 0: acc = result;  b = n;  break;
-            case 1: acc = result;  b = a;  break;
-            case 2: acc = a;  b = result;  break;
-            case 3: acc = n;  b = result;  break;
+            case 0: acc = result;  x = n;  break;
+            case 1: acc = result;  x = a;  break;
+            case 2: acc = a;  x = result;  break;
+            case 3: acc = n;  x = result;  break;
         }
-        computer.core.write(addr, b);
-        return b;
+        computer.core.write(addr, x);
     }
 
     // Execute a group 4 jump instruction
-    long group4(int op, int addr) {
+    void group4(int op, int addr) {
         switch (op & 003) {
             case 0: jump = true;  break;                        // Unconditional
             case 1: jump = computer.alu.isNeg(acc);  break;     // Jump if accumulator negative
@@ -186,38 +190,35 @@ public class CPU {
             scr = addr;                     //   set new sequence control address
             scr2 = (op & 007) >> 2;         //   and set first/second instruction indication
         }
-        return 0;
     }
 
     // Execute a group5 logical/arithmetic instruction
-    long group5(int op, int addr) {
+    void group5(int op, int addr) {
         long n = computer.core.read(addr);
-        long b = 0;
         if ((op & 001) != 0) {
             switch (op & 007) {
                 case 1: acc = computer.alu.shr(acc, addr);  ar = 0;  break;
                 case 5: acc = computer.alu.shl(acc, addr);  ar = 0;  break;
-                case 3: acc = computer.alu.mul(acc, n);  b = n;  ar = 0;  break;
+                case 3: acc = computer.alu.mul(acc, n);  ar = 0;  break;
                 case 7: acc = ar;  break;  // Note: does NOT clear aux register
             }
         } else {
             switch (op & 007) {
                 case 0: acc = computer.alu.longShr(acc, ar, addr);  break;
                 case 4: acc = computer.alu.longShl(acc, ar, addr);  break;
-                case 2: acc = computer.alu.longMul(acc, n);  b = n;  break;
-                case 6: acc = computer.alu.longDiv(acc, ar, n);  b = n;  ar = 0;  break;
+                case 2: acc = computer.alu.longMul(acc, n);  break;
+                case 6: acc = computer.alu.longDiv(acc, ar, n);  ar = 0;  break;
             }
             ar = computer.alu.getExtension();
         }
         overflow |= computer.alu.isOverflow();
-        return b;
     }
 
     // Execute a group 6 floating point instruction
-    long group6(int op, int addr) {
+    void group6(int op, int addr) {
         // These instructions are the same as an 00 op code, unless the FPU is available.
-        long n = computer.core.read(addr);
         if (computer.fpu != null) {
+            long n = computer.core.read(addr);
             switch (op & 007) {
                 case 0: acc = computer.fpu.add(acc, n);  ar = 0;  break;
                 case 1: acc = computer.fpu.sub(acc, n);  ar = 0;  break;
@@ -239,12 +240,10 @@ public class CPU {
             overflow |= computer.fpu.isOverflow();
             fpOverflow |= computer.fpu.isFpOverflow();
         }
-        return n;
     }
 
     // Execute a group 7 control/peripheral instruction
-    long group7(int op, int addr) {
-        long n = 0;
+    void group7(int op, int addr) {
         switch (op & 007) {
             // 70 and 73 are standard instructions
             case 0:
@@ -252,12 +251,10 @@ public class CPU {
                 break;
                 
             case 3:
-                // According to Bill Purvis (on his incredible web pages about the 803 Algol compiler),
+                // According to Bill Purvis (on his excellent web pages about the 803 Algol compiler),
                 // the 73 instruction puts the address in the upper and lower half of the storage word.
                 // I can't think why it would need to do this ... but I believe him, so I'll do the same!
-                n = scr;
-                n = (n<<20) + scr;
-                computer.core.write(addr, n);
+                computer.core.write(addr, Word.asInstr(scr, 0, scr));
                 break;
 
             // 71 and 74 read and write the paper tape readers and punches via the PTS.
@@ -283,7 +280,6 @@ public class CPU {
                 // TODO: block devices not implemented yet!
                 break;
         }
-        return n;
     }
 
     // Dump

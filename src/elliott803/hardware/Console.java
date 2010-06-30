@@ -133,7 +133,7 @@ public class Console extends Device {
             deviceReady();
         } else {
             switch (action) {
-                case CONSOLE_READ:   computer.cpu.setInstruction(wordGen);  break;
+                case CONSOLE_READ:   computer.cpu.setInstruction(Word.getInstr1(wordGen));  break;
                 case CONSOLE_OBEY:   computer.cpu.obey();  break;
                 case CONSOLE_NORMAL: computer.cpu.run();   break;
             }
