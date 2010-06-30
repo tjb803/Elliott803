@@ -7,6 +7,7 @@ package elliott803.view.component;
 
 import java.awt.Color;
 
+import javax.swing.BorderFactory;
 import javax.swing.JRadioButton;
 
 /**
@@ -25,6 +26,7 @@ public class ConsoleButton extends JRadioButton {
 
     public ConsoleButton(String name, Color colour, boolean selected) {
         super(name, selected);
+        setBorder(BorderFactory.createEmptyBorder(2, 3, 2, 3));
         setFocusable(false);
         setForeground(colour);
         setHorizontalTextPosition(CENTER);

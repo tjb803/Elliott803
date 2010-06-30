@@ -40,7 +40,7 @@ public class ConsoleButtons extends JPanel implements ActionListener {
         release = new ConsoleButton("R", ConsoleButton.RED, true);
         release.addActionListener(this);
         add(release);
-        add(Box.createHorizontalStrut(3));
+        add(Box.createHorizontalStrut(5));
         
         buttons = new ConsoleButton[len];
         for (int i = 0; i < len; i++) {

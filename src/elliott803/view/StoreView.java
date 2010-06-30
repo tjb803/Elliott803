@@ -59,7 +59,7 @@ public class StoreView extends JInternalFrame {
         store.setView(this);
 
         Container content = getContentPane();
-        content.add(p1, BorderLayout.NORTH);
+        content.add(p1, BorderLayout.CENTER);
         content.add(p2, BorderLayout.SOUTH);
         pack();
         setVisible(true);

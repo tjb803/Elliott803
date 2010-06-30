@@ -30,19 +30,24 @@ public class PaperTapeStation {
 
     public Reader[] readers;
     public Punch[] punches;
+    
+    boolean swapReader, swapPunch;
 
     public PaperTapeStation(Computer computer) {
         this.computer = computer;
 
-        // Set two tape readers, two tape punches and a teletype
+        // Set two tape readers
         readers = new Reader[2];
         readers[READER1] = new Reader(computer, 1);
         readers[READER2] = new Reader(computer, 2);
+        swapReader = false;
 
+        // Set two tape punches and a teletype
         punches = new Punch[3];
         punches[PUNCH1] = new Punch(computer, 1);
         punches[PUNCH2] = new Punch(computer, 2);
         punches[TELETYPE] = new Teletype(computer, 3);
+        swapPunch = false;
     }
 
     /*
@@ -57,27 +62,44 @@ public class PaperTapeStation {
         if (id < punches.length && punches[id] != null)
             punches[id].setTape(tape);
     }
+    
+    /*
+     * Swap readers and punches
+     */
+    public void setReaders(boolean exchange) {
+        if (exchange != swapReader) {
+            Reader r = readers[0];  readers[0] = readers[1];  readers[1] = r;
+            swapReader = exchange;
+        }
+    }
+    
+    public void setPunches(boolean exchange) {
+        if (exchange != swapPunch) {
+            Punch p = punches[0];  punches[0] = punches[1];  punches[1] = p;
+            swapPunch = exchange;
+        }
+    }
 
     /*
      * Read and write characters
      */
     public int read(int addr) {
         int ch = 0;
-        if (addr >= 2048 && readers[1] != null) {
-            ch = readers[1].read();
+        if (addr >= 2048 && readers[READER2] != null) {
+            ch = readers[READER2].read();
         } else {
-            ch = readers[0].read();
+            ch = readers[READER1].read();
         }
         return ch;
     }
 
     public void write(int addr) {
-        if (addr >= 4096 && punches[2] != null) {
-            punches[2].write(addr);
-        } else if (addr >= 2048 && punches[1] != null) {
-            punches[1].write(addr);
+        if (addr >= 4096 && punches[TELETYPE] != null) {
+            punches[TELETYPE].write(addr);
+        } else if (addr >= 2048 && punches[PUNCH2] != null) {
+            punches[PUNCH2].write(addr);
         } else {
-            punches[0].write(addr);
+            punches[PUNCH1].write(addr);
         }
     }
 }

@@ -110,6 +110,7 @@ test/src/elliott803/view/BaseViewTest.java -text svneol=unset#text/plain
 test/src/elliott803/view/TestConsoleView.java -text svneol=unset#text/plain
 test/src/elliott803/view/TestCpuView.java -text svneol=unset#text/plain
 test/src/elliott803/view/TestDeviceView.java -text svneol=unset#text/plain
+test/src/elliott803/view/TestPtsView.java -text svneol=unset#text/plain
 test/src/elliott803/view/TestStoreView.java -text svneol=unset#text/plain
 test/src/elliott803/view/TestTeletypeView.java -text svneol=unset#text/plain
 test/src/elliott803/view/component/BaseComponentTest.java -text svneol=unset#text/plain
