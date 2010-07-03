@@ -27,8 +27,6 @@ public class ConsoleOperation extends JPanel implements ActionListener {
     public static final String OPERATION_OBEY = "Obey";
 
     Console console;
-    
-    String action = OPERATION_READ;
 
     public ConsoleOperation(Console console) {
         this.console = console;
@@ -47,15 +45,15 @@ public class ConsoleOperation extends JPanel implements ActionListener {
         add(ob);
     }
 
-    public String getOperation() {
-        return action;
-    }
-
     /*
      * Action button clicked, so save state
      */
     public void actionPerformed(ActionEvent e) {
-        action = e.getActionCommand();
-        console.computer.cpu.stop();
+        int action = Console.CONSOLE_NORMAL;
+        if (e.getActionCommand().equals(OPERATION_READ))
+            action = Console.CONSOLE_READ;
+        else if (e.getActionCommand().equals(OPERATION_OBEY))
+            action = Console.CONSOLE_OBEY;
+        console.setAction(action);
     }
 }

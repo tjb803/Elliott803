@@ -5,9 +5,6 @@
  */
 package elliott803.machine;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import elliott803.hardware.ALU;
 import elliott803.hardware.CPU;
 import elliott803.hardware.Console;
@@ -116,47 +113,13 @@ public class Computer extends Thread {
     }
 
     /*
-     * Convenience methods for common operations
-     */
-    public void setInputTape(int id, InputStream tape) {
-        pts.setReaderTape(id, tape);
-    }
-
-    public void setOutputTape(int id, OutputStream tape) {
-        pts.setPunchTape(id, tape);
-    }
-
-    public void setInstruction(int instruction) {
-        cpu.setInstruction(instruction);
-    }
-    
-    public void setConsoleState(long wordgen, boolean manualdata) {
-        console.setWordGen(wordgen);
-        console.setManualData(manualdata);
-    }
-    
-    // Attempt to simulate pressing a button on the keyboard.  We need to allow
-    // one "70 0" instruction to read the current state before we change the state 
-    // of the requested button and allow a second "70 0".  This method is expected
-    // to be called after a console busy wait has occurred.
-    public void pressConsoleButton(int button) {
-        console.setManualDataDelay();
-        cpu.run();
-        console.toggleWordGenBit(40 - button);
-        console.setManualData(false);
-    }
-
-    /*
      * Run the simulation on the current thread, stopping if the system
-     * enters a busy wait condition.
+     * enters a busy wait condition.  This is used by the command line 
+     * version of the simulator.
      */
-
-    public void runInitialInstructions() {
-        runInstructions(0);
-    }
 
     public void runInstructions(int addr) {
-        setInstruction(Instruction.asInstr(040, addr));
+        cpu.setInstruction(Instruction.asInstr(040, addr));
         runInstructions();
     }
 
@@ -166,22 +129,25 @@ public class Computer extends Thread {
     }
 
     /*
-     * Run the simulation on a worker thread.
-     * This is needed when running under a GUI to ensure we don't block
-     * the event dispatch thread.
+     * Run the simulation on a worker thread.  This is used by the GUI 
+     * version of the simulator - operated via the Console - to ensure the
+     * Swing event dispatch thread does not perform any long running tasks. 
      */
 
-    Object executionWait = new Object();
+    Boolean threadRun = Boolean.FALSE;
     int action = ACT_WAIT;
 
     public void run(int act) {
-        synchronized (executionWait) {
+        synchronized (threadRun) {
             action = act;
-            executionWait.notify();
+            threadRun.notify();
         }
     }
 
     public void run() {
+        // Flag to show we are running on a thread and to synchronise thread operations
+        threadRun = new Boolean(true);
+        
         // Lower the priority of the CPU thread a little.  803 programs often used tight
         // spin loops to wait for console input or when they end and we don't want these
         // tight loops to make the GUI seem unresponsive.
@@ -189,9 +155,9 @@ public class Computer extends Thread {
 
         while (true) {
             int act = ACT_WAIT;
-            synchronized (executionWait) {
+            synchronized (threadRun) {
                 try {
-                    executionWait.wait();
+                    threadRun.wait();
                     act = action;
                     action = ACT_WAIT;
                 } catch (InterruptedException e) {

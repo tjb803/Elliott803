@@ -26,7 +26,7 @@ public class ConsoleButton extends JRadioButton {
 
     public ConsoleButton(String name, Color colour, boolean selected) {
         super(name, selected);
-        setBorder(BorderFactory.createEmptyBorder(2, 3, 2, 3));
+        setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 3));
         setFocusable(false);
         setForeground(colour);
         setHorizontalTextPosition(CENTER);

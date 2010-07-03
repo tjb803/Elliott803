@@ -106,20 +106,21 @@ public class Run {
 
         // Create computer and set initial program tape and output tapes
         Computer computer = new Computer();
-        computer.setInputTape(PaperTapeStation.READER1, programTape);
-        computer.setOutputTape(PaperTapeStation.PUNCH1, outputTape1);
-        computer.setOutputTape(PaperTapeStation.PUNCH2, outputTape2);
-        computer.setOutputTape(PaperTapeStation.TELETYPE, outputTeletype);
+        computer.pts.setReaderTape(PaperTapeStation.READER1, programTape);
+        computer.pts.setPunchTape(PaperTapeStation.PUNCH1, outputTape1);
+        computer.pts.setPunchTape(PaperTapeStation.PUNCH2, outputTape2);
+        computer.pts.setPunchTape(PaperTapeStation.TELETYPE, outputTeletype);
         
         // Set console options
-        computer.setConsoleState(wordgen, (button > 0));
+        computer.console.setWordGen(wordgen);
+        computer.console.setManualData(button > 0);
 
         // Jump to the initial instructions to load the program
-        computer.runInitialInstructions();
+        computer.runInstructions(0);
 
         // If system enters a busy wait, load the data tapes into the readers 
-        computer.setInputTape(PaperTapeStation.READER1, inputTape1);
-        computer.setInputTape(PaperTapeStation.READER2, inputTape2);
+        computer.pts.setReaderTape(PaperTapeStation.READER1, inputTape1);
+        computer.pts.setReaderTape(PaperTapeStation.READER2, inputTape2);
 
         if (instrTrace)
             computer.traceStart();
@@ -132,9 +133,14 @@ public class Run {
         }
         
         // If we enter a wait on the console, we need to simulate a button press to try
-        // to continue.
+        // to continue.  To do this we have to allow one "70 0" instruction to read the 
+        // current keyboard state state before we change the state of the requested button 
+        // and allow a second "70 0". 
         if (computer.console.deviceBusy()) {
-            computer.pressConsoleButton(button);
+            computer.console.setManualDataDelay();
+            computer.runInstructions();
+            computer.console.toggleWordGenBit(40 - button);
+            computer.console.setManualData(false);
             computer.runInstructions();
         }    
 

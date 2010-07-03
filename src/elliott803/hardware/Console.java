@@ -120,6 +120,11 @@ public class Console extends Device {
     public void reset() {
         computer.cpu.reset();
     }
+    
+    // Perform a clear store
+    public void clear() {
+        computer.run(Computer.ACT_CLEAR);
+    }
 
     // Set the next action to be performed
     public void setAction(int value) {
@@ -127,15 +132,15 @@ public class Console extends Device {
         action = value;
     }
 
-    // Operate - perform the last selected action
+    // Operate - perform the last selected step-by-step action
     public void operate() {
         if (deviceBusy()) {
             deviceReady();
         } else {
             switch (action) {
                 case CONSOLE_READ:   computer.cpu.setInstruction(Word.getInstr1(wordGen));  break;
-                case CONSOLE_OBEY:   computer.cpu.obey();  break;
-                case CONSOLE_NORMAL: computer.cpu.run();   break;
+                case CONSOLE_OBEY:   computer.run(Computer.ACT_STEP);  break;
+                case CONSOLE_NORMAL: computer.run(Computer.ACT_RUN);   break;
             }
         }    
     }

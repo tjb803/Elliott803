@@ -21,7 +21,6 @@ import javax.swing.JPanel;
 
 import elliott803.hardware.Console;
 import elliott803.machine.Computer;
-import elliott803.machine.Word;
 import elliott803.view.component.ConsoleButton;
 import elliott803.view.component.ConsoleButtons;
 import elliott803.view.component.ConsoleLight;
@@ -147,25 +146,11 @@ public class ConsoleView extends JInternalFrame implements ActionListener, Focus
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
         if (action.equals(CONSOLE_CLEAR)) {
-            console.computer.run(Computer.ACT_CLEAR);
+            console.clear();
         } else if (action.equals(CONSOLE_RESET)) {
-            console.computer.cpu.reset();
+            console.reset();
         } else if (action.equals(CONSOLE_OPERATE)) {
-            // "Operate" bar pressed.  Need to use the methods on Computer to perform
-            // these actions (rather than using the Console) as we need to ensure the
-            // long running simulations don't happen on the event dispatch thread.
-            // TODO: Messy - this should only invoke 'console' methods!
-            if (console.deviceBusy()) {
-                console.operate();
-            } else {
-                String op = function.getOperation();
-                if (op.equals(ConsoleOperation.OPERATION_READ))
-                    console.computer.setInstruction(Word.getInstr1(console.readWordGen()));
-                else if (op.equals(ConsoleOperation.OPERATION_OBEY))
-                    console.computer.run(Computer.ACT_STEP);
-                else if (op.equals(ConsoleOperation.OPERATION_NORMAL))
-                    console.computer.run(Computer.ACT_RUN);
-            }    
+            console.operate();
         } else if (action.equals(CONSOLE_MANUAL)) {
             console.setManualData(manualData.isSelected());
         }

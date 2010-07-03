@@ -30,8 +30,8 @@ import elliott803.machine.PaperTapeStation;
 public class PtsView  extends JInternalFrame implements ActionListener {
     private static final long serialVersionUID = 1L;
     
-    public static final String SWAP_READER = "SwapReader";
-    public static final String SWAP_PUNCH = "SwapPunch";
+    public static final String SWAP_READER = "Exchange Readers";
+    public static final String SWAP_PUNCH = "Exchange Punches";
     
     PaperTapeStation pts;
     ReaderView[] reader;
@@ -55,11 +55,9 @@ public class PtsView  extends JInternalFrame implements ActionListener {
         punch[1] = new PunchView(pts.punches[PaperTapeStation.PUNCH2], 2);
         teletype = new TeletypeView(pts.punches[PaperTapeStation.TELETYPE]);
         
-        swapReader = new JCheckBox("Exchange Readers");
-        swapReader.setActionCommand(SWAP_READER);
+        swapReader = new JCheckBox(SWAP_READER);
         swapReader.addActionListener(this);
-        swapPunch = new JCheckBox("Exchange Punches");
-        swapPunch.setActionCommand(SWAP_PUNCH);
+        swapPunch = new JCheckBox(SWAP_PUNCH);
         swapPunch.addActionListener(this);
         
         JPanel p1 = new JPanel();

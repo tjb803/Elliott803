@@ -7,74 +7,74 @@
 <!-- Build the runtime and source JARs and ZIPs -->
 
 <project name="Elliott803" default="buildAll">
-	<property name="project-name" value="Elliott803"/>
+    <property name="project-name" value="Elliott803"/>
     <property name="system-name" value="Elliott 803B"/>
-	<property name="system-version" value="0.7.1"/>
-	<property name="system-author" value="(C) Copyright Tim Baldwin 2009,2010"/>
-	
-	<property name="jar-name" value="elliott803-${system-version}.jar"/>
-	<property name="zip-name" value="elliott803-${system-version}.zip"/>
-	<property name="src-name" value="elliott803-src-${system-version}.zip"/>
-	
-	<!-- Build all subsections -->
-	<target name="buildAll" depends="buildJar, buildZip, buildSrc">
-		<eclipse.refreshLocal resource="${project-name}"/>
-	</target>
-	
-	<!-- Build the runtime JAR -->
-	<target name="buildJar">
-		<eclipse.incrementalBuild project="${project-name}"/>
-		<delete file="${jar-name}" quiet="true"/>
-		<jar destfile="${jar-name}">
-			<fileset dir="bin"/>
-		    <manifest>
-				<attribute name="Main-Class" value="elliott803.Main"/>
-    			<attribute name="Implementation-Title" value="${system-name}"/>
-    			<attribute name="Implementation-Version" value="${system-version}"/>
-				<attribute name="Implementation-Vendor" value="${system-author}"/>
-			</manifest>
-		</jar>
-	</target>
-	
-	<!-- Build the runtime ZIP package -->
-	<target name="buildZip" depends="buildSamples, buildJar">
-		<delete file="${zip-name}" quiet="true"/>
-		<zip destfile="${zip-name}">
-			<fileset file="license.txt"/>
-			<fileset file="readme.txt"/>
-			<fileset file="${jar-name}"/>
-			<zipfileset dir="src/elliott803/icon" prefix="icons"/>
-			<zipfileset dir="docs" prefix="docs"/>
-			<zipfileset dir="tapes" prefix="tapes"/>
-			<zipfileset dir="samples" prefix="samples"/>
-			<zipfileset dir="build/tapes" prefix="tapes"/>
-		</zip>	
-	</target>
-	
-	<!-- Build the source code ZIP package -->
-	<target name="buildSrc">
-		<delete file="${src-name}" quiet="true"/>
-		<zip destfile="${src-name}">
-			<fileset file="license.txt"/>
-			<fileset file="readme.txt"/>
-			<zipfileset dir="docs" prefix="docs"/>
-			<zipfileset dir="src" prefix="src"/>
-		</zip>
-	</target>
-	
-	<!-- Build the samples -->
-	<target name="buildSamples" depends="buildJar">
-		<property name="sample-src" value="samples/assembler"/>
-		<property name="sample-build" value="build/tapes/samples"/>
-		<delete dir="${sample-build}" quiet="true"/>
-		<mkdir dir="${sample-build}"/>
-		<apply executable="java" dest="${sample-build}" verbose="true">
-			<arg line="-cp ${jar-name} elliott803.utils.Assembler"/>
-			<srcfile/>
-			<targetfile/>
-			<fileset dir="${sample-src}"/>
-			<mapper type="glob" from="*.a1" to="*.tape"/>
-		</apply>
-	</target>
-	
+    <property name="system-version" value="0.7.x"/>
+    <property name="system-author" value="(C) Copyright Tim Baldwin 2009,2010"/>
+
+    <property name="jar-name" value="elliott803-${system-version}.jar"/>
+    <property name="zip-name" value="elliott803-${system-version}.zip"/>
+    <property name="src-name" value="elliott803-src-${system-version}.zip"/>
+
+    <!-- Build all subsections -->
+    <target name="buildAll" depends="buildJar, buildZip, buildSrc">
+        <eclipse.refreshLocal resource="${project-name}"/>
+    </target>
+
+    <!-- Build the runtime JAR -->
+    <target name="buildJar">
+        <eclipse.incrementalBuild project="${project-name}"/>
+        <delete file="${jar-name}" quiet="true"/>
+        <jar destfile="${jar-name}">
+            <fileset dir="bin"/>
+            <manifest>
+                <attribute name="Main-Class" value="elliott803.Main"/>
+                <attribute name="Implementation-Title" value="${system-name}"/>
+                <attribute name="Implementation-Version" value="${system-version}"/>
+                <attribute name="Implementation-Vendor" value="${system-author}"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <!-- Build the runtime ZIP package -->
+    <target name="buildZip" depends="buildSamples, buildJar">
+        <delete file="${zip-name}" quiet="true"/>
+        <zip destfile="${zip-name}">
+            <fileset file="license.txt"/>
+            <fileset file="readme.txt"/>
+            <fileset file="${jar-name}"/>
+            <zipfileset dir="src/elliott803/icon" prefix="icons"/>
+            <zipfileset dir="docs" prefix="docs"/>
+            <zipfileset dir="tapes" prefix="tapes"/>
+            <zipfileset dir="samples" prefix="samples"/>
+            <zipfileset dir="build/tapes" prefix="tapes"/>
+        </zip>
+    </target>
+
+    <!-- Build the source code ZIP package -->
+    <target name="buildSrc">
+        <delete file="${src-name}" quiet="true"/>
+        <zip destfile="${src-name}">
+            <fileset file="license.txt"/>
+            <fileset file="readme.txt"/>
+            <zipfileset dir="docs" prefix="docs"/>
+            <zipfileset dir="src" prefix="src"/>
+        </zip>
+    </target>
+
+    <!-- Build the samples -->
+    <target name="buildSamples" depends="buildJar">
+        <property name="sample-src" value="samples/assembler"/>
+        <property name="sample-build" value="build/tapes/samples"/>
+        <delete dir="${sample-build}" quiet="true"/>
+        <mkdir dir="${sample-build}"/>
+        <apply executable="java" dest="${sample-build}" verbose="true">
+            <arg line="-cp ${jar-name} elliott803.utils.Assembler"/>
+            <srcfile/>
+            <targetfile/>
+            <fileset dir="${sample-src}"/>
+            <mapper type="glob" from="*.a1" to="*.tape"/>
+        </apply>
+    </target>
+
 </project>

@@ -32,6 +32,10 @@ v0.7.0
 	
 v0.7.x
 ------
-  Improvements
+  Improvements:
     - Increase speed considerably when CPU and/or Store view is minimized
-    - Add Paper Tape Station view allowing swapping for readers and punches
+    - Add Paper Tape Station view allowing swapping of readers and punches
+    - Improve appearance when using Nimbus look-and-feel
+    
+  Main bug fixes:
+    - none, so far  

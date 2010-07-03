@@ -41,8 +41,7 @@ public class CPU {
         this.computer = computer;
     }
     
-    // Set the next instruction to be executed - only the first instruction
-    // can be set.
+    // Set the next instruction to be executed
     public void setInstruction(int instruction) {
         ir = Word.asInstr1(instruction);
         scr2 = 0;

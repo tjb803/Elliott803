@@ -31,7 +31,7 @@ public class RandomNumberDevice extends ControlDevice {
     }
 
     public int addressMask() {
-        return 8000;
+        return 0x1FFF;
     }
     
     public long controlRead(int addr) {
