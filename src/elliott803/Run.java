@@ -76,9 +76,8 @@ public class Run {
         int entryAddr = parms.getInteger(2);
 
         // Check at least a program tape has been supplied
-        if (programFile == null) {
+        if (programFile == null)
             parms.usage();
-        }
 
         // Open any input/output streams
         InputStream programTape = new FileInputStream(programFile);
@@ -126,11 +125,10 @@ public class Run {
             computer.traceStart();
 
         // If we have an entry point jump to it, otherwise restart with data tapes loaded
-        if (entryAddr != -1) {
+        if (entryAddr != -1) 
             computer.runInstructions(entryAddr);
-        } else {
+        else
             computer.runInstructions();
-        }
         
         // If we enter a wait on the console, we need to simulate a button press to try
         // to continue.  To do this we have to allow one "70 0" instruction to read the 

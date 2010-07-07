@@ -20,7 +20,6 @@ import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 
 import elliott803.hardware.Console;
-import elliott803.machine.Computer;
 import elliott803.view.component.ConsoleButton;
 import elliott803.view.component.ConsoleButtons;
 import elliott803.view.component.ConsoleLight;
