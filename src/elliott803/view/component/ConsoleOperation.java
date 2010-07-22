@@ -32,6 +32,7 @@ public class ConsoleOperation extends JPanel implements ActionListener {
         this.console = console;
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setAlignmentX(CENTER_ALIGNMENT);
+        console.setAction(Console.CONSOLE_READ);        // Default action is Read
         ConsoleButton rb = new ConsoleButton(OPERATION_READ, ConsoleButton.BLACK, true);
         ConsoleButton nb = new ConsoleButton(OPERATION_NORMAL, ConsoleButton.BLACK, false);
         ConsoleButton ob = new ConsoleButton(OPERATION_OBEY, ConsoleButton.BLACK, false);
