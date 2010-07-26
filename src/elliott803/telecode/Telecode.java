@@ -51,6 +51,7 @@ public abstract class Telecode {
      * 31       LS      LS          (letter shift)
      */
 
+    public static final byte TELE_BL = 0;
     public static final byte TELE_FS = 27;
     public static final byte TELE_SP = 28;
     public static final byte TELE_CR = 29;

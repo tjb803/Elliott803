@@ -96,8 +96,7 @@ public class CharToTelecode extends Telecode {
 
     private int isSpecial(char ch) {
         int i = -1;
-        if (ch == 0) i = 0;
-        else if (ch == '_') i = 0;
+        if (ch == 0 || ch == '_') i = TELE_BL;
         else if (ch == ' ' || ch == '\t') i = TELE_SP;
         else if (ch == '\r') i = TELE_CR;
         else if (ch == '\n') i = TELE_LF;

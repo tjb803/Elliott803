@@ -123,7 +123,7 @@ public class TeletypeView extends TapeDeviceView {
     char[] cc = new char[1];
 
     public void updateCh(int ch) {
-        if (ch != Telecode.TELE_CR) {
+        if (ch != Telecode.TELE_BL && ch != Telecode.TELE_CR) {
             tc[0] = (byte)ch;
             if (converter.convert(tc, 1, cc) != 0) {
                 setChar(cc[0]);
