@@ -102,8 +102,8 @@ src/elliott803/view/component/DisplayLight.java -text
 src/elliott803/view/component/DisplayWord.java -text
 tapes/algol/a104-1.tape -text
 tapes/algol/a104-2.tape -text
-test/Main.launch -text
-test/Run.launch -text
+test/Elliott803[!!-~]Main.launch -text
+test/Elliott803[!!-~]Run.launch -text
 test/src/elliott803/hardware/TestStore.java -text svneol=unset#text/plain
 test/src/elliott803/machine/TestFloatWord.java -text svneol=unset#text/plain
 test/src/elliott803/machine/TestInstruction.java -text svneol=unset#text/plain
