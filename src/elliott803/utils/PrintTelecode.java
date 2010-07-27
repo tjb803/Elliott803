@@ -21,7 +21,7 @@ import elliott803.telecode.TelecodeOutputStream;
  * file using only telecode characters.
  *
  * Usage:
- *    TapeWrite [options] inputfile [outputfile]
+ *    PrintTelecode [options] inputfile [outputfile]
  *
  * where:
  *    inputfile: the name of the text input file
@@ -39,7 +39,7 @@ import elliott803.telecode.TelecodeOutputStream;
  *
  * @author Baldwin
  */
-public class TapeConvert {
+public class PrintTelecode {
 
     public static void main(String[] args) throws Exception {
         // Handle parameters
@@ -47,7 +47,7 @@ public class TapeConvert {
         options.put("ascii", null);
         options.put("inputenc", "inputencoding");
         options.put("outputenc", "outputencoding");
-        Args parms = new Args("TapeConvert", "inputfile [outputfile]", args, options);
+        Args parms = new Args("PrintTelecode", "inputfile [outputfile]", args, options);
 
         File inputFile = parms.getInputFile(1);
         File outputFile = parms.getOutputFile(2);

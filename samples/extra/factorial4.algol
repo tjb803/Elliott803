@@ -1,0 +1,205 @@
+Factorial4'
+BEGIN
+
+Comment ****************************************************************
+        ***                                                          ***
+        *** Calculate factorial of a given number...                 ***
+        ***                                                          ***
+        *** Written: For 503 Algol - August 1968                     ***
+        *** Amended: For 803 Algol -    May 2010                     ***
+        *** Author:  Bob Firth                                       ***
+        *** Contact: General_Factotum@hotmail.co.uk                  ***
+        ***                                                          ***
+        *** Written: June,July 2010                                  ***
+        *** Ver 2.0: Calculations performed in binary                ***
+        *** Ver 3.0: Tidy-up +Trace-   June 2010                     ***
+        *** Ver 4.0: Final tidy code   July 2010                     ***
+        ***                                                          ***
+        *** Definition of factorial N = N*(N-1)*(N-2)......*3*2*1    ***
+        *** Basic "tricks" to speedup on original algorithm (1968)   ***
+        *** (1) Work in binary, not decimal, and then convert result ***
+        ***     to decimal for printing out at end.                  ***
+        *** (2) Only multiply that part of (partial) result array    ***
+        ***     which is currently non-zero.                         ***
+        *** (3) Assemble as many consecutive multipliers into one    ***
+        ***     word as possible, before applying to the main        ***
+        ***     multi-precision array.                               ***
+        ***                                                          ***
+        *** NB  The style of coding could do with being made more    ***
+        ***     modular (using procedures)                           ***
+        ***     This would then allow more intelligent way of        ***
+        ***     handling array bounds (depending on requested number)***
+        ***                                                          ***
+        *** Diagnostics  To view assembly of multipliers, set B-Line ***
+        *** ===========  on the console word generator...            ***
+        ***                                                          ***
+        *** Finally - you can check result(s) at WWW.WolframAlpha.com***
+        ***                                                          ***
+        ****************************************************************'
+
+
+Comment - Requested factorial, and variable used to count it'
+        Integer Number,Count'
+
+Comment - Multiplication temporaries'
+        Integer Factor,Carry'
+
+Comment - Division temporaries'
+        Integer Remain,Temp'
+
+Comment - Array counters/pointers'
+        Integer BMax,DMax,IPoint,OPoint,Point'
+
+Comment - Program constants - MaxPos=2**39-1, BLine=2**19'
+        Integer MaxPos,Power,NDigit,One,BLine'
+
+Comment - Variables used for final printout'
+        Integer Row,Rows,Cols'
+
+Comment - Misc Variables'
+        Integer N,P,Trace'
+
+        Real    pi,Estim'
+        Integer Array BStore[1:800],DStore[1:1000]'
+        Switch  SW1:=SAYSO2,START2,LOOP,OKAY,WORK,ONGO,NEXT,OFLO,SKIP,SKIP1'
+        SWITCH  SW2:=SAYSO3,START3,LOOP1,NOTRAC,DECRE,INCRE,OKAY1,LOOP2'
+        SWITCH  SW3:=LOOP3,OUT1,OUT2,OnYerBike'
+
+        Reader(2)'
+        Punch(3)'
+        MaxPos  :=274877906943'
+        BLine   :=524288'
+        Power   :=10000000000'
+        NDigit  :=entier(LN(Power)/LN(10)+0.5)'
+        One     :=1'
+
+        Read Number'
+        Print ££l1? Calculating Factorial?,sameline,digits(4),Number'
+
+
+        PRINT ££l2? Stage 1 - estimates of result?'
+        PRINT ££l1? =============================?'
+
+        Digits(5)'
+        pi      :=3.14159265'
+        Estim   :=(0.5*LN(2*pi)+(Number+0.5)*LN(Number)-Number)/LN(10)'
+        Print ££l1?  Stirling ?,sameline,aligned(1,8),10**(Estim-entier(Estim))
+                ,£ x 10 to power?,entier(Estim)'
+
+        Estim   :=(Number*LN(Number)-Number+LN(Number*(1+4*Number*(1+2*Number)))/6+LN(pi)/2)/LN(10)'
+        Print ££l1? Ramanujan ?,sameline,aligned(1,8),10**(Estim-entier(Estim))
+                ,£ x 10 to power?,entier(Estim)'
+
+
+        PRINT ££l2? Stage 2 - Calculate result in Binary?'
+        PRINT ££l1? ====================================?'
+
+        PRINT ££l1? Clear binary store...?'
+        FOR N:=2 STEP 1 UNTIL 800 DO BStore[N]:=0'
+                
+        BStore[1]:=1'
+        BMax    :=1'
+        Count   :=1'
+        Elliott(7,0,0     ,0,0,3,BLine )'
+        Elliott(4,2,SAYSO2,0,4,0,START2)'
+SAYSO2: Print ££l1? Working...?'
+
+Comment - Here we stuff as many consecutive integer multiples into a 38 bit word
+          as possible - result in Factor'
+START2: Factor  :=1'
+        Elliott(7,0,0     ,0,0,3,BLine )'
+        Elliott(2,0,Trace ,0,4,2,LOOP  )'
+        PRINT ££l1? Multipliers?,sameline,digits(4),Count+1'
+LOOP:   ELLIOTT(3,0,Number,0,0,5,Count )'
+        ELLIOTT(4,2,WORK  ,0,0,2,Count )'
+        ELLIOTT(5,2,Factor,0,4,2,OKAY  )'
+        ELLIOTT(4,0,WORK  ,0,0,0,0     )'
+OKAY:   ELLIOTT(5,7,0     ,0,2,0,Factor)'
+        ELLIOTT(2,2,Count ,0,4,0,LOOP  )'
+WORK:   Elliott(3,0,Trace ,0,4,2,ONGO  )'
+        PRINT £ to ?,sameline,digits(4),Count,£ Gives Factor?,digits(12),Factor'
+
+Comment - Now we take the product in Factor, and multiply into the multi precision
+          binary number held in BStore()'
+ONGO:   Point   :=ADDRESS(BStore)-1'
+        Elliott(2,6,Carry ,0,2,6,N     )'
+NEXT:   Elliott(2,2,Point ,0,3,0,Factor)'
+        Elliott(0,0,Point ,1,5,2,0     )'
+        Elliott(2,0,4     ,0,5,7,0     )'
+        Elliott(0,4,Carry ,0,4,3,OFLO  )'
+        Elliott(4,0,SKIP  ,0,0,0,0     )'
+OFLO:   Elliott(0,3,MaxPos,0,2,2,4     )'
+SKIP:   Elliott(0,0,Point ,1,2,0,0     )'
+        Elliott(3,0,4     ,0,2,0,Carry )'
+        Elliott(3,2,N     ,0,0,5,BMax  )'
+        Elliott(4,1,NEXT  ,0,0,0,0     )'
+        Elliott(0,0,Point ,1,3,0,0     )'
+        Elliott(4,2,SKIP1 ,0,2,2,BMax  )'
+SKIP1:  IF Count LESS Number THEN GOTO START2'
+        PRINT ££L1?  Binary storage used is?,SAMELINE,digits(3),BMax,£ Words?'
+
+
+        PRINT ££l2? Stage 3 - Convert to Decimal?'
+        PRINT ££l1? ============================?'
+
+        Elliott(7,0,0     ,0,0,3,BLine )'
+        Elliott(4,2,SAYSO3,0,4,0,START3)'
+SAYSO3: Print ££l1? Working...?'
+
+START3: IPoint  :=ADDRESS(BStore)-1'
+        OPoint  :=ADDRESS(DStore)-1'
+        DMax    :=0'
+	N	:=-1'
+LOOP1:  Elliott(7,0,0     ,0,0,3,BLine )'
+        Elliott(4,2,NOTRAC,0,2,2,N     )'
+	IF N = (N DIV 70)*70 THEN PRINT ££l1??'
+	PRINT SAMELINE,£.?'
+NOTRAC: Elliott(3,0,BMax  ,0,4,2,OUT2  )'
+        Elliott(0,4,IPoint,0,2,0,Point )'
+        Elliott(0,0,Point ,1,3,0,0     )'
+        Elliott(4,2,DECRE ,0,0,5,Power )'
+        Elliott(4,1,OKAY1 ,0,4,0,INCRE )'
+DECRE:  Elliott(3,0,One   ,0,2,7,BMax  )'
+        Elliott(4,0,NOTRAC,0,0,0,0     )'
+INCRE:  Elliott(2,2,BMax  ,0,2,2,Point )'
+OKAY1:  Elliott(0,6,Point ,1,1,0,0     )'
+        Elliott(2,0,Remain,0,3,0,One   )'
+        Elliott(2,7,Point ,0,4,0,LOOP3 )'
+LOOP2:  Elliott(0,0,Point ,1,3,0,0     )'
+        Elliott(2,0,4     ,0,5,0,38    )'
+        Elliott(3,0,Remain,0,5,6,Power )'
+        Elliott(0,0,Point ,1,2,0,0     )'
+        Elliott(5,2,Power ,0,5,7,0     )'
+        Elliott(0,7,4     ,0,0,3,Maxpos)'
+        Elliott(2,0,Remain,0,0,0,0     )'
+        Elliott(3,0,One   ,0,3,7,Point )'
+LOOP3:  Elliott(3,0,Point ,0,0,5,IPoint)'
+        Elliott(4,2,OUT1  ,0,4,0,LOOP2 )'
+
+OUT1:   Elliott(2,2,DMax  ,0,3,0,DMax  )'
+        Elliott(0,4,OPoint,0,2,0,4     )'
+        Elliott(3,0,Remain,0,0,0,0     )'
+        Elliott(0,0,4     ,1,2,0,0     )'
+        Elliott(3,0,BMax  ,0,0,5,One   )'
+        Elliott(4,2,OUT2  ,0,4,0,LOOP1 )'
+
+OUT2:   PRINT ££l1? Decimal storage used is?,SAMELINE,digits(3),DMax,£ Words?'
+        Print ££l2? Factorial?,sameline,digits(4),Number,£ is:?,££l1??'
+
+        Cols    :=7'
+        Digits(NDigit)'
+        Rows    :=( DMax+Cols-1 ) DIV Cols'
+        FOR Row:=Rows STEP -1 UNTIL 1 DO BEGIN
+                Print ££l1??'
+                FOR P:=Cols STEP -1 UNTIL 1 DO BEGIN                        
+                        N       :=(Row-1)*Cols+P'
+                        If N GR   DMax THEN Print £           ?'
+                        If N =    DMax THEN Print sameline,DStore[N]'
+                        If N LESS DMax THEN Print sameline,leadzero(£0?),DStore[N]'
+                                               End'
+                                         End'
+
+        Print ££l1? Numer of digits?,sameline,digits(4)
+                ,(DMax-1)*NDigit+entier(1+LN(DStore[DMax])/LN(10))'
+End'
+Comment ======================================\\======================================'

@@ -1,0 +1,485 @@
+PI4'
+BEGIN
+
+Comment ****************************************************************
+        ***                                                          ***
+        *** This calculation of PI uses the Bailey-Borwein-Plouffe   ***
+        *** algorithm, whereby PI = Sum [K=0 to Inf] (1/16)**K       ***
+        ***         *( 4/(8*K+1) -2/(8*K+4) -1/(8K+5) -1/(8*K+6) ).  ***
+        *** At each iteration, the four arrays BFrac1 to BFrac4 are  ***
+        *** populated with the binary expansions of the fractional   ***
+        *** terms, then these are combined, and finally shifted by an***
+        *** amount corresponding to the factor (1/16)**K, upon which ***
+        *** this is added to the accumulating total.  Hence we get   ***
+        *** an answer of gradually increasing precision, viewable    ***
+        *** by setting bit 2 of the console word generator.          ***
+        ***                                                          ***
+        *** Each iteration increases the precision by slightly       ***
+        *** better than 4 binary bits, so we can estimate the decimal***
+        *** precision correspondingly at each iteration, or otherwise***
+        *** by simply comparing results of consecutive iterations.   ***
+        ***                                                          ***
+        *** Diagnostics  Setting BLine causes binary dump of some    ***
+        *** ===========      arrays - to see all remove the Comments ***
+        ***              Setting One on the word generator causes a  ***
+        ***                  trace of significant operations         ***
+        ***              Setting Two on the word generator shows the ***
+        ***                  decimal accumulation at EVERY iteration ***
+        ***                                                          ***
+        *** Author:  Bob Firth                                       ***
+        *** Written: June,July 2010                                  ***
+        *** Contact: General_Factotum@hotmail.co.uk                  ***
+        ***                                                          ***
+        *** Comment: The machine code of the 803/503 is not          ***
+        ***          particularly suited to multi-word precision     ***
+        ***          arithmetic, mainly because of the absence of    ***
+        ***          double-length add and subtract.  Nevertheless   ***
+        ***          it is possible to program around this by        ***
+        ***          detecting and handling overflow while processing***
+        ***          the lower order word.                           ***
+        ***                                                          ***
+        ****************************************************************'
+
+
+PROCEDURE PWRDS(Ident,AStart,ASize)'
+        VALUE   AStart,ASize'
+        INTEGER AStart,ASize'
+        STRING  Ident'
+
+Comment *** Dumps binary representation of elements of array         ***
+        *** starting at AStart, length 1+ASize                       ***
+        ****************************************************************'
+
+BEGIN   INTEGER BLine,NoBits,NoCHs,Count,Word'
+        SWITCH S:=SPACE,LOOP,NEXT,EXIT,GETOUT'
+        BLine   :=524288'
+
+        Elliott(7,0,0     ,0,0,3,BLine )'
+        Elliott(4,2,GETOUT,0,0,0,0     )'
+
+        FOR Count:=0 STEP 1 UNTIL ASize DO BEGIN
+                Elliott(7,0,0     ,0,0,3,BLine )'
+                Elliott(4,2,EXIT  ,0,0,0,0     )'
+                PRINT ££L1??,Ident,sameline,digits(3),Count,£) ?'
+                NOBITS  :=-39'
+                Elliott(3,0,AStart,0,0,4,Count)'
+                Elliott(2,0,4     ,1,3,0,0     )'
+                Elliott(2,0,Word  ,0,0,0,0     )'
+        SPACE:  PRINT £ ?'
+                NOCHS   :=-2'
+        LOOP:   ELLIOTT(3,2,NoBits,0,4,2,EXIT  )'
+                IF WORD LESS 0 THEN PRINT £1?'
+                IF WORD GREQ 0 THEN PRINT £0?'
+                ELLIOTT(3,0,Word  ,0,5,5,1     )'
+                ELLIOTT(2,0,Word  ,0,4,3,NEXT  )'
+        NEXT:   ELLIOTT(3,2,NoCHs ,0,4,2,SPACE )'
+                ELLIOTT(4,0,LOOP  ,0,0,0,0     )'
+        EXIT:                              END'
+GETOUT:
+END PWRDS'
+Comment ================================================================'
+
+
+PROCEDURE INTDV(DVDend,DIVsor,AStart,ASize)'
+        VALUE   DVDend,DIVsor,AStart,ASize'
+        INTEGER DVDend,DIVsor,AStart,ASize'
+
+Comment *** Divides integer word DVDend by integer word DIVsor,      ***
+        *** result is stored in array ARRAY[0:ASize]                 ***
+        *** where whole part of quotient goes to ARRAY[0]            ***
+        *** and fractional part populates rest of array.             ***
+        *** Array position and length given by AStart and ASize+1    ***
+        ****************************************************************'
+
+BEGIN   INTEGER Maxpos,One,Remain,Count,Point'
+        SWITCH S:=NOTRAC,LOOP'
+        Maxpos  :=274877906943'
+        One     :=1'
+
+        Elliott(7,0,0     ,0,0,3,One   )'
+        Elliott(4,2,NOTRAC,0,0,0,0     )'
+        PRINT ##L1?Dividing ?,SAMELINE,DIGITS(1),DVDend,# by ?,DIGITS(5),DIVsor'
+NOTRAC: Elliott(2,6,Remain,0,2,6,Count )'
+        Elliott(3,0,AStart,0,2,0,Point )'
+        Elliott(3,0,DVDend,0,2,0,4     )'
+        Elliott(5,0,38    ,0,0,0,0     )'
+LOOP:   Elliott(3,0,Remain,0,5,6,DIVsor)'
+        Elliott(0,0,Point ,1,2,0,0     )'
+        Elliott(5,2,DIVsor,0,5,7,0     )'
+        Elliott(0,7,4     ,0,0,3,Maxpos)'
+        Elliott(2,0,Remain,0,2,6,4     )'
+        Elliott(2,2,Point ,0,0,0,0     )'
+        Elliott(3,2,Count ,0,0,5,ASize )'
+        Elliott(5,1,0     ,0,4,1,LOOP  )'
+END INTDV'
+Comment ================================================================'
+
+
+PROCEDURE COMBI(T1Strt,T2Strt,T3Strt,T4Strt,TTStrt,Max)'
+        VALUE   T1Strt,T2Strt,T3Strt,T4Strt,TTStrt,Max'
+        INTEGER T1Strt,T2Strt,T3Strt,T4Strt,TTStrt,Max'
+
+Comment *** Take (binary fraction at) T1Strt, subtract that at T2Strt***
+        *** and at T3Strt and at T4Strt, and put result at TTStrt    ***
+        ****************************************************************'
+
+BEGIN   INTEGER Maxpos,One,Count,Carry'
+        Switch  S:=LOOP,UFLO1,SKIP1,UFLO2,SKIP2,UFLO3,SKIP3,UFLO4,SKIP4'
+        Maxpos  :=274877906943'
+        One     :=1'
+
+        T1Strt  :=T1Strt+Max'
+        T2Strt  :=T2Strt+Max'
+        T3Strt  :=T3Strt+Max'
+        T4Strt  :=T4Strt+Max'
+        TTStrt  :=TTStrt+Max'
+        Elliott(3,0,Max   ,0,2,0,Count )'
+        Elliott(2,6,Carry ,0,2,6,4     )'
+LOOP:   Elliott(0,0,T1Strt,1,3,0,0     )'
+        Elliott(0,0,T2Strt,1,0,5,0     )'
+        Elliott(4,1,UFLO1 ,0,4,0,SKIP1 )'
+UFLO1:  Elliott(0,3,MaxPos,0,2,2,4     )'
+SKIP1:  Elliott(0,0,T3Strt,1,0,5,0     )'
+        Elliott(4,1,UFLO2 ,0,4,0,SKIP2 )'
+UFLO2:  Elliott(0,3,MaxPos,0,2,2,4     )'
+SKIP2:  Elliott(0,0,T4Strt,1,0,5,0     )'
+        Elliott(4,1,UFLO3 ,0,4,0,SKIP3 )'
+UFLO3:  Elliott(0,3,MaxPos,0,2,2,4     )'
+SKIP3:  Elliott(0,0,0     ,0,0,5,Carry )'
+        Elliott(4,1,UFLO4 ,0,4,0,SKIP4 )'
+UFLO4:  Elliott(0,3,MaxPos,0,2,2,4     )'
+SKIP4:  Elliott(0,0,TTStrt,1,2,0,0     )'
+        Elliott(3,6,4     ,0,2,0,Carry )'
+        Elliott(3,0,One   ,0,2,7,T1Strt)'
+        Elliott(2,7,T2Strt,0,2,7,T3Strt)'
+        Elliott(2,7,T4Strt,0,2,7,TTStrt)'
+        Elliott(0,0,0     ,0,3,7,Count )'
+        Elliott(0,1,0     ,0,4,1,LOOP  )'
+END COMBI'
+Comment ================================================================'
+
+
+PROCEDURE SHIFT(Expone,TTStrt,SHStrt,Max)'
+        VALUE   Expone,TTStrt,SHStrt,Max'
+        INTEGER Expone,TTStrt,SHStrt,Max'
+
+Comment *** Shift contents of array at TTStrt down by Expone*4 bits  ***
+        *** and place result at array SHStrt, both length Max        ***
+        ****************************************************************'
+
+BEGIN   INTEGER Maxpos,One,Count,ShiftB,ShiftL,ShiftR,ShiftW,Source'
+        Switch  S:=DONE,NOTRAC,MORE,SHIF1,NONE1,NEXT1,SHIF2,NONE2,NEXT2,NOSHIF,EXIT'
+        Maxpos  :=274877906943'
+        One     :=1'
+
+        Count   :=Expone DIV 19'
+        ShiftB  :=( Expone - Count*19 )*4'
+        ShiftW  :=Count *2'
+        ShiftL  :=ShiftR  :=Source  :=0'
+
+        If ShiftB GREQ 60 then BEGIN
+                ShiftW  :=ShiftW +1'
+                ShiftL  :=76 - ShiftB'
+                Goto DONE'
+                               END'
+        If ShiftB GREQ 40 then BEGIN
+                ShiftW  :=ShiftW +1'
+                ShiftR  :=ShiftB - 38'
+                Source  :=1'
+                Goto DONE'
+                               END'
+        If ShiftB GREQ 20 then BEGIN
+                ShiftL  :=38 - ShiftB'
+                Goto DONE'
+                               END'
+        If ShiftB GREQ  0 then BEGIN
+                ShiftR  :=ShiftB'
+                Source  :=1'
+                               END'
+
+DONE:   Elliott(7,0,0     ,0,0,3,One   )'
+        Elliott(4,2,NOTRAC,0,0,0,0     )'
+        Print ££l1?Shift Parameters?,SAMELINE,DIGITS(3),Count,ShiftB,ShiftL,ShiftR,ShiftW,Source'
+
+NOTRAC: Elliott(0,0,0     ,0,2,6,Count )'
+MORE:   Elliott(3,0,Count ,0,0,5,ShiftW)'
+        Elliott(4,1,NONE1 ,0,0,4,TTStrt)'
+        Elliott(2,0,4     ,1,3,0,0     )'
+SHIF1:  Elliott(5,0,38    ,0,4,0,NEXT1 )'
+NONE1:  Elliott(0,6,0     ,0,4,0,SHIF1 )'
+NEXT1:  Elliott(3,0,Count ,0,0,5,ShiftW)'
+        Elliott(0,5,One   ,0,4,1,NONE2 )'
+        Elliott(0,4,TTStrt,0,0,0,0     )'
+        Elliott(2,0,4     ,1,3,0,0     )'
+SHIF2:  Elliott(4,0,NEXT2 ,0,0,0,0     )'
+NONE2:  Elliott(0,6,0     ,0,0,0,0     )'
+NEXT2:  Elliott(0,0,ShiftL,1,5,4,0     )'
+        Elliott(0,0,ShiftR,1,5,0,0     )'
+        Elliott(0,3,Maxpos,0,2,0,4     )'
+        Elliott(3,0,Source,0,4,2,NOSHIF)'
+        Elliott(5,7,0     ,0,2,0,4     )'
+NOSHIF: Elliott(3,0,4     ,0,0,0,0     )'
+        Elliott(0,0,SHStrt,1,2,0,0     )'
+        Elliott(2,2,SHStrt,0,3,0,Count )'
+        Elliott(0,4,One   ,0,2,0,Count )'
+        Elliott(0,5,Max   ,0,0,5,One   )'
+        Elliott(4,1,MORE  ,0,4,3,EXIT  )'
+EXIT:
+END SHIFT'
+Comment ================================================================'
+
+
+PROCEDURE ACCUM(BStart,BSize,TStart,TSize)'
+        VALUE   BStart,BSize,TStart,TSize'
+        INTEGER BStart,BSize,TStart,TSize'
+
+Comment *** Add contents of extended integer at BStart size BSize    ***
+        *** into extended integer at TStart, size TSize.             ***
+        ****************************************************************'
+
+BEGIN   INTEGER Maxpos,One,Count,Carry'
+        SWITCH S:=LOOP,OFLO,SKIP,EXIT'
+        Maxpos  :=274877906943'
+        One     :=1'
+
+        IF BSize NOTEQ TSize THEN BEGIN
+                PRINT ££l1?Illegal parameters to procedure ACCUM?'
+                GOTO EXIT'
+                                  END'
+        TStart  :=TStart+BSize'
+        BStart  :=BStart+BSize'
+        Elliott(3,0,BSize ,0,2,0,Count )'
+        Elliott(2,6,Carry ,0,2,6,4     )'
+LOOP:   Elliott(0,0,TStart,1,3,0,0     )'
+        Elliott(0,0,BStart,1,0,4,0     )'
+        Elliott(4,3,OFLO  ,0,4,0,SKIP  )'
+OFLO:   Elliott(0,3,MaxPos,0,2,2,4     )'
+SKIP:   Elliott(0,4,Carry ,0,0,0,0     )'
+        Elliott(0,0,TStart,1,2,0,0     )'
+        Elliott(3,6,4     ,0,2,0,Carry )'
+        Elliott(3,0,One   ,0,2,7,BStart)'
+        Elliott(0,0,0     ,0,2,7,TStart)'
+        Elliott(3,7,Count ,0,0,1,0     )'
+        Elliott(4,1,LOOP  ,0,0,0,0     )'
+EXIT:
+END CBTOD'
+Comment ================================================================'
+
+
+PROCEDURE CBTOD(BStart,BSize,DStart,DSize)'
+        VALUE   BStart,BSize,DStart,DSize'
+        INTEGER BStart,BSize,DStart,DSize'
+
+Comment *** Converts binary fraction in array at BStart length       ***
+        *** 1+BSize to Decimal fraction at DStart length 1+DSize     ***
+        ****************************************************************'
+
+BEGIN   INTEGER Maxpos,Power,One,BCount,DCount,Carry,Item,Point'
+        SWITCH S:=START,LOOP,OFLO,SKIP,EXIT'
+        Maxpos  :=274877906943'
+        Power   :=10000000000'
+        One     :=1'
+
+        Elliott(3,0,DSize ,0,2,1,DCount)'
+START:  Elliott(0,6,BStart,1,1,0,0     )'
+        Elliott(0,0,DStart,1,2,0,0     )'
+        Elliott(3,0,DCount,0,4,2,EXIT  )'
+        Elliott(2,2,DCount,0,2,6,Carry )'
+        Elliott(3,0,BSize ,0,2,1,BCount)'
+        Elliott(3,0,BStart,0,0,4,BSize )'
+        Elliott(2,0,Point ,0,0,0,0     )'
+
+LOOP:   Elliott(0,0,Point ,1,3,0,0     )'
+        Elliott(5,2,Power ,0,2,0,4     )'
+        Elliott(5,7,0     ,0,0,4,Carry )'
+        Elliott(4,3,OFLO  ,0,4,0,SKIP  )'
+OFLO:   Elliott(0,3,Maxpos,0,2,2,4     )'
+SKIP:   Elliott(0,0,Point ,1,2,0,0     )'
+        Elliott(3,0,4     ,0,2,0,Carry )'
+        Elliott(3,0,One   ,0,2,7,Point )'
+        Elliott(3,2,BCOUNT,0,4,1,LOOP  )'
+        Elliott(2,2,DStart,0,4,0,START )'
+EXIT:
+END CBTOD'
+Comment ================================================================'
+
+
+PROCEDURE PDARY(DStart,DSize)'
+        VALUE   DStart,DSize'
+        INTEGER DStart,DSize'
+
+Comment *** Print decimal number at DStart, and fractional component ***
+        *** at DStart+1, length DSize                                ***
+        ****************************************************************'
+
+BEGIN   INTEGER Cols,Count,Word'
+        Cols    :=6'
+        Elliott(0,0,Dstart,1,3,0,0     )'
+        Elliott(2,0,Word  ,0,0,0,0     )'
+        PRINT ££l1??,sameline,Digits(1),Word,£.?'
+        For Count:=1 step 1 until DSize DO BEGIN
+                Elliott(2,2,Dstart,1,3,0,0     )'
+                Elliott(2,0,Word  ,0,0,0,0     )'
+                IF ( Count-1 ) = ( ( Count-1 ) DIV Cols )*Cols THEN BEGIN
+                        IF ( Count-1 ) GREQ 1 THEN PRINT ££l1?   ?' END'
+                PRINT sameline,leadzero(£0?),Digits(10),Word'
+                                           END'
+END PDARY'
+Comment ================================================================'
+
+
+INTEGER PROCEDURE ESTIM(Expone)'
+                VALUE   Expone'
+                INTEGER Expone'
+
+Comment *** Estimate number of decimal places precision available    ***
+        *** after term Expone contributed.                           ***
+        ****************************************************************'
+
+BEGIN   REAL    Temp'
+        Temp    :=4/(8*Expone+1)-2/(8*Expone+4)-1/(8*Expone+5)-1/(8*Expone+6)'
+        ESTIM   :=entier((Expone*LN(16)-LN(Temp))/LN(10)+0.5)'
+END ESTIM'
+Comment ================================================================'
+
+
+PROCEDURE TRACE(TEXT)'
+        STRING  TEXT'
+
+Comment *** Trace program flow if bit 1 set                          ***
+        ****************************************************************'
+
+BEGIN   INTEGER One'
+        SWITCH S:=NOTRAC'
+        One     :=1'
+
+        Elliott(7,0,0     ,0,0,3,One   )'
+        Elliott(4,2,NOTRAC,0,0,0,0     )'
+        PRINT TEXT'
+NOTRAC:
+END TRACE'
+Comment ================================================================'
+
+
+PROCEDURE CALPI(MaxTrm,BMax,DMax)'
+        VALUE   MaxTrm,BMax,DMax'
+        INTEGER MaxTrm,BMax,DMax'
+
+Comment *** Perform calculation of PI using algorithm described above***
+        *** MaxTrm is the number of terms to be calculated           ***
+        ***   BMax is words allocated to fractional part of result   ***
+        ***   DMax is words allocated (10 digits/word) to decimal    ***
+        ***                                         part of result   ***
+        ****************************************************************'
+
+BEGIN   INTEGER Array BFrac1[0:BMax],BFrac2[0:BMax],BFrac3[0:BMax],BFrac4[0:BMax]'
+        INTEGER Array BFracT[0:BMax],BShift[0:BMax],BReslt[0:BMax],BOutpt[0:BMax]'
+        INTEGER Array DOutpt[0:DMax]'
+        INTEGER Two,Count,Term,Expone,EPlace,DWords'
+        SWITCH S:=SHOW,NOSHOW'
+        Two     :=2'
+
+        FOR Count:=0 STEP 1 UNTIL BMax DO
+                BReslt[Count]:=0'
+
+        FOR Term:=1 STEP 1 UNTIL MaxTrm DO BEGIN
+        Expone  :=Term-1'
+        PRINT ££l1?Adding term ?,sameline,digits(4),Term'
+
+        INTDV(4,8*Expone+1,ADDRESS(BFrac1),BMax)'
+Comment PWRDS(£BFrac1?,ADDRESS(BFrac1),BMax)'
+
+        INTDV(2,8*Expone+4,ADDRESS(BFrac2),BMax)'
+Comment PWRDS(£BFrac2?,ADDRESS(BFrac2),BMax)'
+
+        INTDV(1,8*Expone+5,ADDRESS(BFrac3),BMax)'
+Comment PWRDS(£BFrac3?,ADDRESS(BFrac3),BMax)'
+
+        INTDV(1,8*Expone+6,ADDRESS(BFrac4),BMax)'
+Comment PWRDS(£BFrac4?,ADDRESS(BFrac4),BMax)'
+
+        TRACE(££l1?Combine fractions...?)'
+        COMBI(ADDRESS(BFrac1),ADDRESS(BFrac2),ADDRESS(BFrac3),ADDRESS(BFrac4),ADDRESS(BFracT),BMax)'
+Comment PWRDS(£BFracT?,ADDRESS(BFracT),BMax)'
+
+Comment TRACE(££l1?Shift down...?)'
+        SHIFT(Expone,ADDRESS(BFracT),ADDRESS(BShift),BMax)'
+        PWRDS(£BShift?,ADDRESS(BShift),BMax)'
+
+        TRACE(££l1?Accumulate...?)'
+        ACCUM(ADDRESS(BShift),BMax,ADDRESS(BReslt),BMax)'
+Comment PWRDS(£BReslt?,ADDRESS(BReslt),BMax)'
+
+        IF Term GREQ MaxTrm-2 THEN GOTO SHOW'
+        Elliott(7,0,0     ,0,0,3,Two   )'
+        Elliott(4,2,NOSHOW,0,0,0,0     )'
+SHOW:   TRACE(££l1?Convert to Decimal...?)'
+        FOR Count:=0 STEP 1 UNTIL BMax DO BOutpt(Count):=BReslt(Count)'
+        CBTOD(ADDRESS(BOutpt),BMax,ADDRESS(DOutpt),DMax)'
+        EPlace  :=ESTIM(Expone)'
+        DWords  :=(EPlace+15) DIV 10'
+        IF DWords GR DMax THEN DWords :=DMax'
+        PRINT SAMELINE,£ yields value for PI:-?'
+        PDARY(ADDRESS(DOutpt),DWords)'
+        PRINT ££l1?Estimated accurate to?,sameline,digits(4),EPlace,£  digits£l1??'
+NOSHOW:                                    END'
+
+END CALPI'
+Comment ================================================================
+        ================================================================
+        ================================================================'
+
+
+BEGIN   INTEGER N,BMax,DMax,Expone,MaxTrm'
+        REAL    DTB'
+        SWITCH S:=LOOP1,LOOP2,ONYERBIKE'
+        Reader(2)'
+         Punch(3)'
+        Digits(4)'
+
+Comment The most efficient use of array space is when both Binary and Decimal arrays
+        hold the same precision, which occurs when DMax = BMax * ( LN(2**39)/LN(10**10))
+                                                        = BMax * 1.17402
+
+        To achieve an accuracy of D decimal digits, this is guaranteed by
+        using number of iterations given by:     Maxtrm = D * ( LN(10)/LN(16) )
+                                                        = D * 0.830482
+        where DMax decimal array entries hold 10*DMax digits
+
+        For a more accurate estimate, keep increasing Expone until
+        ( Expone*LN(16)-LN(4/(8*Expone+1)-2/(8*Expone+4)-1/(8*Expone+5)-1/(8*Expone+6)) )/LN(10) >D
+             and then set MaxTrm :=Expone+1'
+
+        Read N'
+        IF N LESSEQ 0 THEN BEGIN
+                PRINT £Invalid number?'
+                GOTO ONYERBIKE'
+                           END'
+
+        DMax    :=( N+9 ) DIV 10'
+        BMax    :=entier( DMax*(10*LN(10))/(39*LN(2)) )+2'
+
+        PRINT ££l1?Required decimal places    ?,sameline,N'
+        PRINT ££l1?Array size, Decimal storage?,sameline,DMax'
+        PRINT ££l1?Array size, Binary storage ?,sameline,BMax'
+        PRINT ££l1?Overall array space reqd.  ?,sameline,DMax+8*BMax'
+
+        Expone  :=0'
+LOOP1:  Expone  :=Expone+10'
+        IF ESTIM(Expone) LESSEQ (N-1) THEN GOTO LOOP1'
+
+LOOP2:  Expone  :=Expone-1'
+        IF ESTIM(Expone) GREQ   (N+1) THEN GOTO LOOP2'
+        Expone  :=Expone+1'
+        Maxtrm  :=Expone+1'
+        PRINT ££l1?Required number iterations ?,sameline,Maxtrm'
+
+        PRINT ££l2?Calculation of PI using?,sameline,MaxTrm,£ iterations?'
+        PRINT ££l1?=======================================?,££l1??'
+
+        CALPI(MaxTrm,BMax,DMax)'
+ONYERBIKE:
+END'
+Comment ================================================================'
+END'
+

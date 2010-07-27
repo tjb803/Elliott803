@@ -20,6 +20,7 @@ For more information on ALGOL 60 itself try Wikipedia
 <li><a href="#ealgol">Elliott ALGOL Notes</a></li>
 <li><a href="#using">Running ALGOL Programs</a></li>
 <li><a href="#samples">Sample Programs</a></li>
+<li><a href="#contrib">Contributed Programs</a></li>
 </ul>
 <hr>
 <h2 id="ealgol">Elliott ALGOL Notes</h2>
@@ -53,7 +54,7 @@ tape punches, tape readers and output teletype.</li>
 </ul>
 <p>As an example here's a simple program in the ALGOL reference notation 
 and in the Elliott format:</p>
-<blockquote><table frame="box" rules="all" cellpadding="3" width="100%">
+<table frame="box" rules="all" cellpadding="3" width="100%">
 <tr><th>ALGOL reference language</th><th>Elliott Representation</th></tr>
 <tr><td><pre><code><br></br><b>begin</b> <b>integer</b> i;  <b>real</b> x;  
       <b>real</b> <b>array</b> y[1:12];
@@ -74,7 +75,7 @@ BEGIN INTEGER I'  REAL X'
       I := I + 1'  X := X + 30'
       IF I LESSEQ 12 THEN GOTO S1'
 END'</code></pre></td></tr>
-</table></blockquote>
+</table>
 <hr>
 <h2 id="using">Running ALGOL Programs</h2>
 <p>To run ALGOL programs on the Elliott 803 you must first load the ALGOL compiler.
@@ -253,11 +254,29 @@ algorithm was invented by
 <a href="http://en.wikipedia.org/wiki/C._A._R._Hoare">Tony Hoare</a>
 and it was the same Tony Hoare who was responsible for the implementation
 of the Elliott 803 ALGOL compiler.</p>
+<hr>
+<h2 id="contrib">Contributed Programs</h2>
+<p>These are some rather more complex example ALGOL programs that have been 
+kindly contributed by <a href="mailto:general_factotum@hotmail.co.uk">Bob Firth</a>.</p>
+<h3 id="factorial">Large Factorials</h3>
+<table frame="box" rules="all" border="1" cellpadding="4">
+<tr><td><b>Source Code</b></td>
+<td><a href="../samples/extra/factorial4.algol"><samp>samples/extra/factorial4.algol</samp></a></td></tr>
+</table>
+<p>This will calculate factorials of large integers (e.g. 1000!).
+The value to be calculated should be provided on a tape placed into reader 2.</p>
+<h3 id="pi">Calculation of PI</h3>
+<table frame="box" rules="all" border="1" cellpadding="4">
+<tr><td><b>Source Code</b></td>
+<td><a href="../samples/extra/pi4.algol"><samp>samples/extra/pi4.algol</samp></a></td></tr>
+</table>
+<p>This will calculate the value of PI to many decimal places (e.g. 1000).
+The number of places required should be provided on a tape placed into reader 2.</p>
 <br><table border="1" frame="above" rules="none" width="100%">
-<tr><td align="left">Tim Baldwin<br>December 2009
+<tr><td align="left">Tim Baldwin<br>July 2010
 <br><a href="mailto:tjb803@tinymail.co.uk">tjb803@tinymail.co.uk</a></td>
 <td align="right">Return to <a href="index.html">index</a>
-<br><br>&copy; Tim Baldwin 2009</td></tr>
+<br><br>&copy; Tim Baldwin 2009,2010</td></tr>
 </table>
 </body>
 </html>

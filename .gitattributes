@@ -13,6 +13,7 @@ docs/image/opcon.jpg -text
 docs/image/opcore.jpg -text
 docs/image/opcpu.jpg -text
 docs/image/oppch.jpg -text
+docs/image/oppts.jpg -text
 docs/image/oprdr.jpg -text
 docs/image/optele.jpg -text
 docs/image/qs1.jpg -text
@@ -37,6 +38,8 @@ samples/assembler/hello1.a1 -text
 samples/assembler/hello2.a1 -text
 samples/assembler/print.a1 -text
 samples/assembler/random.a1 -text
+samples/extra/factorial4.algol -text
+samples/extra/pi4.algol -text
 samples/machines/algol.803 -text
 src/elliott803/Main.java -text
 src/elliott803/Run.java -text
@@ -74,8 +77,8 @@ src/elliott803/utils/Args.java -text
 src/elliott803/utils/Assembler.java -text
 src/elliott803/utils/PrintCore.java -text
 src/elliott803/utils/PrintT1.java -text
+src/elliott803/utils/PrintTelecode.java -text svneol=unset#text/plain
 src/elliott803/utils/PrintTrace.java -text
-src/elliott803/utils/TapeConvert.java -text svneol=unset#text/plain
 src/elliott803/utils/TapeCopy.java -text
 src/elliott803/utils/TapePrint.java -text
 src/elliott803/utils/TapeWrite.java -text

@@ -14,11 +14,16 @@
 <li><a href="#gui">Interactive GUI Interface</a></li>
 <ul>
 <li><a href="#opcon">The Operator Console</a></li>
-<li><a href="#opcpu">The CPU</a></li>
-<li><a href="#opcore">The Core Store</a></li>
+<li><a href="#opcpu">The CPU and Core Store</a></li>
+<ul>
+<li><a href="#perf">Performance Note</a></li>
+</ul>
 <li><a href="#optele">The Output Teletype</a></li>
 <li><a href="#optape">The Paper Tape Readers and Punches</a></li>
+<ul>
+<li><a href="#oppts">The Paper Tape Station</a></li>
 <li><a href="#tmode">Tape Formats</a></li>
+</ul>
 </ul>
 <li><a href="#cmd">Command Line Interface</a></li>
 </ul>
@@ -33,7 +38,7 @@
 running the <code>elliott803.Main</code> program within the JAR.</p>
 <h3>Command</h3>
 <blockquote><pre>
-   <code>java -jar elliott803-n.n.n.jar</code>
+   <code>java -jar elliott803-n.n.n.jar [options] [machinedef]</code> 
 or <code>java <b>elliott803.Main</b> [options] [machinedef]</code>
 </pre></blockquote>
 <h4>Parameters</h4>
@@ -93,22 +98,28 @@ ready to be run.</li>
 <li>Select <i>Normal</i>, <i>Operate</i> to run the jump instruction and to continue
 running normally.</li>
 </ul>
-<p>The indicator lights show the following conditions:</p>
-<img src="image/wordgen1.jpg" alt="Word Generator" align="right"/>
+<p>The <i>Manual Data</i> is used to cause the system to wait (until the <i>Operate</i>
+bar is pressed) whenever an instruction to read the word generator is executed.
+If this button is not pressed the word generator value will be read without
+any pause.</p>
+<p>The indicator lights show the following conditions:
+<img src="image/wordgen1.jpg" alt="Word Generator" align="right"/></p>
 <ul compact>
 <li><b>Busy</b> the system is waiting for input or output - typically waiting
 for a tape to loaded in a tape reader or punch.</li>
 <li><b>Floating Point Overflow</b> a floating point operation has overflowed.
-Execution stops if this occurs.</li>
+Execution stops if this occurs and will only continue when the <i>Operate</i>
+bar is pressed.</li>
 <li><b>Step by Step</b> the system is stopped waiting for operator action.
-This is the condition on start up or after the <i>Reset</i> key is pressed.</li>
+This is the condition on start up, after the <i>Reset</i> key is pressed or 
+if the <i>Read</i> or <i>Obey</i> buttons are selected.</li>
 <li><b>Overflow</b> the overflow condition is set.  
 This will usually flicker on and off as programs are loaded or run.</li>
 </ul>
 <p>This window is supposed to look and operate somewhat like the real Elliott
 803 operator console</p>
 <br clear="right">
-<h3 id="opcpu">The CPU</h3>
+<h3 id="opcpu">The CPU and Core Store</h3>
 <img src="image/opcpu.jpg" alt="CPU" align="left"/>
 <p>The CPU window shows the values of some of the important internal registers as
 execution proceeds.
@@ -130,9 +141,8 @@ This can be formatted and displayed using the
 </td></tr>
 </table>
 <br clear="left">
-<h3 id="opcore">The Core Store</h3>
 <img src="image/opcore.jpg" alt="Core Store" align="left"/>
-<p>The Core Store window shows a view of the 8K words of store.
+<p>The core store window shows a view of the 8K words of store.
 It is intended to give a rough idea of where in store work is taking place.</p>
 <p>The window shows 128 lines of 64 small blocks, each block representing a single
 word of store.
@@ -140,12 +150,16 @@ The block will be white if the word of store contains zero, otherwise it will
 alternate between light and dark grey whenever a value is written to the
 storage location.</p>
 <p>The core store is an output only window.</p>
+<h4 id="perf">Performance Note</h4>
+<p>The frequent updates to the CPU and Core Store windows that take place as 
+execution proceeds considerably slow down the speed of the emulation.  
+If you want processing to run at a much faster speed one or both of these
+windows should be minimized.</p>
 <br clear="left">
 <h3 id="optele">The Output Teletype</h3>
 <img src="image/optele.jpg" alt="Output Teletype" align="left"/>
 <p>The output teletype shows the printed output from the computer.
-The data will scroll up as new lines are output and around the last 100
-lines will be kept.</p>
+The data will scroll up as new lines are output.</p>
 <p>To save output from the teletype press the <i>Save...</i> button and set a
 log file to store the output.
 New output will be appended to the end of any existing log file.
@@ -156,7 +170,7 @@ will also clear any current teletype output.</p>
 <br clear="left">
 <h3 id="optape">The Paper Tape Readers and Punches</h3>
 <img src="image/oprdr.jpg" alt="Tape Reader" align="left"/>
-<img src="image/oppch.jpg" alt="Tape Punch" align="right"/>
+<img src="image/oppch.jpg" alt="Tape Punch" align="left"/>
 <p>The paper tape readers and paper tape punches are the primary means
 of input/output for the computer.
 &quot;Tapes&quot; are held as files on the host PC system and the <i>Load</i>
@@ -176,8 +190,14 @@ The CPU will be in a busy wait until either a tape file is loaded into the
 device so operation can continue or the <i>Reset</i> key on the operators
 console is pressed.</li>
 </ul>
+<h4 id="oppts">The Paper Tape Station</h4>
+<img src="image/oppts.jpg" alt="Tape Reader" align="left"/>
+<p>The paper tape station provides additional control over the tape readers and
+punches allowing the readers amd/or punches to be exchanged.  
+When exchanged the CPU will see Reader 1 (or Punch 1) as Reader 2 (or Punch 2) 
+and <i>vice-versa</i>.</p>
 <br clear="left">
-<h3 id="tmode">Tape Formats</h3>
+<h4 id="tmode">Tape Formats</h4>
 <p>When reading or writing files using the tape readers and tape punches you need
 to consider the format of the tape file that is to be read or written.
 Tapes can be in <i>Elliott</i> format or in <i>System</i> format.</p>
@@ -308,6 +328,11 @@ This will be ignored for a self-triggering program tape.</dd>
 <dt><code>-punch1 <i>outputtape</i></code></dt><dd>The output tape file for punch 1</dd>
 <dt><code>-punch2 <i>outputtape</i></code></dt><dd>The output tape file for punch 2</dd>
 <dt><code>-teletype <i>outputfile</i></code></dt><dd>The output file for teletype, defaults to standard out</dd>
+<dt><code>-wordgen <i>&quot;instruction&quot;</i></code></dt><dd>The value to set on the word gnerator</dd>
+<dt><code>-press <i>keynumber</i></code></dt><dd>A key to press if the system waits for keyboard input.
+The top-left key (the Function 1 &quot;40&quot; or sign bit) is keynumber 1, the bottom right key 
+(the Address 2 &quot;1&quot; bit) is keynumber 39.  
+Other typically useful keynumbers are 20 (the B-digit) and 21 (the Function 2 &quot;40&quot; bit).</dd>
 <dt><code>-ascii</code></dt><dd>Print using only US-ASCII characters</dd>
 <dt><code>-dump</code></dt><dd>Produce a system dump on exit</dd>
 <dt><code>-trace</code></dt><dd>Produce a full instruction trace</dd>
@@ -320,10 +345,10 @@ command line session.</p>
 <code>java elliott803.Run -ascii tapes/samples/charset.tape</code>
 </pre></blockquote>
 <br/><table border="1" frame="above" rules="none" width="100%">
-<tr><td align="left">Tim Baldwin<br>December 2009
+<tr><td align="left">Tim Baldwin<br>July 2010
 <br><a href="mailto:tjb803@tinymail.co.uk">tjb803@tinymail.co.uk</a></td>
 <td align="right">Return to <a href="index.html">index</a>
-<br><br>&copy; Tim Baldwin 2009</td></tr>
+<br><br>&copy; Tim Baldwin 2009,2010</td></tr>
 </table>
 </body>
 </html>

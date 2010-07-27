@@ -26,7 +26,14 @@ computer, help with programming and help with debugging.</p>
 a number of windows that show the state of the various hardware components.
 This includes a view of the state of the <a href="operation.html#opcpu">CPU</a>
 and <a href="operation.html#opcore">Core Store</a> components, as well as
-the more obvious items such as the output <a href="operation.html#optele">teletype</a></p> 
+the more obvious items such as the output <a href="operation.html#optele">teletype</a>.</p> 
+<h3>Performance Note</h3>
+<p>The constant updates that need to be made to the visualization as processing 
+proceeds do impose a significant performance penalty.
+This is particularly true of the CPU and Core Store views, since these must be 
+updated after the execution of every single machine instruction.</p>
+<p>Performance of the simulation can be greatly improved if the CPU and/or the Core
+Store windows are minimzed.</p> 
 <hr>
 <h2>Debug Functions</h2>
 <p>The simulator is able to produce a <a href="#dump">core dump</a> (which includes 
@@ -92,10 +99,10 @@ to the accumulator by executing a special <b>75</b> instruction.</p>
 <td>Write random 38 bit (positive) integer to the accumulator.</td></tr>
 </table>
 <br><table border="1" frame="above" rules="none" width="100%">
-<tr><td align="left">Tim Baldwin<br>December 2009
+<tr><td align="left">Tim Baldwin<br>July 2010
 <br><a href="mailto:tjb803@tinymail.co.uk">tjb803@tinymail.co.uk</a></td>
 <td align="right">Return to <a href="index.html">index</a>
-<br><br>&copy; Tim Baldwin 2009</td></tr>
+<br><br>&copy; Tim Baldwin 2009,2010</td></tr>
 </table>
 </body>
 </html>
