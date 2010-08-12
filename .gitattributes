@@ -3,6 +3,7 @@
 /.project -text
 /bugs.txt -text svneol=unset#text/plain
 /build.xml -text
+build/Elliott803[!!-~]build.launch -text
 docs/algol.html -text svneol=unset#text/plain
 docs/extras.html -text
 docs/history.html -text
