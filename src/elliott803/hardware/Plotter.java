@@ -21,7 +21,7 @@ public class Plotter extends ControlDevice {
     static final int X_MIN = 0;
     static final int X_MAX = 1100 - 1;
     
-    boolean penUp;
+    boolean penDown;
     int penX, penY;
 
     public Plotter(Computer computer) {
@@ -43,16 +43,16 @@ public class Plotter extends ControlDevice {
     public void controlWrite(int addr, long acc) {
         int x = 0, y = 0;
         switch (addr) {
-            case 7184: penUp = true;   break;
-            case 7200: penUp = false;  break;
-            case 7169: x = 1;          break;
-            case 7170: x = -1;         break;
-            case 7172: y = 1;          break;
-            case 7176: y = -1;         break;
-            case 7173: x = 1;  y = 1;  break;
-            case 7174: x = -1; y = 1;  break;
-            case 7177: x = 1;  y = -1; break;
-            case 7178: x = -1; y = -1; break;
+            case 7184: penDown = false; break;
+            case 7200: penDown = true;  break;
+            case 7169: x = 1;           break;
+            case 7170: x = -1;          break;
+            case 7172: y = 1;           break;
+            case 7176: y = -1;          break;
+            case 7173: x = 1;  y = 1;   break;
+            case 7174: x = -1; y = 1;   break;
+            case 7177: x = 1;  y = -1;  break;
+            case 7178: x = -1; y = -1;  break;
         }
         
         if (x != 0 || y != 0) {
@@ -65,7 +65,7 @@ public class Plotter extends ControlDevice {
     // Reset plotter 
     public void reset() {
         penX = penY = 0;
-        penUp = true;
+        penDown = false;
     }
     
     /*
@@ -80,10 +80,10 @@ public class Plotter extends ControlDevice {
     
     void viewPlot(int x, int y, int dir) {
         if (view != null) {
-            if (penUp)
-                view.penMove(x, y, dir);
-            else
+            if (penDown)
                 view.penDraw(x, y, dir);
+            else
+                view.penMove(x, y, dir);
         }    
     }
 }

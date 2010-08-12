@@ -83,7 +83,9 @@ public class DisplayPlot extends JPanel implements Scrollable, ComponentListener
             maxY = Math.max(y + 10, maxY);
             revalidate();
         } else {
-            repaint(getLastRectangle(true));
+            Rectangle r = getLastRectangle();
+            repaint(r);
+            scrollRectToVisible(r);
         }    
     }
     
@@ -123,9 +125,6 @@ public class DisplayPlot extends JPanel implements Scrollable, ComponentListener
                 g.drawLine(p1.x, p1.y, p2.x, p2.y);
             }
         }    
-        
-        // Ensure last point is visible
-        scrollRectToVisible(getLastRectangle(false));
     }
     
     // Create a transform to scale the output so that the window width is 
@@ -151,15 +150,12 @@ public class DisplayPlot extends JPanel implements Scrollable, ComponentListener
         return seg.draw;
     }
     
-    // Return a screen rectangle containing the last line segment.  If 'border'
-    // is true a 1 pixel border is added to allow for rounding errors during 
-    // transform mapping.
-    private Rectangle getLastRectangle(boolean border) {
+    // Return a screen rectangle containing the last line segment. A 1 pixel 
+    // border is added to allow for rounding errors during transform mapping.
+    private Rectangle getLastRectangle() {
         Rectangle r = new Rectangle(p1);
         r.add(p2);
-        if (border) { 
-            r.grow(1, 1);
-        }    
+        r.grow(1, 1);
         return r;
     }
     
