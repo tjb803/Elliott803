@@ -1,7 +1,7 @@
 /**
  * Elliott Model 803B Simulator
  *
- * (C) Copyright Tim Baldwin 2009
+ * (C) Copyright Tim Baldwin 2009,2010
  */
 package elliott803.view;
 

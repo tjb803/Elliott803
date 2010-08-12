@@ -16,15 +16,13 @@ import elliott803.hardware.Reader;
  * @author Baldwin
  */
 public class TestDeviceView extends BaseViewTest {
-    protected void setUp() {
-        super.setUp();
-        
-        // Create the store display component and add to the frame.
+    
+    protected void setupTest() {
         readerView = new ReaderView(new Reader(testComputer, 1), 1);
         punchView = new PunchView(new Punch(testComputer, 2), 2);
-        testFrame.getContentPane().add(readerView);
-        testFrame.getContentPane().add(punchView);
-        testFrame.setVisible(true);
+        testView.add(readerView);
+        testView.add(punchView);
+        punchView.setLocation(400, 0);
     }
     
     private ReaderView readerView;

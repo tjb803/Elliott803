@@ -15,13 +15,10 @@ import elliott803.hardware.Console;
  * @author Baldwin
  */
 public class TestConsoleView extends BaseViewTest {
-    protected void setUp() {
-        super.setUp();
-        
-        // Create the store display component and add to the frame.
+    
+    protected void setupTest() {
         consoleView = new ConsoleView(new Console(testComputer));
-        testFrame.getContentPane().add(consoleView);
-        testFrame.setVisible(true);
+        testView.add(consoleView);
     }
     
     private ConsoleView consoleView;

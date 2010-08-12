@@ -13,13 +13,10 @@ import elliott803.machine.PaperTapeStation;
  * @author Baldwin
  */
 public class TestPtsView  extends BaseViewTest {
-    protected void setUp() {
-        super.setUp();
-        
-        // Create the store display component and add to the frame.
+    
+    protected void setupTest() {
         ptsView = new PtsView(new PaperTapeStation(testComputer));
-        testFrame.getContentPane().add(ptsView);
-        testFrame.setVisible(true);
+        testView.add(ptsView);
     }
 
     private PtsView ptsView;

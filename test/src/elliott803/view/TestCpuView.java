@@ -16,13 +16,10 @@ import elliott803.machine.Word;
  * @author Baldwin
  */
 public class TestCpuView extends BaseViewTest {
-    protected void setUp() {
-        super.setUp();
-        
-        // Create the store display component and add to the frame.
+    
+    protected void setupTest() {
         cpuView = new CpuView(new CPU(testComputer));
-        testFrame.getContentPane().add(cpuView);
-        testFrame.setVisible(true);
+        testView.add(cpuView);
     }
     
     private CpuView cpuView;

@@ -15,13 +15,11 @@ import elliott803.hardware.Teletype;
  * @author Baldwin
  */
 public class TestTeletypeView extends BaseViewTest {
-    protected void setUp() {
-        super.setUp();
-        
+    
+    protected void setupTest() {
         // Create the store display component and add to the frame.
         ttView = new TeletypeView(new Teletype(testComputer, 3));
-        testFrame.getContentPane().add(ttView);
-        testFrame.setVisible(true);
+        testView.add(ttView);
     }
     
     private TeletypeView ttView;
@@ -35,10 +33,10 @@ public class TestTeletypeView extends BaseViewTest {
                 int j = rand.nextInt(35);
                 char ch = (j < 26) ? (char)('A'+j) : ' ';
                 ttView.setChar(ch);
-                Thread.sleep(50);
+                Thread.sleep(20);
             }
-            ttView.setChar('\n');            
-            Thread.sleep(50);
+            ttView.setChar('\n');  
+            Thread.sleep(20);
         }
     }
 }

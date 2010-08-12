@@ -16,16 +16,9 @@ import elliott803.view.component.DisplayCore;
  */
 public class TestDisplayCore extends BaseComponentTest {
     
-    protected void setUp() {
-        super.setUp();
-        
-        // Create the core-store display component 
+    protected void setupTest() {
         displayStore = new DisplayCore();
-        
-        // Add to test frame and show
-        testFrame.getContentPane().add(displayStore);
-        testFrame.pack();
-        testFrame.setVisible(true);
+        testView.add(displayStore);
     }
     
     private DisplayCore displayStore;

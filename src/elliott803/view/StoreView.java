@@ -1,7 +1,7 @@
 /**
  * Elliott Model 803B Simulator
  *
- * (C) Copyright Tim Baldwin 2009
+ * (C) Copyright Tim Baldwin 2009,2010
  */
 package elliott803.view;
 
@@ -25,6 +25,8 @@ import elliott803.view.component.DisplayWord;
  * Not really much to see in the store, but to give a view of what's going on we'll display
  * a blocks of 128x64 pixels representing the 8K words of store.  A pixel will be toggled
  * on/off each time a word is written.  The last stored value will also be displayed.
+ * 
+ * @author Baldwin
  */
 public class StoreView extends JInternalFrame {
     private static final long serialVersionUID = 1L;

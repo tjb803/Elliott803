@@ -5,18 +5,15 @@
  */
 package elliott803.view.component;
 
-import java.awt.Container;
 import java.util.Random;
 
 import javax.swing.BoxLayout;
 
 import elliott803.machine.Word;
-import elliott803.view.component.DisplayWord;
 
 public class TestDisplayWord extends BaseComponentTest {
-    protected void setUp() {
-        super.setUp();
-        
+    
+    protected void setupTest() {
         // Create the various storage display options
         displayBinary = new DisplayWord(DisplayWord.Type.BIN39);
         displayBin38 = new DisplayWord(DisplayWord.Type.BIN38);
@@ -26,16 +23,13 @@ public class TestDisplayWord extends BaseComponentTest {
         displayInstruction = new DisplayWord(DisplayWord.Type.INSTRUCTION);
         
         // Add to the test frame
-        Container content = testFrame.getContentPane();
-        content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
-        content.add(displayBinary);
-        content.add(displayBin38);
-        content.add(displayOctal);
-        content.add(displayInt);
-        content.add(displayFloat);
-        content.add(displayInstruction);
-        testFrame.pack();
-        testFrame.setVisible(true);
+        testView.setLayout(new BoxLayout(testView, BoxLayout.Y_AXIS));
+        testView.add(displayBinary);
+        testView.add(displayBin38);
+        testView.add(displayOctal);
+        testView.add(displayInt);
+        testView.add(displayFloat);
+        testView.add(displayInstruction);
     }
     
     private DisplayWord displayBinary;

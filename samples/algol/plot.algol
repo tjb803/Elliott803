@@ -1,0 +1,110 @@
+Sine Wave;
+
+BEGIN
+    COMMENT **                      **;
+    COMMENT * Elliott 803B simulator *;
+    COMMENT *                        *;
+    COMMENT * (C) Tim Baldwin 2010   *;
+    COMMENT **                      **;
+
+    COMMENT **                               **;
+    COMMENT * Draw a sine wave on the plotter *;
+    COMMENT **                               **;
+
+    INTEGER orgX, orgY;	
+    INTEGER lastX, lastY;
+    
+    COMMENT Plot an approximate straight line from the current position to
+        the new location.  This is actually a very poor straight line
+        as it just uses the legs of a right angle triangle.  It only really
+        works if lines are truly horizontal or vertical or are very short.
+        This just happens to be the case for all lines plotted in this program.;
+    PROCEDURE plotTo(x, y);  VALUE x, y;  INTEGER x, y;
+    BEGIN INTEGER i, w, h;
+          INTEGER sw, sh;
+
+          COMMENT calculate the lengths of the triangle legs;
+          x := x + orgX;  y := y + orgY;
+          w := x - lastX;  h := y - lastY;
+          
+          COMMENT set the plotter movement details;
+          sw := IF w LESS 0 THEN -w ELSE w;
+          sh := IF h LESS 0 THEN -h ELSE h;
+
+          COMMENT plot trying to be clever about which direction to move first;
+          IF (y GR 0 AND h GR 0) OR (y LESS 0 AND h LESS 0) THEN BEGIN
+              IF sh GR 0 THEN FOR i := 1 STEP 1 UNTIL sh DO 
+                  IF h LESS 0 THEN ELLIOTT(7,2,7176, 0, 0,0,0) 
+                              ELSE ELLIOTT(7,2,7172, 0, 0,0,0);
+              IF sw GR 0 THEN FOR i := 1 STEP 1 UNTIL sw DO 
+                  IF w LESS 0 THEN ELLIOTT(7,2,7170, 0, 0,0,0) 
+                              ELSE ELLIOTT(7,2,7169, 0, 0,0,0);
+          END ELSE BEGIN
+              IF sw GR 0 THEN FOR i := 1 STEP 1 UNTIL sw DO 
+                  IF w LESS 0 THEN ELLIOTT(7,2,7170, 0, 0,0,0) 
+                              ELSE ELLIOTT(7,2,7169, 0, 0,0,0);
+              IF sh GR 0 THEN FOR i := 1 STEP 1 UNTIL sh DO 
+                  IF h LESS 0 THEN ELLIOTT(7,2,7176, 0, 0,0,0) 
+                              ELSE ELLIOTT(7,2,7172, 0, 0,0,0);
+          END;
+
+          COMMENT save final position;
+          lastX := x;  lastY := y;
+    END plotTo;
+
+    COMMENT Move pen to new location;
+    PROCEDURE moveTo(x, y);  VALUE x, y;  INTEGER x, y;
+    BEGIN ELLIOTT(7,2,7184, 0, 0,0,0);
+          plotTo(x, y);
+    END moveTo;
+
+    COMMENT Draw line to new location;
+    PROCEDURE drawTo(x, y);  VALUE x, y;  INTEGER x, y;
+    BEGIN ELLIOTT(7,2,7200, 0, 0,0,0);
+          plotTo(x, y);
+    END drawTo;
+    
+    COMMENT Set plot origin;
+    PROCEDURE setOrigin(x, y);  VALUE x, y;  INTEGER x, y;
+    BEGIN 
+        orgX := orgY := 0;      COMMENT reset the pen to the left hand edge;     
+        lastX := 1100;  lastY := 0;
+        moveTo(0, 0);
+                   
+        orgX := x;  orgY := y;  COMMENT set new origin offset;
+    END setOrigin;
+   
+    COMMENT Main program;
+    BEGIN
+        INTEGER stepX, maxY; 
+        INTEGER i;  REAL pi, y;
+        BOOLEAN PROCEDURE divides(a, b);  VALUE a, b;  INTEGER a, b;
+            divides := (a div b)*b = a;
+
+        pi := 3.14159;
+        stepX := 2;
+        maxY := 300;
+        
+        COMMENT Set origin;
+        setOrigin(150, 0);
+        moveTo(0, 0);
+
+        COMMENT Draw the axes;
+        moveTo(0, -maxY);
+        drawTo(0, maxY);
+        moveTo(0, 0);
+        drawTo(360*stepX, 0);
+        FOR i := 15 STEP 15 UNTIL 360 DO BEGIN
+            moveTo(i*stepX, 0);
+            drawTo(i*stepX, IF divides(i,30) THEN 10 ELSE 5);
+        END;        
+    
+        COMMENT Draw the sine curve;
+        moveTo(0, 0);
+        FOR i := 0 STEP 1 UNTIL 360 DO BEGIN
+            y := sin((i/180)*pi) * maxY;
+            drawTo(i*stepX, entier(y));    			
+        END;
+        moveTo(0, 0);
+    END; 
+END program;

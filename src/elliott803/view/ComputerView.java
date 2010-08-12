@@ -1,7 +1,7 @@
 /**
  * Elliott Model 803B Simulator
  *
- * (C) Copyright Tim Baldwin 2009
+ * (C) Copyright Tim Baldwin 2009,2010
  */
 package elliott803.view;
 
@@ -10,7 +10,6 @@ import java.awt.Dimension;
 import javax.swing.JDesktopPane;
 
 import elliott803.machine.Computer;
-
 
 /**
  * A visual representation of the full computer.  This is a frame that contains the
@@ -25,6 +24,7 @@ public class ComputerView extends JDesktopPane {
     public CpuView cpu;
     public StoreView store;
     public PtsView pts;
+    public PlotterView plotter;
 
     public ComputerView(Computer computer) {
         setLayout(null);
@@ -34,6 +34,7 @@ public class ComputerView extends JDesktopPane {
         cpu = new CpuView(computer.cpu);
         store = new StoreView(computer.core);
         pts = new PtsView(computer.pts);
+        plotter = new PlotterView(computer.plotter);
 
         add(console);
         add(cpu);
@@ -43,7 +44,8 @@ public class ComputerView extends JDesktopPane {
         add(pts.reader[1]);
         add(pts.punch[0]);
         add(pts.punch[1]);
-        add(pts.teletype);
+        add(pts.teletype);      // Make sure the plotter is added after the teletype
+        add(plotter);           // as it want it to appear behind.
     }
 
     public void layout(ViewDefinition def) {
@@ -52,8 +54,10 @@ public class ComputerView extends JDesktopPane {
             int max1X = console.getWidth() + cpu.getWidth() + store.getWidth() + 20;
             int max2X = pts.teletype.getWidth() + pts.punch[0].getWidth() + pts.reader[0].getWidth() + 20;
             int maxX = Math.max(max1X, max2X);
-
-            int max1Y = console.getHeight() + pts.teletype.getHeight() + 15;
+            
+            int plotterOffset = pts.teletype.getHeight() - pts.teletype.getContentPane().getPreferredSize().height;
+            
+            int max1Y = console.getHeight() + pts.teletype.getHeight() + plotterOffset + 10;
             int max2Y = cpu.getHeight() + 2*pts.punch[0].getHeight() + pts.getHeight() + 15;
             int max3Y = store.getHeight() + 2*pts.reader[0].getHeight() + pts.getHeight() + 15;
             int maxY = Math.max(Math.max(max1Y, max2Y), max3Y);
@@ -75,17 +79,19 @@ public class ComputerView extends JDesktopPane {
             cpu.setLocation(cpuX, cpuY);
             store.setLocation(storeX, storeY);
 
+            plotter.setSize(pts.teletype.getWidth(), pts.teletype.getHeight());
+            plotter.setLocation(teletypeX, teletypeY - plotterOffset);
+            
             pts.teletype.setLocation(teletypeX, teletypeY);
             pts.setLocation(ptsX, ptsY);
             pts.punch[0].setLocation(punch1X, punch1Y);
             pts.punch[1].setLocation(punch2X, punch2Y);
             pts.reader[0].setLocation(reader1X, reader1Y);
             pts.reader[1].setLocation(reader2X, reader2Y);
-
+            
             // Update the size of the desktop
             def.viewWidth = maxX;  def.viewHeight = maxY;
             Dimension size = new Dimension(maxX, maxY);
-            setSize(size);
             setPreferredSize(size);
         }
     }

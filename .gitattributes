@@ -13,6 +13,7 @@ docs/image/opcon.jpg -text
 docs/image/opcore.jpg -text
 docs/image/opcpu.jpg -text
 docs/image/oppch.jpg -text
+docs/image/opplot.jpg -text
 docs/image/oppts.jpg -text
 docs/image/oprdr.jpg -text
 docs/image/optele.jpg -text
@@ -31,6 +32,7 @@ docs/utilities.html -text
 /license.txt -text
 /readme.txt -text svneol=unset#text/plain
 samples/algol/hello.algol -text
+samples/algol/plot.algol -text
 samples/algol/sort.algol -text
 samples/algol/trig.algol -text
 samples/assembler/charset.a1 -text
@@ -85,6 +87,7 @@ src/elliott803/utils/TapeWrite.java -text
 src/elliott803/view/ComputerView.java -text
 src/elliott803/view/ConsoleView.java -text
 src/elliott803/view/CpuView.java -text
+src/elliott803/view/PlotterView.java -text
 src/elliott803/view/PtsView.java -text
 src/elliott803/view/PunchView.java -text
 src/elliott803/view/ReaderView.java -text
@@ -102,6 +105,7 @@ src/elliott803/view/component/DeviceModeSelect.java -text
 src/elliott803/view/component/DisplayAddr.java -text
 src/elliott803/view/component/DisplayCore.java -text
 src/elliott803/view/component/DisplayLight.java -text
+src/elliott803/view/component/DisplayPlot.java -text
 src/elliott803/view/component/DisplayWord.java -text
 tapes/algol/a104-1.tape -text
 tapes/algol/a104-2.tape -text
@@ -115,9 +119,11 @@ test/src/elliott803/view/BaseViewTest.java -text svneol=unset#text/plain
 test/src/elliott803/view/TestConsoleView.java -text svneol=unset#text/plain
 test/src/elliott803/view/TestCpuView.java -text svneol=unset#text/plain
 test/src/elliott803/view/TestDeviceView.java -text svneol=unset#text/plain
+test/src/elliott803/view/TestPlotterView.java -text
 test/src/elliott803/view/TestPtsView.java -text svneol=unset#text/plain
 test/src/elliott803/view/TestStoreView.java -text svneol=unset#text/plain
 test/src/elliott803/view/TestTeletypeView.java -text svneol=unset#text/plain
 test/src/elliott803/view/component/BaseComponentTest.java -text svneol=unset#text/plain
 test/src/elliott803/view/component/TestDisplayCore.java -text svneol=unset#text/plain
+test/src/elliott803/view/component/TestDisplayPlot.java -text
 test/src/elliott803/view/component/TestDisplayWord.java -text svneol=unset#text/plain

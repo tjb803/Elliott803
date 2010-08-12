@@ -15,13 +15,10 @@ import elliott803.hardware.Store;
  * @author Baldwin
  */
 public class TestStoreView extends BaseViewTest {
-    protected void setUp() {
-        super.setUp();
-        
-        // Create the store display component and add to the frame.
+    
+    protected void setupTest() {
         storeView = new StoreView(new Store(testComputer));
-        testFrame.getContentPane().add(storeView);
-        testFrame.setVisible(true);
+        testView.add(storeView);
     }
     
     private StoreView storeView;

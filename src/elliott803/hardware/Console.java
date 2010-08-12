@@ -34,6 +34,7 @@ public class Console extends Device {
 
     public Console(Computer computer) {
         this.computer = computer;
+        action = CONSOLE_READ;
     }
 
     // Read the word generator as as device.  This will cause a wait if the 

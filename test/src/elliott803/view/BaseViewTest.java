@@ -6,7 +6,6 @@
 package elliott803.view;
 
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Point;
 
 import javax.swing.JDesktopPane;
@@ -22,19 +21,30 @@ import elliott803.machine.Computer;
  */
 public abstract class BaseViewTest extends TestCase {
     
+    protected abstract void setupTest();
+    
     protected void setUp() {
+        // Test Computer instance
+        testComputer = new Computer(true);  
+        
         // Create a multi-document frame for machine view tests
         testFrame = new JFrame("Machine View Tester");    
         testFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         testFrame.setSize(new Dimension(800, 600));
+        testFrame.setPreferredSize(testFrame.getSize());
         testFrame.setLocation(new Point(100, 100));
-        testFrame.setContentPane(new JDesktopPane());
-        testFrame.getContentPane().setLayout(new FlowLayout());
 
-        // Test Computer instance
-        testComputer = new Computer(true);      
+        testView = new JDesktopPane();
+        testView.setLayout(null);
+        setupTest();
+        
+        // And display for testing
+        testFrame.setContentPane(testView);
+        testFrame.pack();
+        testFrame.setVisible(true);
     }
     
     protected JFrame testFrame;
+    protected JDesktopPane testView;
     protected Computer testComputer;
 }

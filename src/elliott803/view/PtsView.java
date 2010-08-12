@@ -1,7 +1,7 @@
 /**
  * Elliott Model 803B Simulator
  *
- * (C) Copyright Tim Baldwin 2009
+ * (C) Copyright Tim Baldwin 2009,2010
  */
 package elliott803.view;
 
@@ -58,6 +58,7 @@ public class PtsView  extends JInternalFrame implements ActionListener {
         swapReader = new JCheckBox(SWAP_READER);
         swapReader.addActionListener(this);
         swapPunch = new JCheckBox(SWAP_PUNCH);
+        swapPunch.setHorizontalTextPosition(JCheckBox.LEADING);
         swapPunch.addActionListener(this);
         
         JPanel p1 = new JPanel();

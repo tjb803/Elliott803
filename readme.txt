@@ -17,6 +17,7 @@ hardware elements:
  - Operator's Console 
  - Paper Tape Readers and Punches
  - Output Teletype
+ - Graph Plotter
   
 A Java Swing GUI interface allows the simulation to be operated in a 
 manner very similar to a real Elliott 803 and also provides a 
@@ -50,6 +51,10 @@ Latest Improvements
 The latest release will always include various minor bug fixes.  In 
 addition the following are notable improvements:
 
+v0.8.0:
+ - Added the Graph Plotter support
+
+v0.7.0:
  - Added 'Manual Data' button to the console
  - Teletype window resizes correctly
  - Teletype 'Save' button saves current output as well as any subsequent
@@ -64,7 +69,6 @@ the simulation and can hopefully be added in a future release:
 
  - Sound
  - Film Handlers
- - Plotter output
  - Ability to fully save and restore machine state between runs
 
 Acknowledgements
