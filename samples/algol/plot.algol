@@ -18,7 +18,7 @@ BEGIN
         the new location.  This is actually a very poor straight line
         as it just uses the legs of a right angle triangle.  It only really
         works if lines are truly horizontal or vertical or are very short.
-        This just happens to be the case for all lines plotted in this program.;
+        This just happens to be the case for all output from this program.;
     PROCEDURE plotTo(x, y);  VALUE x, y;  INTEGER x, y;
     BEGIN INTEGER i, w, h;
           INTEGER sw, sh, pw, ph;
@@ -35,11 +35,15 @@ BEGIN
 
           COMMENT plot trying to be clever about which direction to move first;
           IF (y GR 0 AND h GR 0) OR (y LESS 0 AND h LESS 0) THEN BEGIN
-              IF sh GR 0 THEN FOR i := 1 STEP 1 UNTIL sh DO ELLIOTT(0,0,ph, 1, 7,2,0); 
-              IF sw GR 0 THEN FOR i := 1 STEP 1 UNTIL sw DO ELLIOTT(0,0,pw, 1, 7,2,0);
+              IF sh GR 0 THEN 
+                  FOR i := 1 STEP 1 UNTIL sh DO ELLIOTT(0,0,ph, 1, 7,2,0); 
+              IF sw GR 0 THEN 
+                  FOR i := 1 STEP 1 UNTIL sw DO ELLIOTT(0,0,pw, 1, 7,2,0);
           END ELSE BEGIN
-              IF sw GR 0 THEN FOR i := 1 STEP 1 UNTIL sw DO ELLIOTT(0,0,pw, 1, 7,2,0);
-              IF sh GR 0 THEN FOR i := 1 STEP 1 UNTIL sh DO ELLIOTT(0,0,ph, 1, 7,2,0);
+              IF sw GR 0 THEN 
+                  FOR i := 1 STEP 1 UNTIL sw DO ELLIOTT(0,0,pw, 1, 7,2,0);
+              IF sh GR 0 THEN 
+                  FOR i := 1 STEP 1 UNTIL sh DO ELLIOTT(0,0,ph, 1, 7,2,0);
           END;
 
           COMMENT save final position;
@@ -71,9 +75,9 @@ BEGIN
     COMMENT Main program;
     BEGIN
         INTEGER stepX, maxY; 
-        INTEGER i;  REAL pi, y;
-        BOOLEAN PROCEDURE divides(a, b);  VALUE a, b;  INTEGER a, b;
-            divides := (a div b)*b = a;
+        INTEGER i, tick;  REAL pi, y;
+        BOOLEAN PROCEDURE rem(a, b);  VALUE a, b;  INTEGER a, b;
+            rem := (a div b)*b = a;
 
         pi := 3.14159;
         stepX := 2;
@@ -89,8 +93,9 @@ BEGIN
         moveTo(0, 0);
         drawTo(360*stepX, 0);
         FOR i := 15 STEP 15 UNTIL 360 DO BEGIN
+            tick := IF rem(i,90) THEN 20 ELSE IF rem(i,30) THEN 10 ELSE 5;
             moveTo(i*stepX, 0);
-            drawTo(i*stepX, IF divides(i,30) THEN 10 ELSE 5);
+            drawTo(i*stepX, tick);
         END;        
     
         COMMENT Draw the sine curve;

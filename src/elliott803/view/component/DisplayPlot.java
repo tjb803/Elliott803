@@ -48,10 +48,7 @@ public class DisplayPlot extends JPanel implements Scrollable, ComponentListener
     public DisplayPlot() {
         setBackground(Color.WHITE);
         addComponentListener(this);
-        
-        segments = new ArrayList<Segment>();
-        p1 = new Point();  p2 = new Point();
-        r1 = new Rectangle();
+
         setTransform();
         plotClear();
     }
@@ -73,9 +70,7 @@ public class DisplayPlot extends JPanel implements Scrollable, ComponentListener
             lastSeg.x = x;  lastSeg.y = y;
             mapToPoint(lastSeg, false);
         } else {
-            Segment nextSeg = new Segment(true, x, y, dir); 
-            segments.add(nextSeg);
-            mapToPoint(nextSeg, true);
+            segments.add(mapToPoint(new Segment(true, x, y, dir), true));
         }  
         
         // Calculate the area of the screen that needs redrawing to display
@@ -84,7 +79,7 @@ public class DisplayPlot extends JPanel implements Scrollable, ComponentListener
         if (y < minY || y > maxY) {
             minY = Math.min(y - 10, minY);
             maxY = Math.max(y + 10, maxY);
-            revalidate();
+            revalidate();       // Height has changed so re-do scrollbars
         } else {
             repaint(r1);
         }    
@@ -97,9 +92,7 @@ public class DisplayPlot extends JPanel implements Scrollable, ComponentListener
             lastSeg.x = x;  lastSeg.y = y;
             mapToPoint(lastSeg, false);
         } else {    
-            Segment nextSeg = new Segment(false, x, y, dir); 
-            segments.add(nextSeg);
-            mapToPoint(nextSeg, true);
+            segments.add(mapToPoint(new Segment(false, x, y, dir), true));
         } 
         
         // No need to redraw after a move, as there's nothing new to see.
@@ -107,12 +100,13 @@ public class DisplayPlot extends JPanel implements Scrollable, ComponentListener
     
     // Clear current output
     public void plotClear() {
-        segments.clear();
-        segments.add(new Segment(false, 0, 0, 0));
-        p1.setLocation(0, 0);  p2.setLocation(0, 0);
-        r1.setBounds(0, 0, 0, 0);
+        segments = new ArrayList<Segment>();
+        segments.add(new Segment(false, 0 ,0, 0));
+        p1 = new Point();  p2 = new Point();
+        r1 = new Rectangle();
         minY = maxY = 0;
         revalidate();
+        repaint();
     }
     
     // Redraw the complete plotter output so far
@@ -121,9 +115,10 @@ public class DisplayPlot extends JPanel implements Scrollable, ComponentListener
 
         // Redraw all the output.  We rely on the clipping rectangle to have been
         // set to avoid actually redrawing everything.
+        p2.setLocation(0, 0);
         mapToPoint(segments.get(0), true);
         for (int i = 1; i < segments.size(); i++) {
-            if (mapToPoint(segments.get(i), true)) {
+            if (mapToPoint(segments.get(i), true).draw) {
                 g.drawLine(p1.x, p1.y, p2.x, p2.y);
             }
         }    
@@ -142,8 +137,9 @@ public class DisplayPlot extends JPanel implements Scrollable, ComponentListener
     
     // Map a segment in plotter space to a point in the window space.
     // Point p2 is updated with the new point, if 'add' is true previous
-    // p2 is stored in p1 (as a new point has been added).
-    private boolean mapToPoint(Segment seg, boolean add) {
+    // p2 is stored in p1 (as a new point has been added).  Note this reuses
+    // p1/p2 Point instances to try to avoid excessive object allocations.
+    private Segment mapToPoint(Segment seg, boolean add) {
         if (add) {
             Point p = p2;  p2 = p1;  p1 = p;
         }    
@@ -154,7 +150,8 @@ public class DisplayPlot extends JPanel implements Scrollable, ComponentListener
         // by a 1 pixel boarder to allow for rounding errors in the transform.
         r1.setBounds(p1.x, p1.y, 0, 0);  r1.add(p2);  r1.grow(1, 1);
         
-        return seg.draw;
+        // Return segment parameter for convenience
+        return seg;
     }
     
     /*
@@ -189,8 +186,8 @@ public class DisplayPlot extends JPanel implements Scrollable, ComponentListener
      * Implement ComponentListener to detect window size changes
      */
     public void componentResized(ComponentEvent e) {
-        setTransform();
-        repaint();
+        setTransform();     // Resized so recalculate the transform
+        repaint();          // and ensure we redraw everything
     }
 
     public void componentMoved(ComponentEvent e) {
@@ -205,9 +202,9 @@ public class DisplayPlot extends JPanel implements Scrollable, ComponentListener
     /*
      * Internal class to hold drawing instructions.
      * draw = true if drawing, false if moving
-     * x, y = coordinate to draw/move to
-     * dir = direction of last instruction. Can be any integer to indicate the direction. 
-     *       Segments can be combined if the direction matches.  Set to 0 if direction 
+     * x, y = plotter coordinate to draw/move to
+     * dir = direction of last instruction. Can be any integer to indicate the direction, 
+     *       segments will be combined if the direction matches.  Set to 0 if direction 
      *       is unknown.            
      */
     private static class Segment {
@@ -220,7 +217,7 @@ public class DisplayPlot extends JPanel implements Scrollable, ComponentListener
             this.dir = dir;
         }
         
-        // For debug
+        // Mainly for debugging
         public String toString() {
             return draw + ": [" + x + "," + y + "] " + dir;
         }
