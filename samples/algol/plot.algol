@@ -21,7 +21,7 @@ BEGIN
         This just happens to be the case for all lines plotted in this program.;
     PROCEDURE plotTo(x, y);  VALUE x, y;  INTEGER x, y;
     BEGIN INTEGER i, w, h;
-          INTEGER sw, sh;
+          INTEGER sw, sh, pw, ph;
 
           COMMENT calculate the lengths of the triangle legs;
           x := x + orgX;  y := y + orgY;
@@ -29,23 +29,17 @@ BEGIN
           
           COMMENT set the plotter movement details;
           sw := IF w LESS 0 THEN -w ELSE w;
+          pw := IF w LESS 0 THEN 7170 ELSE 7169;
           sh := IF h LESS 0 THEN -h ELSE h;
+          ph := IF h LESS 0 THEN 7176 ELSE 7172;
 
           COMMENT plot trying to be clever about which direction to move first;
           IF (y GR 0 AND h GR 0) OR (y LESS 0 AND h LESS 0) THEN BEGIN
-              IF sh GR 0 THEN FOR i := 1 STEP 1 UNTIL sh DO 
-                  IF h LESS 0 THEN ELLIOTT(7,2,7176, 0, 0,0,0) 
-                              ELSE ELLIOTT(7,2,7172, 0, 0,0,0);
-              IF sw GR 0 THEN FOR i := 1 STEP 1 UNTIL sw DO 
-                  IF w LESS 0 THEN ELLIOTT(7,2,7170, 0, 0,0,0) 
-                              ELSE ELLIOTT(7,2,7169, 0, 0,0,0);
+              IF sh GR 0 THEN FOR i := 1 STEP 1 UNTIL sh DO ELLIOTT(0,0,ph, 1, 7,2,0); 
+              IF sw GR 0 THEN FOR i := 1 STEP 1 UNTIL sw DO ELLIOTT(0,0,pw, 1, 7,2,0);
           END ELSE BEGIN
-              IF sw GR 0 THEN FOR i := 1 STEP 1 UNTIL sw DO 
-                  IF w LESS 0 THEN ELLIOTT(7,2,7170, 0, 0,0,0) 
-                              ELSE ELLIOTT(7,2,7169, 0, 0,0,0);
-              IF sh GR 0 THEN FOR i := 1 STEP 1 UNTIL sh DO 
-                  IF h LESS 0 THEN ELLIOTT(7,2,7176, 0, 0,0,0) 
-                              ELSE ELLIOTT(7,2,7172, 0, 0,0,0);
+              IF sw GR 0 THEN FOR i := 1 STEP 1 UNTIL sw DO ELLIOTT(0,0,pw, 1, 7,2,0);
+              IF sh GR 0 THEN FOR i := 1 STEP 1 UNTIL sh DO ELLIOTT(0,0,ph, 1, 7,2,0);
           END;
 
           COMMENT save final position;

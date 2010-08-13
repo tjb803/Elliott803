@@ -31,18 +31,19 @@ import javax.swing.Scrollable;
 public class DisplayPlot extends JPanel implements Scrollable, ComponentListener {
     private static final long serialVersionUID = 1L;
 
-    // Minimum and maximum plotter y coordinate seem so far.
+    // Minimum and maximum plotter y coordinate seen so far.
     int minY, maxY;
     
-    // Transform to scale and translate plotter coordinates to output area 
-    double scale;
+    // Transform to scale and translate plotter coordinates to output area.
     AffineTransform transform;
     
-    // Segments contains the set of move/draw instructions to draw the complete
-    // output; segments store plotter coordinates.
+    // segments contains the set of move/draw instructions to draw the complete
+    // output.  Segments are stored in plotter coordinates.
     // p1 and p2 contain the last two points in output area coordinates.
+    // r1 is a rectangle containing the bounds of p1 and p2.
     List<Segment> segments;
     Point p1, p2;
+    Rectangle r1;
     
     public DisplayPlot() {
         setBackground(Color.WHITE);
@@ -50,6 +51,7 @@ public class DisplayPlot extends JPanel implements Scrollable, ComponentListener
         
         segments = new ArrayList<Segment>();
         p1 = new Point();  p2 = new Point();
+        r1 = new Rectangle();
         setTransform();
         plotClear();
     }
@@ -78,14 +80,13 @@ public class DisplayPlot extends JPanel implements Scrollable, ComponentListener
         
         // Calculate the area of the screen that needs redrawing to display
         // the new line segment.
+        scrollRectToVisible(r1);
         if (y < minY || y > maxY) {
             minY = Math.min(y - 10, minY);
             maxY = Math.max(y + 10, maxY);
             revalidate();
         } else {
-            Rectangle r = getLastRectangle();
-            repaint(r);
-            scrollRectToVisible(r);
+            repaint(r1);
         }    
     }
     
@@ -109,6 +110,7 @@ public class DisplayPlot extends JPanel implements Scrollable, ComponentListener
         segments.clear();
         segments.add(new Segment(false, 0, 0, 0));
         p1.setLocation(0, 0);  p2.setLocation(0, 0);
+        r1.setBounds(0, 0, 0, 0);
         minY = maxY = 0;
         revalidate();
     }
@@ -132,7 +134,7 @@ public class DisplayPlot extends JPanel implements Scrollable, ComponentListener
     // of the window.  Also reflect about the y-axis (y scale factor is set 
     // negative) to make positive y-values go up rather than down.
     private void setTransform() {
-        scale = getWidth()/1100.0;
+        double scale = getWidth()/1100.0;
         transform = new AffineTransform();
         transform.translate(0, (getHeight() + (maxY+minY)*scale)/2);
         transform.scale(scale, -scale);
@@ -147,16 +149,12 @@ public class DisplayPlot extends JPanel implements Scrollable, ComponentListener
         }    
         p2.x = seg.x;  p2.y = seg.y;
         transform.transform(p2, p2);
+        
+        // Generate the bounding rectangle for the last two points.  This is extended
+        // by a 1 pixel boarder to allow for rounding errors in the transform.
+        r1.setBounds(p1.x, p1.y, 0, 0);  r1.add(p2);  r1.grow(1, 1);
+        
         return seg.draw;
-    }
-    
-    // Return a screen rectangle containing the last line segment. A 1 pixel 
-    // border is added to allow for rounding errors during transform mapping.
-    private Rectangle getLastRectangle() {
-        Rectangle r = new Rectangle(p1);
-        r.add(p2);
-        r.grow(1, 1);
-        return r;
     }
     
     /*
@@ -164,7 +162,7 @@ public class DisplayPlot extends JPanel implements Scrollable, ComponentListener
      * inside a scroll pane.
      */
     public Dimension getPreferredSize() {
-        return new Dimension(getWidth(), (int)((maxY-minY)*scale));
+        return new Dimension(getWidth(), (int)((maxY-minY)*transform.getScaleX()));
     }
 
     public Dimension getPreferredScrollableViewportSize() {
