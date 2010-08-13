@@ -80,6 +80,7 @@ public class DisplayPlot extends JPanel implements Scrollable, ComponentListener
             minY = Math.min(y - 10, minY);
             maxY = Math.max(y + 10, maxY);
             revalidate();       // Height has changed so re-do scrollbars
+            repaint();
         } else {
             repaint(r1);
         }    

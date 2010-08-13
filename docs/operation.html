@@ -19,6 +19,7 @@
 <li><a href="#perf">Performance Note</a></li>
 </ul>
 <li><a href="#optele">The Output Teletype</a></li>
+<li><a href="#opplot">The Graph Plotter</a></li>
 <li><a href="#optape">The Paper Tape Readers and Punches</a></li>
 <ul>
 <li><a href="#oppts">The Paper Tape Station</a></li>
@@ -121,6 +122,7 @@ This will usually flicker on and off as programs are loaded or run.</li>
 <br clear="right">
 <h3 id="opcpu">The CPU and Core Store</h3>
 <img src="image/opcpu.jpg" alt="CPU" align="left"/>
+<img src="image/opcore.jpg" alt="Core Store" align="right"/>
 <p>The CPU window shows the values of some of the important internal registers as
 execution proceeds.
 This includes the currently executing instruction and the contents of the
@@ -141,20 +143,19 @@ This can be formatted and displayed using the
 </td></tr>
 </table>
 <br clear="left">
-<img src="image/opcore.jpg" alt="Core Store" align="left"/>
 <p>The core store window shows a view of the 8K words of store.
 It is intended to give a rough idea of where in store work is taking place.</p>
 <p>The window shows 128 lines of 64 small blocks, each block representing a single
 word of store.
 The block will be white if the word of store contains zero, otherwise it will
 alternate between light and dark grey whenever a value is written to the
-storage location.</p>
-<p>The core store is an output only window.</p>
-<h4 id="perf">Performance Note</h4>
+storage location.
+The core store is an output only window.</p>
+<h4 id="perf">Important Performance Note</h4>
 <p>The frequent updates to the CPU and Core Store windows that take place as 
 execution proceeds considerably slow down the speed of the emulation.  
 If you want processing to run at a much faster speed one or both of these
-windows should be minimized.</p>
+windows should be minimized.
 <br clear="left">
 <h3 id="optele">The Output Teletype</h3>
 <img src="image/optele.jpg" alt="Output Teletype" align="left"/>
@@ -166,7 +167,17 @@ New output will be appended to the end of any existing log file.
 The log file will be closed if the <i>Clear</i> button is pressed and this
 will also clear any current teletype output.</p>
 <p>When selecting a log file you will need to choose an appropriate
-<a href="#tmode">tape format</a> for the resulting log file.</p>
+<a href="#tmode">tape format</a> for the resulting log file.
+<br clear="left">
+<h3 id="opplot">The Graph Plotter</h3>
+<img src="image/opplot.jpg" alt="Graph Plotter" align="left"/>
+<p>The graph plotter displays any plotter output generated.
+The output is scaled so that the current width of the plotter window 
+represents the full width of a real Calcomp plotter, that is 11 inches.
+<p>Pressing the <i>Clear</i> button will clear the plotter output and
+reset the pen to the left hand edge.
+Take care pressing <i>Clear</i> as the image cannot be recovered without
+re-running the program that generated it. 
 <br clear="left">
 <h3 id="optape">The Paper Tape Readers and Punches</h3>
 <img src="image/oprdr.jpg" alt="Tape Reader" align="left"/>
@@ -192,10 +203,10 @@ console is pressed.</li>
 </ul>
 <h4 id="oppts">The Paper Tape Station</h4>
 <img src="image/oppts.jpg" alt="Tape Reader" align="left"/>
-<p>The paper tape station provides additional control over the tape readers and
-punches allowing the readers amd/or punches to be exchanged.  
-When exchanged the CPU will see Reader 1 (or Punch 1) as Reader 2 (or Punch 2) 
-and <i>vice-versa</i>.</p>
+<p>The paper tape station provides additional control over the tape
+readers and punches allowing the readers amd/or punches to be exchanged.
+When the appropriate option is selected the CPU will see Reader 1
+(or Punch 1) as Reader 2 (or Punch 2) and <i>vice-versa</i>.</p>
 <br clear="left">
 <h4 id="tmode">Tape Formats</h4>
 <p>When reading or writing files using the tape readers and tape punches you need
@@ -328,7 +339,8 @@ This will be ignored for a self-triggering program tape.</dd>
 <dt><code>-punch1 <i>outputtape</i></code></dt><dd>The output tape file for punch 1</dd>
 <dt><code>-punch2 <i>outputtape</i></code></dt><dd>The output tape file for punch 2</dd>
 <dt><code>-teletype <i>outputfile</i></code></dt><dd>The output file for teletype, defaults to standard out</dd>
-<dt><code>-wordgen <i>&quot;instruction&quot;</i></code></dt><dd>The value to set on the word gnerator</dd>
+<dt><code>-wordgen <i>&quot;instruction&quot;</i></code></dt><dd>The value to set on the word 
+generator, formatted as an instruction e.g. "70 1 : 00 1".</dd>
 <dt><code>-press <i>keynumber</i></code></dt><dd>A key to press if the system waits for keyboard input.
 The top-left key (the Function 1 &quot;40&quot; or sign bit) is keynumber 1, the bottom right key 
 (the Address 2 &quot;1&quot; bit) is keynumber 39.  
@@ -345,7 +357,7 @@ command line session.</p>
 <code>java elliott803.Run -ascii tapes/samples/charset.tape</code>
 </pre></blockquote>
 <br/><table border="1" frame="above" rules="none" width="100%">
-<tr><td align="left">Tim Baldwin<br>July 2010
+<tr><td align="left">Tim Baldwin<br>August 2010
 <br><a href="mailto:tjb803@tinymail.co.uk">tjb803@tinymail.co.uk</a></td>
 <td align="right">Return to <a href="index.html">index</a>
 <br><br>&copy; Tim Baldwin 2009,2010</td></tr>

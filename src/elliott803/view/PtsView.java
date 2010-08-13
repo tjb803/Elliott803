@@ -30,8 +30,8 @@ import elliott803.machine.PaperTapeStation;
 public class PtsView  extends JInternalFrame implements ActionListener {
     private static final long serialVersionUID = 1L;
     
-    public static final String SWAP_READER = "Exchange Readers";
-    public static final String SWAP_PUNCH = "Exchange Punches";
+    public static final String SWAP_READER = "Reader Select";
+    public static final String SWAP_PUNCH = "Punch Select";
     
     PaperTapeStation pts;
     ReaderView[] reader;

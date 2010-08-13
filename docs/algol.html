@@ -34,15 +34,15 @@ etc had to be in uppercase only and many of the special symbols used in
 ALGOL were not available.
 There were substituted using using available symbols and letter sequences, 
 for example:<blockquote><table frame="void" rules="none">
-<tr><td><code>GR</code></td><td>&nbsp;&nbsp;for&nbsp;&nbsp;</td><td><code>&gt;</code></td></tr>
-<tr><td><code>DIV</code></td><td>&nbsp;&nbsp;for&nbsp;&nbsp;</td><td><code>&divide;</code></td></tr>
-<tr><td><code>NOTEQ</code></td><td>&nbsp;&nbsp;for&nbsp;&nbsp;</td><td><code>&ne;</code></td></tr>
-<tr><td><code>**</code></td><td>&nbsp;&nbsp;for&nbsp;&nbsp;</td><td><code>&uarr;</code></td>
+<tr><td><code>GR</code></td><td width="15"/><td>for</td><td width="15"/><td><code>&gt;</code></td></tr>
+<tr><td><code>DIV</code></td><td/><td>for</td><td/><td><code>&divide;</code></td></tr>
+<tr><td><code>NOTEQ</code></td><td/><td>for</td><td/><td><code>&ne;</code></td></tr>
+<tr><td><code>**</code></td><td/><td>for</td><td/><td><code>&uarr;</code></td>
 <td>... and several others</td></tr> 
-<tr><td colspan="4">Three particularly important (but slightly odd) substitutions are:</td></tr>
-<tr><td><code>'</code>  (apostrophe)</td><td>&nbsp;&nbsp;for&nbsp;&nbsp;</td><td><code>;</code>  (semicolon)</td></tr>
-<tr><td><code>&pound;</code>  (GB pound sign)</td><td>&nbsp;&nbsp;for&nbsp;&nbsp;</td><td><code>&lsquo;</code>  (open string quote)</td></tr>
-<tr><td><code>?</code>  (question mark)</td><td>&nbsp;&nbsp;for&nbsp;&nbsp;</td><td><code>&rsquo;</code>  (close string quote)</td></tr>
+<tr><td colspan="6">Three particularly important (but slightly odd) substitutions are:</td></tr>
+<tr><td><code>'</code>  (apostrophe)</td><td/><td>for</td><td/><td><code>;</code>  (semicolon)</td></tr>
+<tr><td><code>&pound;</code>  (GB pound sign)</td><td/><td>for</td><td/><td><code>&lsquo;</code>  (open string quote)</td></tr>
+<tr><td><code>?</code>  (question mark)</td><td/><td>for</td><td/><td><code>&rsquo;</code>  (close string quote)</td></tr>
 </table></blockquote></li>
 <li>All ALGOL programs must start with a title followed by an apostrophe.</li>
 <li>The final END keyword must be followed by an apostrophe.</li>
@@ -122,6 +122,13 @@ already released press it down.)</li>
 <p>At this point the system is ready to compile a program.
 A real 803 would now be producing a particular warbling noise from its
 loudspeaker!</p>
+<h3>Using a Preloaded Machine Image</h3>
+<p>As an alternative to loading the two compiler tapes each time they are 
+required it is possible to start the simulator using a <i>machine definition</i>
+parameter specifying a pre-loaded ALGOL core image.
+A pre-loaded compiler image can be found in <code>samples/machines/algol.803</code>.</p>
+<p>If the pre-loaded image is used you will need to execute a <b>40 7</b> instruction
+to begin compiling a new program.
 <h3>Compiling and Running a Program</h3>
 <p>When the compiler has been loaded it is ready to compile and run programs.</p>
 <ol>
@@ -254,6 +261,32 @@ algorithm was invented by
 <a href="http://en.wikipedia.org/wiki/C._A._R._Hoare">Tony Hoare</a>
 and it was the same Tony Hoare who was responsible for the implementation
 of the Elliott 803 ALGOL compiler.</p>
+<h3 id="plot">Sine Wave Plot</h3>
+<table frame="box" rules="all" border="1" cellpadding="4">
+<tr><td><b>Source Code</b></td>
+<td><a href="../samples/algol/plot.algol"><samp>samples/algol/plot.algol</samp></a></td></tr>
+</table>
+<p>This program demonstrates a simple use of the graph plotter to draw
+an approximate sine-wave.
+The mechanism used to draw lines on the plotter is deliberately done in
+a very simple manner, but it seems perfectly adequate for this application.</p>
+<p>Note that <code>ELLIOTT()</code> statements are used to insert specific
+machine code instructions to drive the plotter.
+The plotter had paper that was 11 inches wide and a pen that could be 
+moved in steps of 1/100 inch in any of 8 directions using special machine
+instructions:</p>
+<blockquote><table frame="void" rules="none" cellpadding="1">
+<tr><td><code>72 7184</code></td><td width="15"/><td>Raise the pen</td></tr>
+<tr><td><code>72 7200</code></td><td/><td>Lower the pen</td></tr>
+<tr><td><code>72 7169</code></td><td/><td>Move one step EAST</td></tr>
+<tr><td><code>72 7170</code></td><td/><td>Move one step WEST</td></tr>
+<tr><td><code>72 7172</code></td><td/><td>Move one step NORTH</td></tr>
+<tr><td><code>72 7176</code></td><td/><td>Move one step SOUTH</td></tr>
+<tr><td><code>72 7173</code></td><td/><td>Move one step NORTH-EAST</td></tr>
+<tr><td><code>72 7174</code></td><td/><td>Move one step NORTH-WEST</td></tr>
+<tr><td><code>72 7177</code></td><td/><td>Move one step SOUTH-EAST</td></tr>
+<tr><td><code>72 7178</code></td><td/><td>Move one step SOUTH-WEST</td></tr>
+</table></blockquote> 
 <hr>
 <h2 id="contrib">Contributed Programs</h2>
 <p>These are some rather more complex example ALGOL programs that have been 
@@ -273,7 +306,7 @@ The value to be calculated should be provided on a tape placed into reader 2.</p
 <p>This will calculate the value of PI to many decimal places (e.g. 1000).
 The number of places required should be provided on a tape placed into reader 2.</p>
 <br><table border="1" frame="above" rules="none" width="100%">
-<tr><td align="left">Tim Baldwin<br>July 2010
+<tr><td align="left">Tim Baldwin<br>August 2010
 <br><a href="mailto:tjb803@tinymail.co.uk">tjb803@tinymail.co.uk</a></td>
 <td align="right">Return to <a href="index.html">index</a>
 <br><br>&copy; Tim Baldwin 2009,2010</td></tr>
