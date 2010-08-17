@@ -9,6 +9,7 @@ import elliott803.hardware.ALU;
 import elliott803.hardware.CPU;
 import elliott803.hardware.Console;
 import elliott803.hardware.FPU;
+import elliott803.hardware.PaperTapeStation;
 import elliott803.hardware.Plotter;
 import elliott803.hardware.Store;
 import elliott803.machine.extension.RandomNumberDevice;

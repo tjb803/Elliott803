@@ -55,7 +55,7 @@ public class PrintTrace {
         }
 
         // Read the trace file
-        Trace trace = Trace.readTrace(inputFile.getCanonicalPath());
+        Trace trace = Trace.readTrace(inputFile);
         DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG);
 
         output.println("Elliott 803B Instruction Trace");

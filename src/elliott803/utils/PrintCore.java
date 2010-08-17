@@ -46,7 +46,7 @@ public class PrintCore {
         }
 
         // Read the core dump
-        Dump dump = Dump.readDump(inputFile.getCanonicalPath());
+        Dump dump = Dump.readDump(inputFile);
         DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG);
 
         if (dump != null) {

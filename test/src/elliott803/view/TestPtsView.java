@@ -5,7 +5,7 @@
  */
 package elliott803.view;
 
-import elliott803.machine.PaperTapeStation;
+import elliott803.hardware.PaperTapeStation;
 
 /**
  * Unit test for the paper tape station view

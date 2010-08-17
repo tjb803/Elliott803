@@ -17,7 +17,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 
-import elliott803.machine.PaperTapeStation;
+import elliott803.hardware.PaperTapeStation;
 
 /**
  * The visual representation of the paper tape station.

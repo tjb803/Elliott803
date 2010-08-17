@@ -14,6 +14,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -101,7 +102,7 @@ public class DisplayPlot extends JPanel implements Scrollable, ComponentListener
     
     // Clear current output
     public void plotClear() {
-        segments = new ArrayList<Segment>();
+        segments = Collections.synchronizedList(new ArrayList<Segment>());
         segments.add(new Segment(false, 0 ,0, 0));
         p1 = new Point();  p2 = new Point();
         r1 = new Rectangle();
@@ -118,10 +119,12 @@ public class DisplayPlot extends JPanel implements Scrollable, ComponentListener
         // set to avoid actually redrawing everything.
         p2.setLocation(0, 0);
         mapToPoint(segments.get(0), true);
-        for (int i = 1; i < segments.size(); i++) {
-            if (mapToPoint(segments.get(i), true).draw) {
-                g.drawLine(p1.x, p1.y, p2.x, p2.y);
-            }
+        synchronized (segments) {
+            for (int i = 1; i < segments.size(); i++) {
+                if (mapToPoint(segments.get(i), true).draw) {
+                    g.drawLine(p1.x, p1.y, p2.x, p2.y);
+                }
+            }   
         }    
     }
     

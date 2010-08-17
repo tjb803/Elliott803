@@ -3,14 +3,12 @@
  *
  * (C) Copyright Tim Baldwin 2009
  */
-package elliott803.machine;
+package elliott803.hardware;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import elliott803.hardware.Punch;
-import elliott803.hardware.Reader;
-import elliott803.hardware.Teletype;
+import elliott803.machine.Computer;
 
 /**
  * The Paper Tape Station controlling the tape readers, tape punches and

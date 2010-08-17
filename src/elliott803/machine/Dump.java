@@ -5,11 +5,14 @@
  */
 package elliott803.machine;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -65,40 +68,38 @@ public class Dump implements Serializable {
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd-HHmmss-SSS");
         String filename = "elliott-" + df.format(timestamp) + ".core";
          try {
-            FileOutputStream fout = new FileOutputStream(filename);
-            DeflaterOutputStream zout = new DeflaterOutputStream(fout);
-            ObjectOutputStream out = new ObjectOutputStream(zout);
-            out.writeObject(this);
-            out.close();
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
+            OutputStream stream = new DeflaterOutputStream(new FileOutputStream(filename)); 
+            write(stream);
+            stream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
+    
+    public void write(OutputStream stream) throws IOException {
+        ObjectOutputStream out = new ObjectOutputStream(stream);
+        out.writeObject(this);
+        out.flush();
     }
 
    /*
     * Read a dump file.
     */
-    public static Dump readDump(String filename) {
+    public static Dump readDump(File file) {
         Dump dump = null;
         try {
-            FileInputStream stream = new FileInputStream(filename);
+            InputStream stream = new InflaterInputStream(new FileInputStream(file));
             dump = readDump(stream);
             stream.close();
         } catch (Exception e) {
-            e.printStackTrace(System.err);
+            e.printStackTrace();
         }
         return dump;
     }
     
-    public static Dump readDump(InputStream stream) {
-        Dump dump = null;
-        try {
-            InflaterInputStream zin = new InflaterInputStream(stream);
-            ObjectInputStream in = new ObjectInputStream(zin);
-            dump = (Dump)in.readObject();
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
-        }
+    public static Dump readDump(InputStream stream) throws IOException, ClassNotFoundException {
+        ObjectInputStream in = new ObjectInputStream(stream);
+        Dump dump = (Dump)in.readObject();
         return dump; 
     }
 }

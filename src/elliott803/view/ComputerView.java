@@ -25,9 +25,13 @@ public class ComputerView extends JDesktopPane {
     public StoreView store;
     public PtsView pts;
     public PlotterView plotter;
+    
+    Computer computer;
 
     public ComputerView(Computer computer) {
         setLayout(null);
+        
+        this.computer = computer;
 
         // Create views for the various devices
         console = new ConsoleView(computer.console);
@@ -35,7 +39,7 @@ public class ComputerView extends JDesktopPane {
         store = new StoreView(computer.core);
         pts = new PtsView(computer.pts);
         plotter = new PlotterView(computer.plotter);
-
+        
         add(console);
         add(cpu);
         add(store);
@@ -47,52 +51,49 @@ public class ComputerView extends JDesktopPane {
         add(pts.teletype);      // Make sure the plotter is added after the teletype
         add(plotter);           // as it want it to appear behind.
     }
+   
+    // Layout all the windows in their default positions
+    public void defaultLayout() {        
+        int plotterX = pts.teletype.getWidth() - pts.teletype.getRootPane().getPreferredSize().width;
+        int plotterY = pts.teletype.getHeight() - pts.teletype.getRootPane().getPreferredSize().height;
+        
+        int max1X = console.getWidth() + cpu.getWidth() + store.getWidth() + 20;
+        int max2X = pts.teletype.getWidth() + plotterX + pts.punch[0].getWidth() + pts.reader[0].getWidth() + 20;
+        int maxX = Math.max(max1X, max2X);
 
-    public void layout(ViewDefinition def) {
-        if (def.empty) {
-            // Empty layout, so arrange everything in default positions
-            int max1X = console.getWidth() + cpu.getWidth() + store.getWidth() + 20;
-            int max2X = pts.teletype.getWidth() + pts.punch[0].getWidth() + pts.reader[0].getWidth() + 20;
-            int maxX = Math.max(max1X, max2X);
-            
-            int plotterOffset = pts.teletype.getHeight() - pts.teletype.getContentPane().getPreferredSize().height;
-            
-            int max1Y = console.getHeight() + pts.teletype.getHeight() + plotterOffset + 10;
-            int max2Y = cpu.getHeight() + 2*pts.punch[0].getHeight() + pts.getHeight() + 15;
-            int max3Y = store.getHeight() + 2*pts.reader[0].getHeight() + pts.getHeight() + 15;
-            int maxY = Math.max(Math.max(max1Y, max2Y), max3Y);
+        int max1Y = console.getHeight() + pts.teletype.getHeight() + plotterY + 10;
+        int max2Y = cpu.getHeight() + 2*pts.punch[0].getHeight() + pts.getHeight() + 15;
+        int max3Y = store.getHeight() + 2*pts.reader[0].getHeight() + pts.getHeight() + 15;
+        int maxY = Math.max(Math.max(max1Y, max2Y), max3Y);
 
-            int consoleX = 0, consoleY = 0;
-            int storeX = maxX - store.getWidth(), storeY = 0;
-            int cpuX = storeX - cpu.getWidth() - 10, cpuY = 0;
-            
-            pts.setSize(pts.reader[0].getWidth() + pts.punch[0].getWidth() + 5, pts.getHeight());
-            
-            int teletypeX = 0, teletypeY = maxY - pts.teletype.getHeight();
-            int ptsX = maxX - pts.getWidth(), ptsY = maxY - pts.getHeight();
-            int punch2X = maxX - pts.punch[1].getWidth(), punch2Y = ptsY - pts.punch[1].getHeight();
-            int reader2X = punch2X - pts.reader[1].getWidth() - 5, reader2Y = punch2Y;
-            int punch1X = punch2X,  punch1Y = punch2Y - pts.punch[0].getHeight();
-            int reader1X = reader2X, reader1Y = reader2Y - pts.reader[0].getHeight();
+        int consoleX = 0, consoleY = 0;
+        int storeX = maxX - store.getWidth(), storeY = 0;
+        int cpuX = storeX - cpu.getWidth() - 10, cpuY = 0;
 
-            console.setLocation(consoleX, consoleY);
-            cpu.setLocation(cpuX, cpuY);
-            store.setLocation(storeX, storeY);
+        pts.setSize(pts.reader[0].getWidth() + pts.punch[0].getWidth() + 5, pts.getHeight());
 
-            plotter.setSize(pts.teletype.getWidth(), pts.teletype.getHeight());
-            plotter.setLocation(teletypeX, teletypeY - plotterOffset);
-            
-            pts.teletype.setLocation(teletypeX, teletypeY);
-            pts.setLocation(ptsX, ptsY);
-            pts.punch[0].setLocation(punch1X, punch1Y);
-            pts.punch[1].setLocation(punch2X, punch2Y);
-            pts.reader[0].setLocation(reader1X, reader1Y);
-            pts.reader[1].setLocation(reader2X, reader2Y);
-            
-            // Update the size of the desktop
-            def.viewWidth = maxX;  def.viewHeight = maxY;
-            Dimension size = new Dimension(maxX, maxY);
-            setPreferredSize(size);
-        }
-    }
+        int teletypeX = 0, teletypeY = maxY - pts.teletype.getHeight();
+        int ptsX = maxX - pts.getWidth(), ptsY = maxY - pts.getHeight();
+        int punch2X = maxX - pts.punch[1].getWidth(), punch2Y = ptsY - pts.punch[1].getHeight();
+        int reader2X = punch2X - pts.reader[1].getWidth() - 5, reader2Y = punch2Y;
+        int punch1X = punch2X,  punch1Y = punch2Y - pts.punch[0].getHeight();
+        int reader1X = reader2X, reader1Y = reader2Y - pts.reader[0].getHeight();
+
+        console.setLocation(consoleX, consoleY);
+        cpu.setLocation(cpuX, cpuY);
+        store.setLocation(storeX, storeY);
+
+        plotter.setSize(pts.teletype.getWidth(), pts.teletype.getHeight());
+        plotter.setLocation(teletypeX + plotterX, teletypeY - plotterY);
+
+        pts.teletype.setLocation(teletypeX, teletypeY);
+        pts.setLocation(ptsX, ptsY);
+        pts.punch[0].setLocation(punch1X, punch1Y);
+        pts.punch[1].setLocation(punch2X, punch2Y);
+        pts.reader[0].setLocation(reader1X, reader1Y);
+        pts.reader[1].setLocation(reader2X, reader2Y);
+
+        Dimension size = new Dimension(maxX, maxY);
+        setPreferredSize(size);
+    } 
 }

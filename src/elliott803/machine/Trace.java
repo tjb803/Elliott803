@@ -6,9 +6,11 @@
 package elliott803.machine;
 
 import java.io.EOFException;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -104,7 +106,7 @@ public class Trace implements Serializable {
                     out = null;
                 }
             } catch (IOException e) {
-                System.err.println(e);
+                e.printStackTrace();
             }
         }
     }
@@ -115,8 +117,10 @@ public class Trace implements Serializable {
         if (in != null) {
             try {
                 entry = (Entry)in.readObject();
-            } catch (Exception e) {
+            } catch (EOFException e) {
                 // Assume end of file reached
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         return entry;
@@ -125,18 +129,15 @@ public class Trace implements Serializable {
     /*
      * Read a trace file
      */
-    public static Trace readTrace(String filename) {
+    public static Trace readTrace(File file) {
         Trace trace = null;
         try {
-            FileInputStream fin = new FileInputStream(filename);
-            InflaterInputStream zin = new InflaterInputStream(fin);
-            ObjectInputStream in = new ObjectInputStream(zin);
+            InputStream stream = new InflaterInputStream(new FileInputStream(file));
+            ObjectInputStream in = new ObjectInputStream(stream);
             trace = (Trace)in.readObject();
             trace.in = in;
-        } catch (EOFException e) {
-            // End of file reached
         } catch (Exception e) {
-            e.printStackTrace(System.err);
+            e.printStackTrace();
         }
         return trace;
     }

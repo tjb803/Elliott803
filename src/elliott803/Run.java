@@ -13,9 +13,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
 
+import elliott803.hardware.PaperTapeStation;
 import elliott803.hardware.TapeDevice;
 import elliott803.machine.Computer;
-import elliott803.machine.PaperTapeStation;
 import elliott803.machine.Word;
 import elliott803.telecode.TelecodeOutputStream;
 import elliott803.utils.Args;
