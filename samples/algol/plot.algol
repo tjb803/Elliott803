@@ -11,9 +11,9 @@ BEGIN
     COMMENT * Draw a sine wave on the plotter *;
     COMMENT **                               **;
 
-    INTEGER orgX, orgY;	
+    INTEGER orgX, orgY;
     INTEGER lastX, lastY;
-    
+
     COMMENT Plot an approximate straight line from the current position to
         the new location.  This is actually a very poor straight line
         as it just uses the legs of a right angle triangle.  It only really
@@ -26,7 +26,7 @@ BEGIN
           COMMENT calculate the lengths of the triangle legs;
           x := x + orgX;  y := y + orgY;
           w := x - lastX;  h := y - lastY;
-          
+
           COMMENT set the plotter movement details;
           sw := IF w LESS 0 THEN -w ELSE w;
           pw := IF w LESS 0 THEN 7170 ELSE 7169;
@@ -35,14 +35,14 @@ BEGIN
 
           COMMENT plot trying to be clever about which direction to move first;
           IF (y GR 0 AND h GR 0) OR (y LESS 0 AND h LESS 0) THEN BEGIN
-              IF sh GR 0 THEN 
-                  FOR i := 1 STEP 1 UNTIL sh DO ELLIOTT(0,0,ph, 1, 7,2,0); 
-              IF sw GR 0 THEN 
+              IF sh GR 0 THEN
+                  FOR i := 1 STEP 1 UNTIL sh DO ELLIOTT(0,0,ph, 1, 7,2,0);
+              IF sw GR 0 THEN
                   FOR i := 1 STEP 1 UNTIL sw DO ELLIOTT(0,0,pw, 1, 7,2,0);
           END ELSE BEGIN
-              IF sw GR 0 THEN 
+              IF sw GR 0 THEN
                   FOR i := 1 STEP 1 UNTIL sw DO ELLIOTT(0,0,pw, 1, 7,2,0);
-              IF sh GR 0 THEN 
+              IF sh GR 0 THEN
                   FOR i := 1 STEP 1 UNTIL sh DO ELLIOTT(0,0,ph, 1, 7,2,0);
           END;
 
@@ -61,20 +61,20 @@ BEGIN
     BEGIN ELLIOTT(7,2,7200, 0, 0,0,0);
           plotTo(x, y);
     END drawTo;
-    
+
     COMMENT Set plot origin;
     PROCEDURE setOrigin(x, y);  VALUE x, y;  INTEGER x, y;
-    BEGIN 
-        orgX := orgY := 0;      COMMENT reset the pen to the left hand edge;     
+    BEGIN
+        orgX := orgY := 0;      COMMENT reset the pen to the left hand edge;
         lastX := 1100;  lastY := 0;
         moveTo(0, 0);
-                   
+
         orgX := x;  orgY := y;  COMMENT set new origin offset;
     END setOrigin;
-   
+
     COMMENT Main program;
     BEGIN
-        INTEGER stepX, maxY; 
+        INTEGER stepX, maxY;
         INTEGER i, tick;  REAL pi, y;
         BOOLEAN PROCEDURE rem(a, b);  VALUE a, b;  INTEGER a, b;
             rem := (a div b)*b = a;
@@ -82,7 +82,7 @@ BEGIN
         pi := 3.14159;
         stepX := 2;
         maxY := 300;
-        
+
         COMMENT Set origin;
         setOrigin(150, 0);
         moveTo(0, 0);
@@ -96,14 +96,14 @@ BEGIN
             tick := IF rem(i,90) THEN 20 ELSE IF rem(i,30) THEN 10 ELSE 5;
             moveTo(i*stepX, 0);
             drawTo(i*stepX, tick);
-        END;        
-    
-        COMMENT Draw the sine curve;
-        moveTo(0, 0);
-        FOR i := 0 STEP 1 UNTIL 360 DO BEGIN
-            y := sin((i/180)*pi) * maxY;
-            drawTo(i*stepX, entier(y));    			
         END;
         moveTo(0, 0);
-    END; 
+
+        COMMENT Draw the sine curve;
+        FOR i := 0 STEP 1 UNTIL 360 DO BEGIN
+            y := sin((i/180)*pi) * maxY;
+            drawTo(i*stepX, entier(y));
+        END;
+        moveTo(0, 0);
+    END;
 END program;

@@ -25,8 +25,9 @@ public class DisplayCore extends JPanel {
     static final int ROWSIZE = 64;
     static final int ROWCOUNT = STORESIZE/ROWSIZE;
     static final int BLOCKSIZE = 2;
+    static final int ROUNDING = BLOCKSIZE-1;
 
-    int[][] store = new int[ROWCOUNT][ROWSIZE];
+    byte[][] store = new byte[ROWCOUNT][ROWSIZE];
 
     public DisplayCore() {
         setPreferredSize(new Dimension(ROWSIZE*BLOCKSIZE, ROWCOUNT*BLOCKSIZE));
@@ -34,7 +35,7 @@ public class DisplayCore extends JPanel {
 
     public void setValue(int addr, long value) {
         int i = addr%ROWSIZE, j = addr/ROWSIZE;
-        int b = (value == 0) ? 0 : store[j][i] + 1;
+        byte b = (byte)((value == 0) ? 0 : store[j][i] + 1);
         store[j][i] = b;
         repaint(BLOCKSIZE*i, BLOCKSIZE*j, BLOCKSIZE, BLOCKSIZE);
     }
@@ -42,7 +43,7 @@ public class DisplayCore extends JPanel {
     public void setValues(long[] core) {
         for (int addr = 4; addr < core.length; addr++) {
             int i = addr%ROWSIZE, j = addr/ROWSIZE;
-            store[j][i] = (core[addr] == 0) ? 0 : 1;
+            store[j][i] = (byte)((core[addr] == 0) ? 0 : 1);
         }
         repaint();
     }
@@ -52,19 +53,18 @@ public class DisplayCore extends JPanel {
         
         // Use the clipping rectangle to determine the area of output that needs
         // to be repainted.  Default is to paint everything.
-        int startX = 0, startY = 0;
         int minI = 0, maxI = ROWSIZE, minJ = 0, maxJ = ROWCOUNT;
         Rectangle clip = g.getClipBounds();
         if (clip != null) {
-            startX = clip.x;  startY = clip.y;
-            minI = clip.x/BLOCKSIZE;  maxI = minI + clip.width/BLOCKSIZE;
-            minJ = clip.y/BLOCKSIZE;  maxJ = minJ + clip.height/BLOCKSIZE;
+            minI = (clip.x+ROUNDING)/BLOCKSIZE;  maxI = minI + (clip.width+ROUNDING)/BLOCKSIZE;
+            minJ = (clip.y+ROUNDING)/BLOCKSIZE;  maxJ = minJ + (clip.height+ROUNDING)/BLOCKSIZE;
         }
         
         // Paint the output area
+        int startX = minI*BLOCKSIZE, startY = minJ*BLOCKSIZE;
         for (int j = minJ, y = startY; j < maxJ; j++) {
             for (int i = minI, x = startX; i < maxI; i++) {
-                int b = store[j][i];
+                byte b = store[j][i];
                 g.setColor((b == 0) ? Color.WHITE : ((b&1) == 0) ? Color.DARK_GRAY : Color.LIGHT_GRAY);
                 g.fillRect(x, y, BLOCKSIZE, BLOCKSIZE);
                 x += BLOCKSIZE;
