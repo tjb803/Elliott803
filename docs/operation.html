@@ -13,6 +13,7 @@
 <ul>
 <li><a href="#gui">Interactive GUI Interface</a></li>
 <ul>
+<li><a href="#start">Start Up and Shut Down</a></li>
 <li><a href="#opcon">The Operator Console</a></li>
 <li><a href="#opcpu">The CPU and Core Store</a></li>
 <ul>
@@ -55,6 +56,10 @@ Other look-and-feels that may be available (depending on operating system
 and Java version) include: <code>metal</code>, <code>windows</code>, 
 <code>classic</code>, <code>motif</code>, <code>gtk</code> and <code>nimbus</code>.
 </dd>
+<dt><code>-load</code></dt><dd>Prompt to load a saved machine definition 
+when the simulator starts.</dd>
+<dt><code>-save</code></dt><dd>Prompt to save the current machine definition
+when the simulator ends.</dd>
 </dl></blockquote>
 <p>The GUI interface displays a main window containing several smaller internal
 windows representing the various hardware and devices that form the Elliott
@@ -64,6 +69,20 @@ The current layout can be saved when the simulator is closed and restarted
 next time.</p>
 <p>Most interaction will take place with the paper tape reader and tape punch
 devices and with the system operator's console.</p>
+<h3 id="start">Start Up and Shut Down</h3>
+<p>When the simulator starts up it can load a pre-saved machine image containing
+the complete core memeory contents and the size, position any layout of all
+the application windows.</p>
+<p>The image can either be provided as a parameter when starting the application
+or the option <code><b>-load</b></code> can be used and the system will prompt
+to select the image to use.
+If no image is provided a default window layout will be used. 
+<p>When the simulator is closed it can optionally prompt to save the current
+machine image ready to restart next time.  
+This can be useful if you have resized and re-arranged the windows or if you
+want to avoid having to reload large data tapes such as the ALGOL compiler.
+The option <code><b>-save</b></code> should be used when starting the application 
+to tell it to prompt to save the image when it closes.
 <h3 id="opcon">The Operator Console</h3>
 <img src="image/opcon.jpg" alt="Operator Console" align="left"/>
 <p>The operator console is the mechanism by which the computer is operated.
@@ -340,7 +359,7 @@ This will be ignored for a self-triggering program tape.</dd>
 <dt><code>-punch2 <i>outputtape</i></code></dt><dd>The output tape file for punch 2</dd>
 <dt><code>-teletype <i>outputfile</i></code></dt><dd>The output file for teletype, defaults to standard out</dd>
 <dt><code>-wordgen <i>&quot;instruction&quot;</i></code></dt><dd>The value to set on the word 
-generator, formatted as an instruction e.g. "70 1 : 00 1".</dd>
+generator, formatted as an instruction e.g. <code>"70 1 : 00 1"</code>.</dd>
 <dt><code>-press <i>keynumber</i></code></dt><dd>A key to press if the system waits for keyboard input.
 The top-left key (the Function 1 &quot;40&quot; or sign bit) is keynumber 1, the bottom right key 
 (the Address 2 &quot;1&quot; bit) is keynumber 39.  
