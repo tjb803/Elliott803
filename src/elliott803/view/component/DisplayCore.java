@@ -56,8 +56,8 @@ public class DisplayCore extends JPanel {
         int minI = 0, maxI = ROWSIZE, minJ = 0, maxJ = ROWCOUNT;
         Rectangle clip = g.getClipBounds();
         if (clip != null) {
-            minI = (clip.x+ROUNDING)/BLOCKSIZE;  maxI = minI + (clip.width+ROUNDING)/BLOCKSIZE;
-            minJ = (clip.y+ROUNDING)/BLOCKSIZE;  maxJ = minJ + (clip.height+ROUNDING)/BLOCKSIZE;
+            minI = clip.x/BLOCKSIZE;  maxI = minI + (clip.width+ROUNDING)/BLOCKSIZE;
+            minJ = clip.y/BLOCKSIZE;  maxJ = minJ + (clip.height+ROUNDING)/BLOCKSIZE;
         }
         
         // Paint the output area
