@@ -177,7 +177,6 @@ public class Main implements Runnable, WindowListener {
                 File file = selectImage.getSelectedFile();
                 MachineImage image = MachineImage.readImage(file);
                 image.apply(computer, computerView);
-                frame.pack();
             }
         }
     }
