@@ -50,7 +50,6 @@ public class DisplayPlot extends JPanel implements Scrollable, ComponentListener
         setBackground(Color.WHITE);
         addComponentListener(this);
 
-        setTransform();
         plotClear();
     }
 
@@ -80,11 +79,12 @@ public class DisplayPlot extends JPanel implements Scrollable, ComponentListener
         if (y < minY || y > maxY) {
             minY = Math.min(y - 10, minY);
             maxY = Math.max(y + 10, maxY);
+            setTransform();     // Reset transform 
             revalidate();       // Height has changed so re-do scrollbars
             repaint();
         } else {
             repaint(r1);
-        }    
+        }
     }
     
     public void plotMove(int x, int y, int dir) {
@@ -107,6 +107,7 @@ public class DisplayPlot extends JPanel implements Scrollable, ComponentListener
         p1 = new Point();  p2 = new Point();
         r1 = new Rectangle();
         minY = maxY = 0;
+        setTransform();
         revalidate();
         repaint();
     }
