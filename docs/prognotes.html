@@ -17,7 +17,11 @@ of the simulator.</p>
 <li>Download the source package from the SourceForge download site. 
 <p>The source package is named <code>elliott803-src-n.n.n.zip</code> and
 contains the full Java source for the project classes.</p></li>
-<li>Download the source directly from the SourceForge SVN code repository at
+<li>Download the source directly from the SourceForge SVN code repository
+listed below.
+Read-only access to the code in SVN should be available to anyone, if 
+you want ot update the code you will need a SourceForge ID and you will
+need to be added to project. 
 <blockquote><pre>
 https://elliott803.svn.sourceforge.net/svnroot/elliott803
 </pre></blockquote>
@@ -32,15 +36,64 @@ to rebuild or modify the code.
 In addition to the source for the simulator classes the SVN project also 
 contains a number of JUnit unit tests and the ANT build script used to
 create the project download packages.</p>
-<br><p>More details to come ...</p><br>
+<h3>Code Design</h3>
+<p>The code is designed using an approximate Model-View-Controller type of 
+architecture, to split the GUI View logic completely from the core emulation
+which combines the Model and the Controller function.
+The intention is that the relatively simple Swing-based UI could be fairly 
+easily replaced with more fancy graphics if required, without needing any
+changes to hardware simulation.</p>
+<h3>Java Packages</h3>
+<p>The source code is structured into the following Java packages:
+<dl>
+<dt><code><b>elliott803</b></code></dt>
+<dd>The base package containing the two 'main()' entry points: <code>Main.java</code>
+is the main GUI program and <code>Run.java</code> is the command line version.
+(The command line version is probably not very useful anymore but I did use it
+to test things before I had written the GUI.)</dd>
+<dt><code><b>elliott803.hardware</b></code></dt>
+<dd>The classes that implement various pieces of real 803 hardware, for example 
+the CPU, the tape readers, the teletype etc.</dd>
+<dt><code><b>elliott.hardware.device</b></code></dt>
+<dd>Some base classes that provide general support common to all of the hardware
+devices, in particular those that can signal 'busy' conditions and respond to 
+the 7x instruction opcodes.</dd>
+<dt><code><b>elliott.machine</b></code></dt>
+<dd>The more abstract classes relating to the core emulation that are not related
+to specific pieces of real hardware.</dd>
+<dt><code><b>elliott803.machine.extension</b></code></dt>
+<dd>Classes that provide extensions to the computer that are useful for the simulator
+but do not represent function present on a real 803, for example the random number
+generator.</dd>
+<dt><code><b>elliott803.view</b></code></dt>
+<dd>The GUI 'view' classes.
+All of the visuals are contained withing these classes (and the component 
+sub-package) and there is only a simple and well defined split between the view
+code and the core emulation code.</dd> 
+<dt><code><b>elliott803.view.component</b></code></dt>
+<dd>These are simple (generally, expect maybe the DisplayPlot one!) and often 
+reusable components used to build the GUI views.  
+They are used whenever there is not a standard Swing component that is suitable.</dd>
+<dt><code><b>elliott803.telecode</b></code></dt>
+<dd>These classes handle all the conversion from Java characters to Elliott
+Telecode characters and <i>vice-versa</i>.
+There are simple character converters and more complex conversion input and 
+output streams which fit in nicely with the Java I/O models.</dd>
+<dt><code><b>elliott803.utils</b></code></dt>
+<dd>All of the additional utility programs, including the simple assembler.</dd>
+<dt><code><b>elliott803.icon</b></code></dt>
+<dd>Some icons in various formats that are used internally and also packaged as
+part of the distrubtion ZIP for others to use.</dd> 
+</dl>
+<br><p>More details to come ... probably</p><br>
 <h3>Contributing To The Project</h3>
 <p>If you'd like to help work on the project please contact me at the address at 
 the bottom of the page!</p>
 <br><table border="1" frame="above" rules="none" width="100%">
-<tr><td align="left">Tim Baldwin<br>December 2009
+<tr><td align="left">Tim Baldwin<br>August 2010
 <br><a href="mailto:tjb803@tinymail.co.uk">tjb803@tinymail.co.uk</a></td>
 <td align="right">Return to <a href="index.html">index</a>
-<br><br>&copy; Tim Baldwin 2009</td></tr>
+<br><br>&copy; Tim Baldwin 2009,2010</td></tr>
 </table>
 </body>
 </html>

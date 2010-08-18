@@ -32,7 +32,7 @@ A selection of sample Elliott 803 programs are included and others can
 be written using:
 
  - A simple assembler for short test programs
- - The original Elliott ALGOL compiler     
+ - The original Elliott ALGOL 60 compiler     
 
 Installation and Operation 
 --------------------------
@@ -51,8 +51,9 @@ Latest Improvements
 The latest release will always include various minor bug fixes.  In 
 addition the following are notable improvements:
 
-v0.8.0:
+v1.0.0:
  - Added the Graph Plotter support
+ - Added full save and restore of machine image and window layout
 
 v0.7.0:
  - Added 'Manual Data' button to the console
@@ -69,7 +70,6 @@ the simulation and can hopefully be added in a future release:
 
  - Sound
  - Film Handlers
- - Ability to fully save and restore machine state between runs
 
 Acknowledgements
 ----------------
@@ -86,6 +86,7 @@ Release History
 v0.5.0  December 2009    First public release
 v0.6.0  December 2009    Includes Algol compiler and samples
 v0.7.0  June 2010        Bug fixes and small improvements
+v1.0.0  August 2010      Initial intended function fully complete
 
 ===========
 Tim Baldwin

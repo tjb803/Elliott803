@@ -1,9 +1,96 @@
 Elliott 803 Simulation - Possible New Features
 ==============================================
 
- - add some kind of sound 
- - add timing information to all instructions
-    - either add pauses to run at correct original speed
-    - or display simulator speed compared to real speed (percentage maybe?)
- - add a 'Reload' button to tape readers (eject and reload same tape)
+The v1.0.0 release contains pretty much all the function I had originally
+intended to implement in this project.  The following is a list of 
+possible enhancements - some large, some small - that could be added or
+have been suggested by people who have used the program.
+
+  Sound
+  -----
+  Sound was a important aspect of the real 803 and was produced by 
+  pulsing a speaker in the operator console with the top bit from 
+  each instruction executed - therefore the sequence of instructions and
+  the instruction timings (which vary depending on opcode) cause 
+  recognisable sounds to be produced.
+  
+  It should be possible to emulate something very close to this using 
+  Java classes from the javax.sound.sampled package.  Producing correct
+  sounds will need the simulation to run at approximately the same speed
+  as a real 803 - see next feature ...  
  
+  Timing
+  ------
+  Currently the simulation runs as fast (or as slow) as it can, no attempt is
+  made to regulate the speed.  When displaying the CPU and Core Store window
+  updates it runs quite slowly, if these are minimised it runs very quickly.
+  
+  The timings of all the original 803 instructions are known, so it would be 
+  possible to record this as the emulation proceeds.  These timings could then 
+  be used to either slow down the simulation to real 803 speeds, or to 
+  maintain a kind of 'clock' that could show, perhaps as a percentage, how 
+  fast or slow it is operating compared to a real system.  
+  
+  Tape Readers and Punches
+  ------------------------
+  When developing a program you might spend quite a lot of time editing it 
+  and re-compiling it.  It might be used to add a 'Reload' button to the tape
+  reader as a quick way of reloading the last tape.
+  
+  The view of the reader and/or punch could also be enhanced to display some
+  or all of the file it is reading/writing.  For reading text files (such as 
+  Algol programs) it would be good to see some or all of the text displayed 
+  and some kind of cursor or highlight showing the current character being 
+  read.  This could help identify the source of some of the compiler's rather 
+  terse and cryptic error messages.
+  
+  Teletype
+  --------
+  Not sure if a real 803 could do this or not but the 503 could read from the
+  teletype device as well as write to it.  A '71 4096' instruction would mean
+  read from the teletype.  Curiously the Algol compiler will generate these 
+  instructions in a READER(3) function is coded.  Being able to enter a small
+  amount of data interactively via the teletype would be useful for Algol 
+  programs that want one or two parameters and would avoid having to edit and
+  load a separate tape just to supply the data.
+  
+  Alternatively, the tape readers could be enhanced to have am 'interactive' 
+  mode, whereby they read from some sort of text input area rather than a file.   
+  
+  Additional Hardware
+  -------------------
+  The main piece of missing hardware is the film handlers.  There is a block-
+  device framework already in the code with a thought to implementing them but
+  it is not complete and there is no actual film handler implementation.
+  
+  It wouldn't be too hard to do - it's basically just a big store - although
+  I'm not actually sure how useful it would be.  Storing things on paper tapes
+  is not really a problem when the 'tapes' are really just disk files!  
+ 
+  Better Floating Point
+  ---------------------
+  The floating point instructions work by cheating, they convert the Elliott
+  39-bit floating point numbers to Java doubles, do the arithmetic in Java
+  then convert back to the Elliott bit pattern.  This is simple and actually
+  works very well, but the results are not always absolutely identical to 
+  those a real 803 would produce.
+  
+  It would be possible rewrite the FPU to do all its work entirely using the 
+  Elliott number format and this should produce exact results.  But it would 
+  need some in-depth knowledge of exactly how the original hardware worked 
+  especially in some of the edge cases.  I'm not sure how worthwhile this would
+  be.
+  
+  Elliott 503
+  -----------
+  The Elliott 503 was a follow-on the the 803 and had a very similar instruction
+  set and hardware peripherals, although it was much faster.  It wouldn't be
+  too hard to branch the code to create a separate 503 emulation, although 
+  hopefully much of the existing core code could be kept common. 
+  
+
+If anyone is interested in working on any of these or other enhancements
+please drop me an email at tjb803@tinymail.co.uk.
+
+Tim Baldwin
+August 2010  
