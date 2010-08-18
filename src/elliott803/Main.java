@@ -134,20 +134,21 @@ public class Main implements Runnable, WindowListener {
         frame.setContentPane(view);
         frame.addWindowListener(this);
         
-        // Restore previous machine image or create a default layout
+        // Set the default window layout
+        view.defaultLayout();
+        Dimension screen = tk.getScreenSize();
+        Dimension window = view.getPreferredSize();
+        Insets insets = frame.getInsets();
+        int fw = window.width + insets.left + insets.right;
+        int fh = window.height + insets.top + insets.bottom;
+        frame.setLocation((screen.width - fw)/2, (screen.height - fh)/2);
+        
+        // And apply any saved machine image
         saveImage = save;
         loadImage = load;
         if (image != null) {
             image.apply(computer, view);
-        } else {    
-            view.defaultLayout();
-            Dimension screen = tk.getScreenSize();
-            Dimension window = view.getPreferredSize();
-            Insets insets = frame.getInsets();
-            int fw = window.width + insets.left + insets.right;
-            int fh = window.height + insets.top + insets.bottom;
-            frame.setLocation((screen.width - fw)/2, (screen.height - fh)/2);
-        } 
+        }    
         
         // Create image selection dialog 
         selectImage = new JFileChooser(new File("."));
