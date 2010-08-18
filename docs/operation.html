@@ -40,12 +40,12 @@
 running the <code>elliott803.Main</code> program within the JAR.</p>
 <h3>Command</h3>
 <blockquote><pre>
-   <code>java -jar elliott803-n.n.n.jar [options] [machinedef]</code> 
-or <code>java <b>elliott803.Main</b> [options] [machinedef]</code>
+   <code>java -jar elliott803-n.n.n.jar [options] [machine]</code> 
+or <code>java <b>elliott803.Main</b> [options] [machine]</code>
 </pre></blockquote>
 <h4>Parameters</h4>
 <blockquote><dl>
-<dt><code>machinedef</code></dt><dd>A previously saved machine definition.</dd>
+<dt><code>machine</code></dt><dd>A previously saved machine image.</dd>
 </dl></blockquote>
 <h4>Options</h4>
 <blockquote><dl>
@@ -56,9 +56,9 @@ Other look-and-feels that may be available (depending on operating system
 and Java version) include: <code>metal</code>, <code>windows</code>, 
 <code>classic</code>, <code>motif</code>, <code>gtk</code> and <code>nimbus</code>.
 </dd>
-<dt><code>-load</code></dt><dd>Prompt to load a saved machine definition 
+<dt><code>-load</code></dt><dd>Prompt to load a saved machine image 
 when the simulator starts.</dd>
-<dt><code>-save</code></dt><dd>Prompt to save the current machine definition
+<dt><code>-save</code></dt><dd>Prompt to save the current machine image
 when the simulator ends.</dd>
 </dl></blockquote>
 <p>The GUI interface displays a main window containing several smaller internal
