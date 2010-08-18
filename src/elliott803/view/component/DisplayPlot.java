@@ -75,7 +75,6 @@ public class DisplayPlot extends JPanel implements Scrollable, ComponentListener
         
         // Calculate the area of the screen that needs redrawing to display
         // the new line segment.
-        scrollRectToVisible(r1);
         if (y < minY || y > maxY) {
             minY = Math.min(y - 10, minY);
             maxY = Math.max(y + 10, maxY);
@@ -85,6 +84,7 @@ public class DisplayPlot extends JPanel implements Scrollable, ComponentListener
         } else {
             repaint(r1);
         }
+        scrollRectToVisible(r1);
     }
     
     public void plotMove(int x, int y, int dir) {
@@ -106,7 +106,7 @@ public class DisplayPlot extends JPanel implements Scrollable, ComponentListener
         segments.add(new Segment(false, 0 ,0, 0));
         p1 = new Point();  p2 = new Point();
         r1 = new Rectangle();
-        minY = maxY = 0;
+        minY = 9999;  maxY = -9999;
         setTransform();
         revalidate();
         repaint();
