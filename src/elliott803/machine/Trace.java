@@ -106,7 +106,7 @@ public class Trace implements Serializable {
                     out = null;
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                System.err.println(e);
             }
         }
     }
@@ -120,7 +120,7 @@ public class Trace implements Serializable {
             } catch (EOFException e) {
                 // Assume end of file reached
             } catch (Exception e) {
-                e.printStackTrace();
+                System.err.println(e);
             }
         }
         return entry;
@@ -137,7 +137,7 @@ public class Trace implements Serializable {
             trace = (Trace)in.readObject();
             trace.in = in;
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println(e);
         }
         return trace;
     }

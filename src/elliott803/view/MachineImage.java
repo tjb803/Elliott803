@@ -26,14 +26,14 @@ import elliott803.machine.Dump;
 public class MachineImage {
 
     public Dump imageDump;
-    public ViewImage imageViewDef;
+    public ViewImage imageView;
 
     public MachineImage() {
     }
     
     public MachineImage(Computer computer, ComputerView view) {
         imageDump = new Dump(computer);
-        imageViewDef = new ViewImage(view);
+        imageView = new ViewImage(view);
     }
     
     /*
@@ -41,8 +41,8 @@ public class MachineImage {
      */
     public void apply(Computer computer, ComputerView view) {
         computer.core.restore(imageDump);
-        if (imageViewDef != null) 
-            imageViewDef.layout(view);
+        if (imageView != null) 
+            imageView.layout(view);
     }
     
     /*
@@ -52,11 +52,11 @@ public class MachineImage {
         try {
             OutputStream stream = new DeflaterOutputStream(new FileOutputStream(file));
             imageDump.write(stream);
-            if (imageViewDef != null)
-                imageViewDef.write(stream);
+            if (imageView != null)
+                imageView.write(stream);
             stream.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e);
         }
     }
     
@@ -70,10 +70,10 @@ public class MachineImage {
         try {
             InputStream stream = new InflaterInputStream(new FileInputStream(file));
             machine.imageDump = Dump.readDump(stream);
-            machine.imageViewDef = ViewImage.readViewDef(stream);
+            machine.imageView = ViewImage.readImage(stream);
             stream.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println(e);
         }
         return machine;
     }

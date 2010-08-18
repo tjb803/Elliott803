@@ -36,7 +36,7 @@ public class PrintMachine {
         // Handle parameters
         Map<String,String> options = Args.optionMap();
         options.put("nodump", null);
-        Args parms = new Args("PrintMachine", "machine [outputfile]", args, null);
+        Args parms = new Args("PrintMachine", "machine [outputfile]", args, options);
         
         File inputFile = parms.getInputFile(1);
         File outputFile = parms.getOutputFile(2);
@@ -57,7 +57,7 @@ public class PrintMachine {
         // optional view image with all window positions.
         MachineImage image = MachineImage.readImage(inputFile);
         Dump dump = image.imageDump;
-        ViewImage def = image.imageViewDef;
+        ViewImage view = image.imageView;
         
         DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG);
         output.println("Elliott 803B Machine Image");
@@ -74,16 +74,16 @@ public class PrintMachine {
         }    
         
         // Then the saved window positions
-        if (def == null) {
+        if (view == null) {
             output.println("No view details.");
         } else {
             output.println("View details:");
-            output.println("  Frame: " + def.title); 
-            output.println("    position = " + printRect(def.position) + ", " + printRect(def.normalPosition));
+            output.println("  Application: " + view.title); 
+            output.println("    position = " + printRect(view.position1) + ", " + printRect(view.position2));
             output.println("\n  Windows:");
-            for (ViewImage v : def.windows) {
+            for (ViewImage v : view.windows) {
                 System.out.println("    " + v.title);
-                System.out.println("      position = " + printRect(v.position) + ", " + printRect(v.normalPosition));
+                System.out.println("      position = " + printRect(v.position1) + ", " + printRect(v.position2));
                 System.out.println("      isMin = " + v.isMin + ", isMax = " + v.isMax);
             }
         }    

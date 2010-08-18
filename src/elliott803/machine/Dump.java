@@ -72,7 +72,7 @@ public class Dump implements Serializable {
             write(stream);
             stream.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e);
         }
     }
     
@@ -92,7 +92,7 @@ public class Dump implements Serializable {
             dump = readDump(stream);
             stream.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println(e);
         }
         return dump;
     }

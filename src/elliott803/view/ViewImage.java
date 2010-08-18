@@ -33,7 +33,7 @@ public class ViewImage implements Serializable {
     private static final long serialVersionUID = 1L;
     
     public String title;
-    public Rectangle position, normalPosition;
+    public Rectangle position1, position2;
     public boolean isMin, isMax;
     public List<ViewImage> windows;
     
@@ -44,8 +44,8 @@ public class ViewImage implements Serializable {
         // Record the position of our top level frame
         JFrame app = (JFrame)desktop.getTopLevelAncestor();
         title = app.getTitle();
-        position = app.getBounds();
-        normalPosition = desktop.getBounds();
+        position1 = app.getBounds();
+        position2 = desktop.getBounds();
         
         // And the positions of everything within it. Need to maintain the 
         // original order here as that defines the window Z-ordering.
@@ -60,8 +60,8 @@ public class ViewImage implements Serializable {
      */
     public ViewImage(JInternalFrame frame) {
         title = frame.getTitle();
-        position = frame.getBounds();
-        normalPosition = frame.getNormalBounds();
+        position1 = frame.getBounds();
+        position2 = frame.getNormalBounds();
         isMin = frame.isIcon();
         isMax = frame.isMaximum();
     }
@@ -69,28 +69,30 @@ public class ViewImage implements Serializable {
     /*
      * Layout windows according to this saved image
      */
+    
+    // Layout the main application desktop
     public void layout(JDesktopPane desktop) {
         // Restore the desktop position
         JFrame app = (JFrame)desktop.getTopLevelAncestor();
-        desktop.setPreferredSize(normalPosition.getSize());
-        app.setBounds(position);
-        app.pack();
-        
+        desktop.setPreferredSize(position2.getSize());
+        desktop.setBounds(position2);
+        app.setBounds(position1);
+        app.validate();
+
         // Remove all the existing frames from the desktop and index them
         // by title, remembering their original order.
         Map<String,JInternalFrame> index = new LinkedHashMap<String,JInternalFrame>();
         for (JInternalFrame frame : desktop.getAllFrames()) {
             index.put(frame.getTitle(), frame);
-            desktop.remove(frame);
         }
-        
-        // Now add back any saved frames in the saved order and positions
-        for (ViewImage def : windows) {
-            JInternalFrame frame = index.get(def.title);
+        desktop.removeAll();
+ 
+        // Now add back any saved frames in their original order and position
+        for (ViewImage window : windows) {
+            JInternalFrame frame = index.remove(window.title);
             if (frame != null) {
                 desktop.add(frame);
-                def.layout(frame);
-                index.remove(def.title);
+                window.layout(frame);
             }
         }
         
@@ -100,10 +102,13 @@ public class ViewImage implements Serializable {
         }
     }
     
+    // Layout an individual window inside the desktop
     public void layout(JInternalFrame frame) {
-        frame.setBounds(position);
-        frame.setNormalBounds(normalPosition);
         try {
+            frame.setIcon(false);
+            frame.setMaximum(false);
+            frame.setBounds(position1);
+            if (position2 != null) frame.setNormalBounds(position2);
             if (isMin) frame.setIcon(true);
             if (isMax) frame.setMaximum(true);
         } catch (PropertyVetoException e) {
@@ -123,14 +128,14 @@ public class ViewImage implements Serializable {
      * Read a view image.  Input stream may be empty, in which case
      * there is nothing to read.
      */
-    public static ViewImage readViewDef(InputStream stream) throws IOException, ClassNotFoundException {
-        ViewImage def = null;
+    public static ViewImage readImage(InputStream stream) throws IOException, ClassNotFoundException {
+        ViewImage view = null;
          try {
              ObjectInputStream in = new ObjectInputStream(stream);
-             def = (ViewImage)in.readObject();
+             view = (ViewImage)in.readObject();
          } catch (EOFException e) {
              // End of stream, so return null
          }
-         return def; 
+         return view; 
      }
 }
