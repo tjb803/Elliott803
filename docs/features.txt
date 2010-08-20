@@ -44,12 +44,16 @@ have been suggested by people who have used the program.
   read.  This could help identify the source of some of the compiler's rather 
   terse and cryptic error messages.
   
-  Teletype
-  --------
+  Teletype and Plotter
+  --------------------
+  Add a "Print" button to print the current output to a real printer.
+  
+  Interactive Input
+  -----------------
   Not sure if a real 803 could do this or not but the 503 could read from the
   teletype device as well as write to it.  A '71 4096' instruction would mean
   read from the teletype.  Curiously the Algol compiler will generate these 
-  instructions in a READER(3) function is coded.  Being able to enter a small
+  instructions if a READER(3) function is coded.  Being able to enter a small
   amount of data interactively via the teletype would be useful for Algol 
   programs that want one or two parameters and would avoid having to edit and
   load a separate tape just to supply the data.
