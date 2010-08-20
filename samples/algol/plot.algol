@@ -14,13 +14,14 @@ BEGIN
     INTEGER orgX, orgY, scaleX, scaleY;
     INTEGER lastX, lastY;
 
-    COMMENT Set plot origin and rest pen to left hand edge;
+    COMMENT Set plot origin and the X and Y scaling factor;
     PROCEDURE setOrigin(x, y, sx, sy);  VALUE x, y, sx, sy;  INTEGER x, y, sx, sy;
     BEGIN INTEGER i;
         scaleX := sx;  scaleY := sy;
         orgX := x;  orgY := y;
         lastX := lastY := 0;
         
+        COMMENT reset the pen to the left hand edge;
         FOR i := 1 STEP 2 UNTIL 1100 DO ELLIOTT(7,2,7170, 0, 7,2,7170);
     END setOrigin;
 
