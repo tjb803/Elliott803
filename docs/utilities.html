@@ -160,6 +160,18 @@ The core dump files usually have a name like
 flags when the system dump was performed, followed by the full 8K words
 of store.  
 To save space any consecutive words with the same value are omitted.</p>
+<p>Each storage word will be output something like this:</p>
+<pre><code>
+ 742:    00  553 : 63 6766   [0004245475156]   (+580287086)       ".BEGIN"
+ 743:    00    0 : 00    6   [0000000000006]   (+6)   'F ='
+</code></pre> 
+<p>This shows the address of the word followed by its value as a pair of
+instructions, its value in octal (in square brackets) and its value in 
+decimal (in round brackets).  
+For values that might represent a single telecode character the character
+in letter-shift and figure-shift form is displayed in single quotes,
+for values that might represent packed text characters the possible 
+packed text is displayed in double quotes.  
 <p>Core dump files can be produced by using the special  
 <a href=extras.html#control">simulator control</a> instruction, or by pressing
 the <i>Dump</i> button on the CPU view window.</p>

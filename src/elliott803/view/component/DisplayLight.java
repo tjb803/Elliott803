@@ -7,6 +7,7 @@ package elliott803.view.component;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -23,17 +24,25 @@ public class DisplayLight extends JPanel {
     public static final Color GREEN = Color.GREEN.darker();
     public static final Color RED = Color.RED.darker();
 
+    boolean lightOn;
+    
     public DisplayLight(Dimension size, Color colour) {
         setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
         setAlignmentX(LEFT_ALIGNMENT);
         setMaximumSize(size);
         setPreferredSize(size);
-        setBackground(colour);
-        setOpaque(false);
+        setForeground(colour);
     }
 
     public void setValue(boolean on) {
-        setOpaque(on);
+        lightOn = on;
         repaint();
+    }
+    
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (lightOn) {
+            g.fillRect(0, 0, getWidth(), getHeight());
+        }
     }
 }

@@ -11,8 +11,18 @@ BEGIN
     COMMENT * Draw a sine wave on the plotter *;
     COMMENT **                               **;
 
-    INTEGER orgX, orgY;
+    INTEGER orgX, orgY, scaleX, scaleY;
     INTEGER lastX, lastY;
+
+    COMMENT Set plot origin and rest pen to left hand edge;
+    PROCEDURE setOrigin(x, y, sx, sy);  VALUE x, y, sx, sy;  INTEGER x, y, sx, sy;
+    BEGIN INTEGER i;
+        scaleX := sx;  scaleY := sy;
+        orgX := x;  orgY := y;
+        lastX := lastY := 0;
+        
+        FOR i := 1 STEP 2 UNTIL 1100 DO ELLIOTT(7,2,7170, 0, 7,2,7170);
+    END setOrigin;
 
     COMMENT Plot an approximate straight line from the current position to
         the new location.  This is actually a very poor straight line
@@ -24,7 +34,7 @@ BEGIN
           INTEGER sw, sh, pw, ph;
 
           COMMENT calculate the lengths of the triangle legs;
-          x := x + orgX;  y := y + orgY;
+          x := x*scaleX + orgX;  y := y*scaleY + orgY;
           w := x - lastX;  h := y - lastY;
 
           COMMENT set the plotter movement details;
@@ -33,7 +43,7 @@ BEGIN
           sh := IF h LESS 0 THEN -h ELSE h;
           ph := IF h LESS 0 THEN 7176 ELSE 7172;
 
-          COMMENT plot trying to be clever about which direction to move first;
+          COMMENT plot trying to be smart about which direction to move first;
           IF (y GR 0 AND h GR 0) OR (y LESS 0 AND h LESS 0) THEN BEGIN
               IF sh GR 0 THEN
                   FOR i := 1 STEP 1 UNTIL sh DO ELLIOTT(0,0,ph, 1, 7,2,0);
@@ -62,47 +72,36 @@ BEGIN
           plotTo(x, y);
     END drawTo;
 
-    COMMENT Set plot origin;
-    PROCEDURE setOrigin(x, y);  VALUE x, y;  INTEGER x, y;
-    BEGIN
-        orgX := orgY := 0;      COMMENT reset the pen to the left hand edge;
-        lastX := 1100;  lastY := 0;
-        moveTo(0, 0);
-
-        orgX := x;  orgY := y;  COMMENT set new origin offset;
-    END setOrigin;
-
     COMMENT Main program;
     BEGIN
-        INTEGER stepX, maxY;
+        INTEGER maxY;
         INTEGER i, tick;  REAL pi, y;
         BOOLEAN PROCEDURE rem(a, b);  VALUE a, b;  INTEGER a, b;
             rem := (a div b)*b = a;
 
         pi := 3.14159;
-        stepX := 2;
         maxY := 300;
 
         COMMENT Set origin;
-        setOrigin(150, 0);
+        setOrigin(150, 0, 2, 1);
         moveTo(0, 0);
 
         COMMENT Draw the axes;
         moveTo(0, -maxY);
         drawTo(0, maxY);
         moveTo(0, 0);
-        drawTo(360*stepX, 0);
+        drawTo(360, 0);
         FOR i := 15 STEP 15 UNTIL 360 DO BEGIN
             tick := IF rem(i,90) THEN 20 ELSE IF rem(i,30) THEN 10 ELSE 5;
-            moveTo(i*stepX, 0);
-            drawTo(i*stepX, tick);
+            moveTo(i, 0);
+            drawTo(i, tick);
         END;
         moveTo(0, 0);
 
         COMMENT Draw the sine curve;
         FOR i := 0 STEP 1 UNTIL 360 DO BEGIN
             y := sin((i/180)*pi) * maxY;
-            drawTo(i*stepX, entier(y));
+            drawTo(i, entier(y));
         END;
         moveTo(0, 0);
     END;
