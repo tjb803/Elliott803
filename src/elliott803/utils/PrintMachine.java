@@ -79,11 +79,11 @@ public class PrintMachine {
         } else {
             output.println("View details:");
             output.println("  Application: " + view.title); 
-            output.println("    position = " + printRect(view.position1) + ", " + printRect(view.position2));
+            output.println("    position = " + printRect(view.position) + ", " + printRect(view.position2));
             output.println("\n  Windows:");
             for (ViewImage v : view.windows) {
                 System.out.println("    " + v.title);
-                System.out.println("      position = " + printRect(v.position1) + ", " + printRect(v.position2));
+                System.out.println("      position = " + printRect(v.position));
                 System.out.println("      isMin = " + v.isMin + ", isMax = " + v.isMax);
             }
         }    

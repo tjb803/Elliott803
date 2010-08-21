@@ -1,7 +1,7 @@
 /**
  * Elliott Model 803B Simulator
  *
- * (C) Copyright Tim Baldwin 2009,2010
+ * (C) Copyright Tim Baldwin 2010
  */
 package elliott803.view;
 
@@ -33,7 +33,7 @@ public class ViewImage implements Serializable {
     private static final long serialVersionUID = 1L;
     
     public String title;
-    public Rectangle position1, position2;
+    public Rectangle position, position2;
     public boolean isMin, isMax;
     public List<ViewImage> windows;
     
@@ -44,7 +44,7 @@ public class ViewImage implements Serializable {
         // Record the position of our top level frame
         JFrame app = (JFrame)desktop.getTopLevelAncestor();
         title = app.getTitle();
-        position1 = app.getBounds();
+        position = app.getBounds();
         position2 = desktop.getBounds();
         
         // And the positions of everything within it. Need to maintain the 
@@ -60,8 +60,7 @@ public class ViewImage implements Serializable {
      */
     public ViewImage(JInternalFrame frame) {
         title = frame.getTitle();
-        position1 = frame.getBounds();
-        position2 = frame.getNormalBounds();
+        position = frame.getNormalBounds();
         isMin = frame.isIcon();
         isMax = frame.isMaximum();
     }
@@ -76,7 +75,7 @@ public class ViewImage implements Serializable {
         JFrame app = (JFrame)desktop.getTopLevelAncestor();
         desktop.setPreferredSize(position2.getSize());
         desktop.setBounds(position2);
-        app.setBounds(position1);
+        app.setBounds(position);
         app.validate();
 
         // Remove all the existing frames from the desktop and index them
@@ -107,8 +106,13 @@ public class ViewImage implements Serializable {
         try {
             frame.setIcon(false);
             frame.setMaximum(false);
-            frame.setBounds(position1);
-            if (position2 != null) frame.setNormalBounds(position2);
+            
+            // If the window should not be re-sized we just restore its 
+            // position.  Re-sizable windows restore position and size.
+            frame.setLocation(position.getLocation());
+            if (frame.isResizable()) 
+                frame.setSize(position.getSize());
+            
             if (isMin) frame.setIcon(true);
             if (isMax) frame.setMaximum(true);
         } catch (PropertyVetoException e) {
