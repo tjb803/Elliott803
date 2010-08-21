@@ -70,5 +70,6 @@ public class PrintTrace {
             output.print("   " + Word.toOctalString(entry.acc) + " (" + Word.toIntegerString(entry.acc) + ")");
             output.println();
         }
+        output.println();
     }
 }

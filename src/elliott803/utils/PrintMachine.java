@@ -62,15 +62,16 @@ public class PrintMachine {
         DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG);
         output.println("Elliott 803B Machine Image");
         output.println("created: " + df.format(dump.timestamp));
+        output.println();
         
         // Start with the core dump
         if (nodump) {
             output.println("Core store omitted.");     
+            output.println();
         } else {    
-            output.println("\nCore store:");
+            output.println("Core store:");
             PrintCore formatter = new PrintCore(output);
             formatter.printStore(dump.core, 0, 8192);
-            output.println();
         }    
         
         // Then the saved window positions
@@ -80,12 +81,14 @@ public class PrintMachine {
             output.println("View details:");
             output.println("  Application: " + view.title); 
             output.println("    position = " + printRect(view.position) + ", " + printRect(view.position2));
-            output.println("\n  Windows:");
+            output.println();
+            output.println("  Windows:");
             for (ViewImage v : view.windows) {
                 System.out.println("    " + v.title);
                 System.out.println("      position = " + printRect(v.position));
                 System.out.println("      isMin = " + v.isMin + ", isMax = " + v.isMax);
             }
+            output.println();
         }    
     } 
     

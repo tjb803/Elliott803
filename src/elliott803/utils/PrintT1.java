@@ -91,7 +91,8 @@ public class PrintT1 {
         }
 
         // Format the output (uses a method from the dump formatter to format words).
-        output.println("Elliott 803B Binary Tape\n");
+        output.println("Elliott 803B Binary Tape");
+        output.println();
         output.println("Load address: " + Instruction.toAddrString(loadAddress));
         if (triggerInstruction != -1) {
             output.println("Trigger:   " + Instruction.toInstrString(triggerInstruction));

@@ -52,12 +52,13 @@ public class PrintCore {
         if (dump != null) {
             output.println("Elliott 803B Core Dump");
             output.println("created: " + df.format(dump.timestamp));
+            output.println();
 
             // Format the output
             PrintCore formatter = new PrintCore(output);
-            output.println("\nCPU registers:");
+            output.println("CPU registers:");
             formatter.printCpu(dump);
-            output.println("\nCore store:");
+            output.println("Core store:");
             formatter.printStore(dump.core, 0, 8192);
         } else {
             System.err.println("No core dump found");
@@ -79,6 +80,7 @@ public class PrintCore {
         output.println();
         output.println("  Overflow:   " + dump.overflow);
         output.println("  FP Overflow: " + dump.fpOverflow);
+        output.println();
     }
 
     // Format storage.  Multiple lines of zeros are compressed.
@@ -104,6 +106,7 @@ public class PrintCore {
                 duplicates += 1;
             }
         }
+        output.println();
     }
 
     // Print a storage line
