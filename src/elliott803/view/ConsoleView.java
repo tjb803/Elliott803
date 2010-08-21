@@ -1,7 +1,7 @@
 /**
  * Elliott Model 803B Simulator
  *
- * (C) Copyright Tim Baldwin 2009
+ * (C) Copyright Tim Baldwin 2009,2010
  */
 package elliott803.view;
 
@@ -53,15 +53,35 @@ public class ConsoleView extends JInternalFrame implements ActionListener, Focus
     JButton operate;
     DisplayWord wordgen;
 
-    public ConsoleView(Console console) {
+    public ConsoleView(Console console, ComputerView computerView) {
         super("Operator Console", false, false, false, true);
         this.console = console;
         setFocusable(true);
         addFocusListener(this);
+        
+        JPanel ip = new JPanel();
+        ip.setLayout(new BoxLayout(ip, BoxLayout.X_AXIS));
+        ip.setBorder(BorderFactory.createTitledBorder("Machine Image"));
+        JButton lb = new JButton(ComputerView.IMAGE_LOAD);
+        lb.addActionListener(computerView);
+        JButton sb = new JButton(ComputerView.IMAGE_SAVE);
+        sb.addActionListener(computerView);
+        ip.add(Box.createHorizontalStrut(5));
+        ip.add(lb);
+        ip.add(Box.createHorizontalStrut(10));
+        ip.add(sb);
+        ip.add(Box.createHorizontalStrut(5));
 
         JPanel wg = new JPanel();
         wg.setLayout(new BoxLayout(wg, BoxLayout.Y_AXIS));
-        wg.add(new ConsoleButtons("Function 1", FN_NAMES, 6, 39, console));
+        JPanel f1 = new JPanel();
+        f1.setLayout(new BoxLayout(f1, BoxLayout.X_AXIS));
+        f1.setAlignmentX(LEFT_ALIGNMENT);
+        f1.add(new ConsoleButtons("Function 1", FN_NAMES, 6, 39, console));
+        f1.add(Box.createHorizontalGlue());
+        f1.add(ip);
+        f1.add(Box.createHorizontalGlue());
+        wg.add(f1);
         wg.add(Box.createVerticalStrut(5));
         wg.add(new ConsoleButtons("Address 1", ADDR_NAMES, 14, 33, console));
         wg.add(Box.createVerticalStrut(5));
@@ -72,7 +92,7 @@ public class ConsoleView extends JInternalFrame implements ActionListener, Focus
 
         JPanel wv = new JPanel();
         wv.setLayout(new BoxLayout(wv, BoxLayout.X_AXIS));
-        wv.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        wv.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
         wv.setAlignmentX(LEFT_ALIGNMENT);
         wordgen = new DisplayWord("Word", Type.INSTRUCTION);
         wv.add(wordgen);
@@ -115,7 +135,7 @@ public class ConsoleView extends JInternalFrame implements ActionListener, Focus
         rb.setAlignmentX(CENTER_ALIGNMENT);
         rb.addActionListener(this);
         controls.add(rb);
-        controls.add(Box.createVerticalStrut(5));
+        controls.add(Box.createVerticalStrut(10));
 
         function = new ConsoleOperation(console);
         controls.add(function);

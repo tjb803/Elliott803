@@ -40,6 +40,7 @@ public class MachineImage {
      * Apply the machine image to the current simulation
      */
     public void apply(Computer computer, ComputerView view) {
+        computer.cpu.reset();
         computer.core.restore(imageDump);
         if (imageView != null) 
             imageView.layout(view);

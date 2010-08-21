@@ -7,7 +7,6 @@ package elliott803.hardware.device;
 
 import elliott803.machine.Word;
 
-
 /**
  * This is the base class for all Control devices.  These are the non-block-transfer
  * type devices that respond to the 72 and 75 instructions.

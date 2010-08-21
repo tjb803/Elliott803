@@ -1,7 +1,7 @@
 /**
  * Elliott Model 803B Simulator
  *
- * (C) Copyright Tim Baldwin 2009
+ * (C) Copyright Tim Baldwin 2009,2010
  */
 package elliott803.machine.extension;
 
@@ -24,7 +24,7 @@ import elliott803.hardware.device.ControlDevice;
  */
 public class RandomNumberDevice extends ControlDevice {
 
-    RandomWord random = new RandomWord();
+    Random random = new Random();
 
     public int addressBase() {
         return 8000;
@@ -35,14 +35,8 @@ public class RandomNumberDevice extends ControlDevice {
     }
     
     public long controlRead(int addr) {
-        return random.nextInteger();
-    }
-
-    static class RandomWord extends Random {
-        private static final long serialVersionUID = 1L;
-
-        long nextInteger() {
-            return next(38);
-        }
+        long hiBits = random.nextInt(1<<19);
+        long loBits = random.nextInt(1<<19);
+        return (hiBits<<19) | loBits; 
     }
 }

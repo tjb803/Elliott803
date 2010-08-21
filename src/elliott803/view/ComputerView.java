@@ -6,8 +6,13 @@
 package elliott803.view;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.JDesktopPane;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
 
 import elliott803.machine.Computer;
 
@@ -17,8 +22,11 @@ import elliott803.machine.Computer;
  *
  * @author Baldwin
  */
-public class ComputerView extends JDesktopPane {
+public class ComputerView extends JDesktopPane implements ActionListener {
     private static final long serialVersionUID = 1L;
+    
+    static final String IMAGE_LOAD = "Load...";
+    static final String IMAGE_SAVE = "Save...";
 
     public ConsoleView console;
     public CpuView cpu;
@@ -27,6 +35,7 @@ public class ComputerView extends JDesktopPane {
     public PlotterView plotter;
     
     Computer computer;
+    JFileChooser imageSelect;
 
     public ComputerView(Computer computer) {
         setLayout(null);
@@ -34,7 +43,7 @@ public class ComputerView extends JDesktopPane {
         this.computer = computer;
 
         // Create views for the various devices
-        console = new ConsoleView(computer.console);
+        console = new ConsoleView(computer.console, this);
         cpu = new CpuView(computer.cpu);
         store = new StoreView(computer.core);
         pts = new PtsView(computer.pts);
@@ -50,6 +59,18 @@ public class ComputerView extends JDesktopPane {
         add(pts.punch[1]);
         add(pts.teletype);      // Make sure the plotter is added after the teletype
         add(plotter);           // as it want it to appear behind.
+
+        // Create a file chooser dialog for the load/save image function
+        imageSelect = new JFileChooser(new File("."));
+        imageSelect.setDialogTitle("Elliott 803 Machine Image");
+        imageSelect.setFileFilter(new FileFilter() {
+            public boolean accept(File f) {
+                return (f.isDirectory() || f.getName().endsWith(".803"));
+            }
+            public String getDescription() {
+                return "Elliott 803 Machine Images";
+            }
+        });    
     }
    
     // Layout all the windows in their default positions
@@ -96,4 +117,26 @@ public class ComputerView extends JDesktopPane {
         Dimension size = new Dimension(maxX, maxY);
         setPreferredSize(size);
     } 
+    
+    /*
+     * Prompt to load and save machine images
+     */
+
+    public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().equals(IMAGE_LOAD)) {
+            if (imageSelect.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+                File file = imageSelect.getSelectedFile();
+                MachineImage image = MachineImage.readImage(file);
+                image.apply(computer, this);
+            }
+        } else if (e.getActionCommand().equals(IMAGE_SAVE)) {
+            if (imageSelect.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+                File file = imageSelect.getSelectedFile();
+                if (!file.getName().contains("."))
+                    file = new File(file.getPath() + ".803");
+                MachineImage image = new MachineImage(computer, this);
+                image.write(file);
+            }
+        }
+    }
 }

@@ -15,6 +15,9 @@
 <ul>
 <li><a href="#start">Start Up and Shut Down</a></li>
 <li><a href="#opcon">The Operator Console</a></li>
+<ul>
+<li><a href="#image">Loading and Saving Machine Images</a></li>
+</ul>
 <li><a href="#opcpu">The CPU and Core Store</a></li>
 <ul>
 <li><a href="#perf">Performance Note</a></li>
@@ -56,17 +59,13 @@ Other look-and-feels that may be available (depending on operating system
 and Java version) include: <code>metal</code>, <code>windows</code>, 
 <code>classic</code>, <code>motif</code>, <code>gtk</code> and <code>nimbus</code>.
 </dd>
-<dt><code>-load</code></dt><dd>Prompt to load a saved machine image 
-when the simulator starts.</dd>
-<dt><code>-save</code></dt><dd>Prompt to save the current machine image
-when the simulator ends.</dd>
 </dl></blockquote>
 <p>The GUI interface displays a main window containing several smaller internal
 windows representing the various hardware and devices that form the Elliott
 803 simulation.
 These windows can be moved around and resized (or minimized) as required.
-The current layout can be saved when the simulator is closed and restarted
-next time.</p>
+The current layout can be saved as part of a machine image and restored 
+in a later run.</p>
 <p>Most interaction will take place with the paper tape reader and tape punch
 devices and with the system operator's console.</p>
 <h3 id="start">Start Up and Shut Down</h3>
@@ -138,7 +137,15 @@ This will usually flicker on and off as programs are loaded or run.</li>
 </ul>
 <p>This window is supposed to look and operate somewhat like the real Elliott
 803 operator console</p>
-<br clear="right">
+<h4 id="image">Loading and Saving Machine Images</h4>
+<img src="image/lsimg.jpg" alt="LoadSave" align="left">
+<p>The two additional console buttons in the <i>Machine Image</i> section are 
+used to save the current machine image or restore a previously saved machine
+image.
+A machine image consists of the complete core memory and may also include the 
+size, position and layout of all the windows on the screen.
+They are typically saved as files with an extension of <code>.803</code>.</p>
+<br clear="left">
 <h3 id="opcpu">The CPU and Core Store</h3>
 <img src="image/opcpu.jpg" alt="CPU" align="left"/>
 <img src="image/opcore.jpg" alt="Core Store" align="right"/>

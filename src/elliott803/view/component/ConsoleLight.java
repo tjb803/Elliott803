@@ -19,7 +19,7 @@ import javax.swing.JPanel;
 public class ConsoleLight extends JPanel {
     private static final long serialVersionUID = 1L;
 
-    static final Dimension size = new Dimension(35, 9);
+    static final Dimension SIZE = new Dimension(35, 9);
 
     DisplayLight light;
 
@@ -27,7 +27,7 @@ public class ConsoleLight extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setAlignmentX(CENTER_ALIGNMENT);
 
-        light = new DisplayLight(size, DisplayLight.CYAN);
+        light = new DisplayLight(SIZE, DisplayLight.CYAN);
         light.setAlignmentX(CENTER_ALIGNMENT);
         add(light);
 

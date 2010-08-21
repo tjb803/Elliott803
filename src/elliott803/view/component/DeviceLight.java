@@ -21,7 +21,7 @@ import javax.swing.JPanel;
 public class DeviceLight extends JPanel {
     private static final long serialVersionUID = 1L;
 
-    static final Dimension size = new Dimension(9, 9);
+    static final Dimension SIZE = new Dimension(9, 9);
 
     DisplayLight light;
 
@@ -29,7 +29,7 @@ public class DeviceLight extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setAlignmentX(RIGHT_ALIGNMENT);
 
-        light = new DisplayLight(size, colour);
+        light = new DisplayLight(SIZE, colour);
 
         add(new JLabel(name + ":"));
         add(Box.createHorizontalStrut(5));

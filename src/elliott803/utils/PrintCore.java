@@ -8,7 +8,6 @@ package elliott803.utils;
 import java.io.File;
 import java.io.PrintStream;
 import java.text.DateFormat;
-import java.util.Arrays;
 
 import elliott803.machine.Dump;
 import elliott803.machine.Instruction;
@@ -130,7 +129,7 @@ public class PrintCore {
                     case 31: text += "   LS"; break;
                     default: text += "  '" + Telecode.asLetter(ch) + " " + Telecode.asFigure(ch) + "'";
                     }
-                } else if (word > 32) {
+                } else if (word > 63) {
                     char[] pt = new char[6];
                     for (int i = 5; i >= 0; i--) {
                         int ch = (int)word & Telecode.CHAR_MASK;

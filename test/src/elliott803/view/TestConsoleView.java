@@ -17,7 +17,7 @@ import elliott803.hardware.Console;
 public class TestConsoleView extends BaseViewTest {
     
     protected void setupTest() {
-        consoleView = new ConsoleView(new Console(testComputer));
+        consoleView = new ConsoleView(new Console(testComputer), null);
         testView.add(consoleView);
     }
     

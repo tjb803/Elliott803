@@ -30,7 +30,6 @@ public class DisplayLight extends JPanel {
         setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
         setAlignmentX(LEFT_ALIGNMENT);
         setMaximumSize(size);
-        setPreferredSize(size);
         setForeground(colour);
     }
 

@@ -29,6 +29,20 @@ import javax.swing.Scrollable;
  * 
  * @author Baldwin
  */
+
+// TODO: Currently this keeps a list of all the lines that need to be drawn to
+// make the current image and redraws them all each time paintComponent is called.
+// It relies on this being fast since firstly drawing lines is pretty quick and 
+// secondly many of them will probably be clipped out (as we're only painting areas
+// of the image that have changed).  But it is still probably not the best way to 
+// do it as with the plotter moving in 1/100th inch there are likely to be a lot
+// of little line segments to draw (although I do try to combine any that are in
+// in same direction as the last one).
+//
+// Maybe better to draw into an off-screen image bitmap (kept in plotter units) 
+// and then just scale and blit this onto the screen during paintComponent. The 
+// off screen image will need to be resized as the y-extents change though.
+
 public class DisplayPlot extends JPanel implements Scrollable, ComponentListener {
     private static final long serialVersionUID = 1L;
 
@@ -50,6 +64,7 @@ public class DisplayPlot extends JPanel implements Scrollable, ComponentListener
         setBackground(Color.WHITE);
         addComponentListener(this);
 
+        segments = Collections.synchronizedList(new ArrayList<Segment>());
         plotClear();
     }
 
@@ -78,8 +93,8 @@ public class DisplayPlot extends JPanel implements Scrollable, ComponentListener
         if (y < minY || y > maxY) {
             minY = Math.min(y - 10, minY);
             maxY = Math.max(y + 10, maxY);
-            setTransform();     // Reset transform 
-            revalidate();       // Height has changed so re-do scrollbars
+            setTransform();     // Height has changed so recalculate the 
+            revalidate();       // transform and reset any scrollbars.
             repaint();
         } else {
             repaint(r1);
@@ -102,7 +117,7 @@ public class DisplayPlot extends JPanel implements Scrollable, ComponentListener
     
     // Clear current output
     public void plotClear() {
-        segments = Collections.synchronizedList(new ArrayList<Segment>());
+        segments.clear();
         segments.add(new Segment(false, 0 ,0, 0));
         p1 = new Point();  p2 = new Point();
         r1 = new Rectangle();
