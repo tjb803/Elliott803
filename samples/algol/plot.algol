@@ -77,8 +77,8 @@ BEGIN
     BEGIN
         INTEGER maxY;
         INTEGER i, tick;  REAL pi, y;
-        BOOLEAN PROCEDURE rem(a, b);  VALUE a, b;  INTEGER a, b;
-            rem := (a div b)*b = a;
+        BOOLEAN PROCEDURE divides(a, b);  VALUE a, b;  INTEGER a, b;
+            divides := (a div b)*b = a;
 
         pi := 3.14159;
         maxY := 300;
@@ -93,7 +93,8 @@ BEGIN
         moveTo(0, 0);
         drawTo(360, 0);
         FOR i := 15 STEP 15 UNTIL 360 DO BEGIN
-            tick := IF rem(i,90) THEN 20 ELSE IF rem(i,30) THEN 10 ELSE 5;
+            tick := IF divides(i,90) THEN 20 ELSE 
+                    IF divides(i,30) THEN 10 ELSE 5;
             moveTo(i, 0);
             drawTo(i, tick);
         END;
@@ -102,7 +103,7 @@ BEGIN
         COMMENT Draw the sine curve;
         FOR i := 0 STEP 1 UNTIL 360 DO BEGIN
             y := sin((i/180)*pi) * maxY;
-            drawTo(i, entier(y));
+            drawTo(i, y);
         END;
         moveTo(0, 0);
     END;

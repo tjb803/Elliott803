@@ -108,35 +108,34 @@ public class Main implements Runnable {
     JFrame frame;
     Computer computer;
     ComputerView computerView;
+    boolean layout;
     
     public Main(Computer computer, ComputerView view, MachineImage image) {
         this.computer = computer;
         this.computerView = view;
         
-        Toolkit tk = Toolkit.getDefaultToolkit();
-        Image icon = tk.createImage(getClass().getResource("icon/803-32.png"));
+        Image icon = Toolkit.getDefaultToolkit().createImage(getClass().getResource("icon/803-32.png"));
 
         frame = new JFrame(computer.name + " Simulation (v" + computer.version + ")");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setIconImage(icon);
         frame.setContentPane(view);
         
-        // Set the default window layout
-        view.defaultLayout();
-        Dimension screen = tk.getScreenSize();
-        Dimension window = view.getPreferredSize();
-        Insets insets = frame.getInsets();
-        int fw = window.width + insets.left + insets.right;
-        int fh = window.height + insets.top + insets.bottom + 10;
-        frame.setLocation((screen.width - fw)/2, (screen.height - fh)/2);
-        
-        // And apply any saved machine image
-        if (image != null)
-            image.apply(computer, view);
+        // Set the default window layout and then apply any saved image
+        layout = view.defaultLayout();
+        if (image != null) {
+            layout = image.apply(computer, view);
+        }    
     }
  
     public void run() {
-        frame.pack();
+        // If layout is not complete (ie from a restored machine image) we
+        // need to pack the frame and position it in the centre of the screen.
+        if (!layout) {
+            Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+            frame.pack();
+            frame.setLocation((screen.width - frame.getWidth())/2, (screen.height - frame.getHeight())/2);
+        }
         frame.setVisible(true);
     }
 }

@@ -74,7 +74,7 @@ public class ComputerView extends JDesktopPane implements ActionListener {
     }
    
     // Layout all the windows in their default positions
-    public void defaultLayout() {        
+    public boolean defaultLayout() {        
         int plotterX = pts.teletype.getWidth() - pts.teletype.getRootPane().getPreferredSize().width;
         int plotterY = pts.teletype.getHeight() - pts.teletype.getRootPane().getPreferredSize().height;
         
@@ -116,6 +116,8 @@ public class ComputerView extends JDesktopPane implements ActionListener {
 
         Dimension size = new Dimension(maxX, maxY);
         setPreferredSize(size);
+        
+        return false;       // Layout is incomplete (frame is unsized)
     } 
     
     /*

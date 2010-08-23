@@ -70,7 +70,7 @@ public class ViewImage implements Serializable {
      */
     
     // Layout the main application desktop
-    public void layout(JDesktopPane desktop) {
+    public boolean layout(JDesktopPane desktop) {
         // Restore the desktop position
         JFrame app = (JFrame)desktop.getTopLevelAncestor();
         desktop.setPreferredSize(position2.getSize());
@@ -99,6 +99,8 @@ public class ViewImage implements Serializable {
         for (JInternalFrame frame : index.values()) {
             desktop.add(frame);
         }
+        
+        return true;        // Full layout is complete
     }
     
     // Layout an individual window inside the desktop

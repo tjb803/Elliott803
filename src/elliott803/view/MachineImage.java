@@ -39,11 +39,14 @@ public class MachineImage {
     /*
      * Apply the machine image to the current simulation
      */
-    public void apply(Computer computer, ComputerView view) {
+    public boolean apply(Computer computer, ComputerView view) {
+        boolean layout = false;
         computer.cpu.reset();
         computer.core.restore(imageDump);
-        if (imageView != null) 
-            imageView.layout(view);
+        if (imageView != null) {
+            layout = imageView.layout(view);
+        }  
+        return layout;
     }
     
     /*
