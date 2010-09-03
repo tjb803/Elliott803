@@ -28,7 +28,10 @@ public class TestTeletypeView extends BaseViewTest {
         Random rand = new Random();
         int count = 0;
         while (true) {
-            ttView.setText(count++ + ": ");
+            String prefix = count++ + ": ";
+            for (int i = 0; i < prefix.length(); i++) {
+                ttView.setChar(prefix.charAt(i));
+            }
             for (int i = 0; i < 5+rand.nextInt(72); i++) {
                 int j = rand.nextInt(35);
                 char ch = (j < 26) ? (char)('A'+j) : ' ';
@@ -37,6 +40,16 @@ public class TestTeletypeView extends BaseViewTest {
             }
             ttView.setChar('\n');  
             Thread.sleep(20);
+        }
+    }
+    
+    public void testLongLines() throws Exception {
+        int count = 0;
+        while (true) {
+            char ch = (char)('0' + count%10);
+            ttView.setChar(ch);
+            Thread.sleep(5);
+            count++;
         }
     }
 }
