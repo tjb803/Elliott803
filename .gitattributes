@@ -31,3 +31,15 @@ docs/quickstart.html -text
 docs/samples.html -text
 docs/telecode.html -text
 docs/utilities.html -text
+samples/algol/hello.algol -text
+samples/algol/plot.algol -text
+samples/algol/sort.algol -text
+samples/algol/trig.algol -text
+samples/assembler/charset.a1 -text
+samples/assembler/hello1.a1 -text
+samples/assembler/hello2.a1 -text
+samples/assembler/print.a1 -text
+samples/assembler/random.a1 -text
+samples/extra/factorial4.algol -text
+samples/extra/pi4.algol -text
+samples/machines/algol.803 -text
