@@ -1,4 +1,5 @@
 * text=auto !eol
+/.classpath -text
 build/Elliott803[!!-~]build.launch -text
 build/bugs.txt -text svneol=unset#text/plain
 build/build.xml -text
