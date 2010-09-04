@@ -111,3 +111,21 @@ src/elliott803/view/component/DisplayPlot.java -text
 src/elliott803/view/component/DisplayWord.java -text
 tapes/algol/a104-1.tape -text
 tapes/algol/a104-2.tape -text
+test/Elliott803[!!-~]Main.launch -text
+test/Elliott803[!!-~]Run.launch -text
+test/src/elliott803/hardware/TestStore.java -text svneol=unset#text/plain
+test/src/elliott803/machine/TestFloatWord.java -text svneol=unset#text/plain
+test/src/elliott803/machine/TestInstruction.java -text svneol=unset#text/plain
+test/src/elliott803/machine/TestWord.java -text svneol=unset#text/plain
+test/src/elliott803/view/BaseViewTest.java -text svneol=unset#text/plain
+test/src/elliott803/view/TestConsoleView.java -text svneol=unset#text/plain
+test/src/elliott803/view/TestCpuView.java -text svneol=unset#text/plain
+test/src/elliott803/view/TestDeviceView.java -text svneol=unset#text/plain
+test/src/elliott803/view/TestPlotterView.java -text
+test/src/elliott803/view/TestPtsView.java -text svneol=unset#text/plain
+test/src/elliott803/view/TestStoreView.java -text svneol=unset#text/plain
+test/src/elliott803/view/TestTeletypeView.java -text svneol=unset#text/plain
+test/src/elliott803/view/component/BaseComponentTest.java -text svneol=unset#text/plain
+test/src/elliott803/view/component/TestDisplayCore.java -text svneol=unset#text/plain
+test/src/elliott803/view/component/TestDisplayPlot.java -text
+test/src/elliott803/view/component/TestDisplayWord.java -text svneol=unset#text/plain
