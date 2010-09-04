@@ -1,1 +1,7 @@
 * text=auto !eol
+build/Elliott803[!!-~]build.launch -text
+build/bugs.txt -text svneol=unset#text/plain
+build/build.xml -text
+build/features.txt -text svneol=unset#text/plain
+build/license.txt -text
+build/readme.txt -text svneol=unset#text/plain

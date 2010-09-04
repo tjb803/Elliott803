@@ -1,0 +1,46 @@
+Elliott 803 Simulation - Bug fixes and known bugs
+=================================================
+
+v0.5.0, v0.6.0
+--------------
+  First releases
+    
+v0.7.0
+------
+  Improvements:
+    - Manual Data button added to console - will cause a wait for the Operate
+      bar to be pressed when a 70 0 instruction is issued.
+    - Simulator can be started with a 'machine image' file to restore a 
+      previous state
+         - note: 'machine image' can be a core dump and currently only
+                 the contents of the store will be restored.   
+         - a pre-loaded Algol image is provided   
+    - Teletype 'Save' button will save all existing output as well as any new
+      output   
+    - Icon image files added to package           
+  
+  Main bug fixes:
+    - Read and Obey buttons enter step-by-step mode when pressed
+	- Obey function (press Operate with Obey selected) correctly single steps 
+	  single instructions
+	- Overflow detection corrected for some double length arithmetic functions
+	- Floating point overflow now stops and waits for Operate bar before 
+	  continuing (with undefined results)
+	- Floating point 'divide-by-zero' sets arithmetic overflow as well as floating
+	  point overflow  
+	- Teletype window resizes correctly    
+	
+v1.0.0
+------
+  This version contains all the function I had originally intended to 
+  implement.  There is plenty more that could be done (see features.txt),
+  but I now think this is ready to be called v1.0.0.
+
+  Improvements:
+    - Increase speed considerably when CPU and/or Store view is minimized
+    - Add Paper Tape Station view allowing swapping of readers and punches
+    - Add plotter device and Plotter output view
+    - Support full save and restore of machine images including the core 
+      store contents and all window positions and layout
+    - Improve appearance when using Nimbus look-and-feel
+       
