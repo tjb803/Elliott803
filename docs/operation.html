@@ -1,0 +1,394 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Elliott 803 Simulator - Operation Guide</title>
+</head>
+<body>
+<table border="2" frame="box" rules="none" cellpadding="10" width="100%">
+<tr align="center"><td><img src="image/e803.gif"/></td></tr>
+</table>
+<h1>Operation Guide</h1>
+<p>There are two ways to run the Elliott 803 simulator:</p>
+<ul>
+<li><a href="#gui">Interactive GUI Interface</a></li>
+<ul>
+<li><a href="#start">Start Up and Shut Down</a></li>
+<li><a href="#opcon">The Operator Console</a></li>
+<ul>
+<li><a href="#image">Loading and Saving Machine Images</a></li>
+</ul>
+<li><a href="#opcpu">The CPU and Core Store</a></li>
+<ul>
+<li><a href="#perf">Performance Note</a></li>
+</ul>
+<li><a href="#optele">The Output Teletype</a></li>
+<li><a href="#opplot">The Graph Plotter</a></li>
+<li><a href="#optape">The Paper Tape Readers and Punches</a></li>
+<ul>
+<li><a href="#oppts">The Paper Tape Station</a></li>
+<li><a href="#tmode">Tape Formats</a></li>
+</ul>
+</ul>
+<li><a href="#cmd">Command Line Interface</a></li>
+</ul>
+<p>Most people will want to use the <a href="#gui">GUI interface</a>.</p>
+<p>Some further details of how programs are loaded and run are given here:</p>
+<ul>
+<li><a href="#pload">Loading Programs</a></li>
+</ul>
+<hr>
+<h2 id="gui">Interactive GUI</h2>
+<p>The GUI interface can be started by running the simulator JAR file or by
+running the <code>elliott803.Main</code> program within the JAR.</p>
+<h3>Command</h3>
+<blockquote><pre>
+   <code>java -jar elliott803-n.n.n.jar [options] [machine]</code> 
+or <code>java <b>elliott803.Main</b> [options] [machine]</code>
+</pre></blockquote>
+<h4>Parameters</h4>
+<blockquote><dl>
+<dt><code>machine</code></dt><dd>A previously saved machine image.</dd>
+</dl></blockquote>
+<h4>Options</h4>
+<blockquote><dl>
+<dt><code>-look <i>lookandfeel</i></code></dt><dd>The name of the Java GUI 
+look-and-feel to use.
+By default the standard platform look-and-feel will be used.
+Other look-and-feels that may be available (depending on operating system
+and Java version) include: <code>metal</code>, <code>windows</code>, 
+<code>classic</code>, <code>motif</code>, <code>gtk</code> and <code>nimbus</code>.
+</dd>
+</dl></blockquote>
+<p>The GUI interface displays a main window containing several smaller internal
+windows representing the various hardware and devices that form the Elliott
+803 simulation.
+These windows can be moved around and resized (or minimized) as required.
+The current layout can be saved as part of a machine image and restored 
+in a later run.</p>
+<p>Most interaction will take place with the paper tape reader and tape punch
+devices and with the system operator's console.</p>
+<h3 id="start">Start Up and Shut Down</h3>
+<p>When the simulator starts up it can load a pre-saved machine image containing
+the complete core memeory contents and the size, position any layout of all
+the application windows.</p>
+<p>The image can either be provided as a parameter when starting the application
+or the option <code><b>-load</b></code> can be used and the system will prompt
+to select the image to use.
+If no image is provided a default window layout will be used. 
+<p>When the simulator is closed it can optionally prompt to save the current
+machine image ready to restart next time.  
+This can be useful if you have resized and re-arranged the windows or if you
+want to avoid having to reload large data tapes such as the ALGOL compiler.
+The option <code><b>-save</b></code> should be used when starting the application 
+to tell it to prompt to save the image when it closes.
+<h3 id="opcon">The Operator Console</h3>
+<img src="image/opcon.jpg" alt="Operator Console" align="left"/>
+<p>The operator console is the mechanism by which the computer is operated.
+There are 39 buttons on the left hand side called the <i>Word Generator</i>.
+These buttons are used to form complete machine words, typically instructions.
+For convenience the value of the instruction currently formed by the buttons on
+the word generator is shown at the bottom of the window.</p>
+<p><b>Note:</b> When one of these 39 buttons is pressed it will stay pressed down.
+You can release the button, and all other buttons in the same group, by pressing 
+the red release button (marked with an <i>R</i>) at the far left of the row.</p>
+<p>On the right hand side are the various operation buttons and indicator lights.
+The <i>Clear Store</i> button sets all storage locations to zero.  The <i>Reset</i>
+button stops any current execution, clears any &quot;busy&quot; condition and
+returns control to the console.</p>
+<p>The three buttons marked <i>Read</i>, <i>Normal</i> and <i>Obey</i> are used
+in conjunction with the <i>Operate</i> bar to operate the computer.
+To use them you first select the function required by pressing one of the three
+buttons then hit the <i>Operate</i> bar to execute it.</p>
+<p>The <i>Read</i> function reads the instruction currently set on the word
+generator buttons to the CPU instruction register, ready to be executed.
+The <i>Obey</i> function obeys the next instruction then returns to step-by-step
+mode.
+The <i>Normal</i> function obeys the next instruction and continues executing
+instructions normally.</p>
+<p id="boot">So a typical sequence of operations to cause a jump to the 
+<a href="#initns">initial instructions</a> at location zero (to load a program 
+from the tape reader) would be:</p>
+<ul compact>
+<li>Set the instruction <b>40 0 : 00 0</b> on the word generator (this just needs
+the top left-most button pressed).</li>
+<li>Select <i>Read</i>, <i>Operate</i> to load up that <b>40 0</b> instruction
+ready to be run.</li>
+<li>Select <i>Normal</i>, <i>Operate</i> to run the jump instruction and to continue
+running normally.</li>
+</ul>
+<p>The <i>Manual Data</i> is used to cause the system to wait (until the <i>Operate</i>
+bar is pressed) whenever an instruction to read the word generator is executed.
+If this button is not pressed the word generator value will be read without
+any pause.</p>
+<p>The indicator lights show the following conditions:
+<img src="image/wordgen1.jpg" alt="Word Generator" align="right"/></p>
+<ul compact>
+<li><b>Busy</b> the system is waiting for input or output - typically waiting
+for a tape to loaded in a tape reader or punch.</li>
+<li><b>Floating Point Overflow</b> a floating point operation has overflowed.
+Execution stops if this occurs and will only continue when the <i>Operate</i>
+bar is pressed.</li>
+<li><b>Step by Step</b> the system is stopped waiting for operator action.
+This is the condition on start up, after the <i>Reset</i> key is pressed or 
+if the <i>Read</i> or <i>Obey</i> buttons are selected.</li>
+<li><b>Overflow</b> the overflow condition is set.  
+This will usually flicker on and off as programs are loaded or run.</li>
+</ul>
+<p>This window is supposed to look and operate somewhat like the real Elliott
+803 operator console</p>
+<h4 id="image">Loading and Saving Machine Images</h4>
+<img src="image/lsimg.jpg" alt="LoadSave" align="left">
+<p>The two additional console buttons in the <i>Machine Image</i> section are 
+used to save the current machine image or restore a previously saved machine
+image.
+A machine image consists of the complete core memory and may also include the 
+size, position and layout of all the windows on the screen.
+They are typically saved as files with an extension of 
+&quot;<code>.803</code>&quot;.</p>
+<br clear="left">
+<h3 id="opcpu">The CPU and Core Store</h3>
+<img src="image/opcpu.jpg" alt="CPU" align="left"/>
+<img src="image/opcore.jpg" alt="Core Store" align="right"/>
+<p>The CPU window shows the values of some of the important internal registers as
+execution proceeds.
+This includes the currently executing instruction and the contents of the
+accumulator and auxiliary registers.</p>
+<p>At the bottom of the window are two debug options:</p>
+<table frame="void" rules="none">
+<tr><td>
+<ul>
+<li>Pressing the <i>Dump</i> button will produce a
+<a href="extras.html#dump">system core dump</a>.
+This can be formatted and displayed using the
+<a href="utilities.html#pdump">Core File Formatter</a> utility.</li>
+<li>Selecting the <i>Trace</i> option will turn on and off the
+<a href=extras.html#trace">system instruction trace</a>.
+This can be formatted and displayed using the
+<a href="utilities.html#ptrace">Trace File Formatter</a> utility.</li>
+</ul>
+</td></tr>
+</table>
+<br clear="left">
+<p>The core store window shows a view of the 8K words of store.
+It is intended to give a rough idea of where in store work is taking place.</p>
+<p>The window shows 128 lines of 64 small blocks, each block representing a single
+word of store.
+The block will be white if the word of store contains zero, otherwise it will
+alternate between light and dark grey whenever a value is written to the
+storage location.
+The core store is an output only window.</p>
+<h4 id="perf">Important Performance Note</h4>
+<p>The frequent updates to the CPU and Core Store windows that take place as 
+execution proceeds considerably slow down the speed of the emulation.  
+If you want processing to run at a much faster speed one or both of these
+windows should be minimized.
+<br clear="left">
+<h3 id="optele">The Output Teletype</h3>
+<img src="image/optele.jpg" alt="Output Teletype" align="left"/>
+<p>The output teletype shows the printed output from the computer.
+The data will scroll up as new lines are output or when the <i>Scroll</i>
+button is pressed.</p>
+<p>To save output from the teletype press the <i>Save...</i> button and set a
+log file to store the output.
+New output will be appended to the end of any existing log file.
+The log file will be closed if the <i>Clear</i> button is pressed and this
+will also clear any current teletype output.</p>
+<p>When selecting a log file you will need to choose an appropriate
+<a href="#tmode">tape format</a> for the resulting log file.
+<br clear="left">
+<h3 id="opplot">The Graph Plotter</h3>
+<img src="image/opplot.jpg" alt="Graph Plotter" align="left"/>
+<p>The graph plotter displays any plotter output generated.
+The output is scaled so that the current width of the plotter window 
+represents the full width of a real Calcomp plotter, that is 11 inches.
+<p>Pressing the <i>Clear</i> button will clear the plotter output and
+reset the pen to the left hand edge.
+Take care pressing <i>Clear</i> as the image cannot be recovered without
+re-running the program that generated it. 
+<br clear="left">
+<h3 id="optape">The Paper Tape Readers and Punches</h3>
+<img src="image/oprdr.jpg" alt="Tape Reader" align="left"/>
+<img src="image/oppch.jpg" alt="Tape Punch" align="left"/>
+<p>The paper tape readers and paper tape punches are the primary means
+of input/output for the computer.
+&quot;Tapes&quot; are held as files on the host PC system and the <i>Load</i>
+and <i>Save</i> buttons on the tape devices produce a file selection dialog
+that allows the tape files to be selected.</p>
+<p>When selecting a tape file you will need to choose an appropriate
+<a href="#tmode">tape format</a> for the file.</p>
+<br clear="left">
+There are two lights on the tape devices to show their current status
+<ul>
+<li><b>Busy</b> will be illuminated if the device is reading or writing data.
+It will go out when the device is idle.  This can be used to determine when,
+for example, a tape has finished loading.</li>
+<li><b>Waiting</b> will be illuminated if the device has had a read or write
+operation issued against it but it has no tape loaded.
+The CPU will be in a busy wait until either a tape file is loaded into the
+device so operation can continue or the <i>Reset</i> key on the operators
+console is pressed.</li>
+</ul>
+<h4 id="oppts">The Paper Tape Station</h4>
+<img src="image/oppts.jpg" alt="Tape Reader" align="left"/>
+<p>The paper tape station provides additional control over the tape
+readers and punches allowing the readers amd/or punches to be exchanged.
+When the appropriate option is selected the CPU will see Reader 1
+(or Punch 1) as Reader 2 (or Punch 2) and <i>vice-versa</i>.
+<br clear="left">
+<h4 id="tmode">Tape Formats</h4>
+<p>When reading or writing files using the tape readers and tape punches you need
+to consider the format of the tape file that is to be read or written.
+Tapes can be in <i>Elliott</i> format or in <i>System</i> format.</p>
+<ul>
+<li><i>Elliott</i> format tapes are either binary program tapes or tapes
+whose characters are encoded as Elliott telecode.</li>
+<li><i>System</i> tapes are text tapes (such as program source code or
+program data) that are encoded as normal text files on the PC.</li>
+</ul>
+<img src="image/tmode.jpg" alt="Tape Format" align="right"/>
+<p>The file selection dialogs contain a panel on the right hand side that allows
+the correct tape format to be selected.
+Depending on the action requested the tape format will offer one or more of
+the following options:</p>
+<dl>
+<dt><b>Auto</b></dt><dd>The tape format will be automatically selected.
+This is the default format for the tape readers and is normally the correct
+one to choose.
+The contents of the file will be examined to determine if it is an Elliott
+binary or telecode tape or if it is a system text file.</dd>
+<dt><b>Elliott</b></dt><dd>The tape is in Elliott binary or telecode format.
+This is the default format for the tape punches, as it is assumed they may
+be writing binary data (such as compiler output tapes).
+If the output is text it will be encoded in telecode and can be converted
+to the system character set using the
+<a href=utilites.html#tprint">TapePrint</a> utility</dd>
+<dt><b>System</b></dt><dd>The tape is in standard system format.
+This is the default format for teleprinter output.
+This is only suitable for text input or output - the characters read or
+written to the tape will be automatically converted from or to telecode
+as necessary.</dd>
+<dt><b>US-ASCII</b></dt><dd>This option is only available with the <b>System</b>
+output format.
+It ensures that only characters from the US-ASCII character set are used
+when converting from telecode to system characters, in particular the
+GB pound sign character (<code>&pound;</code>) will be written as the number 
+sign (<code>#</code>).</dd>
+</dl>
+<hr>
+<h2 id="pload">Loading Programs</h2>
+<p>If you are patient, careful and very meticulous it is possible to enter
+a complete program and run it using only the operator's console.
+If you want to try, here's a very simple two line program that will print
+a series of 'A's to the teletype:</p>
+<blockquote><pre><code>128:  74 4127 : 74 4097          * Print a letter shift and an 'A'    
+129:  40  128 : 00    0          * Jump to location 128 to repeat</code></pre></blockquote>
+<p>This could be entered and run using the following sequence of operations:</p>
+<table frame="box" rules="all" cellpadding="3">
+<tr><th>Word Generator</th><th>Operation</th><th>Notes</th></tr>
+<tr><td colspan="3">Reset the computer ready for use</td></tr>
+<tr><td></td><td><i>Reset</i></td><td>The &quot;Step by step&quot; light should now be on.</td></tr>
+<tr><td colspan="3">Load the short program into store</td></tr>
+<tr><td><b><code>70&nbsp;0&nbsp;:&nbsp;00&nbsp;0</code></b></td>
+<td><i>Read</i>,&nbsp;<i>Operate</i></td>
+<td>Put the instruction 70&nbsp;0 (read the word generator to the accumulator) into the
+instruction register ready to be obeyed (but not run yet)</td></tr>
+<tr><td><b><code>74&nbsp;4127&nbsp;:&nbsp;74&nbsp;4097</code></b></td>
+<td><i>Obey</i>,&nbsp;<i>Operate</i></td>
+<td>Obey the previous 70&nbsp;0 instruction so the accumulator now contains the
+instruction 74&nbsp;4127&nbsp;:&nbsp;74&nbsp;4097)
+<br>(Hint: 4127 = 4096 + 31, 4097 = 4096 + 1)</td></tr>
+<tr><td><b><code>20&nbsp;128&nbsp;:&nbsp;00&nbsp;0</code></b></td>
+<td><i>Read</i>, <i>Operate</i>, <i>Obey</i>, <i>Operate</i></td>
+<td>Put the instruction 20&nbsp;128 (store accumulator to location 128) into the instruction
+register and obey it.</td></tr>
+<tr><td><b><code>70&nbsp;0&nbsp;:&nbsp;00&nbsp;0</code></b></td>
+<td><i>Read</i>, <i>Operate</i></td>
+<td>Get the 70&nbsp;0 instruction ready to be obeyed again</td></tr>
+<tr><td><b><code>40&nbsp;128&nbsp;:&nbsp;00&nbsp;0</code></b></td>
+<td><i>Obey</i>, <i>Operate</i></td>
+<td>Obey the previous instruction so the accumulator now contains 
+40&nbsp;128&nbsp;:&nbsp;00&nbsp;0</td></tr>
+<tr><td><b><code>20&nbsp;129&nbsp;:&nbsp;00&nbsp;0</code></b></td>
+<td><i>Read</i>, <i>Operate</i>, <i>Obey</i>, <i>Operate</i></td>
+<td>Put the instruction 20&nbsp;129 (store accumulator to location 129) into the instruction
+register and obey it.</td></tr>
+<tr><td colspan="3">Run the program</td></tr>
+<tr><td><b><code>40&nbsp;128&nbsp;:&nbsp;00&nbsp;0</code></b></td>
+<td><i>Read</i>, <i>Operate</i>, <i>Normal</i>, <i>Operate</i></td>
+<td>Reads and executes a 40&nbsp;128 (jump to location 128) instruction and continues
+running normally, i.e. fetching and executing instructions from store.
+<br>The short program should run and print continuous 'A' characters to the
+output teletype.</td></tr>
+<tr><td colspan="3">Stop the program</td></tr>
+<tr><td></td><td><i>Reset</i></td><td>Output should stop and the system return to
+&quot;Step by step&quot; mode.</td></tr>
+</table>
+<h3 id="initins">Initial Instructions</h3>
+<p>Clearly this method of loading and running programs is impractical for any program
+of any size, so the 803 provides a better solution.
+Storage locations 0 through to 3 contain hard-wired instructions called the <i>Initial
+Instructions</i>, these are a bootstrap program that can load binary data from paper
+tape (in tape reader 1) into consecutive words in store.
+Since a word is 39 bits and each character on tape is 5 bits, it takes 8 tape
+characters for each word of store.</p>
+<p>For interest, the initial instructions are these:</p>
+<blockquote><pre><code>0:  26 4 : 06 0
+1:  22 4 / 16 3
+2:  55 5 : 71 0
+3:  43 1 : 40 2</code>
+</pre></blockquote>
+<p>They use just one extra word (location 4) of working storage and can load
+the program into any location in store - the first word read from the tape 
+defines the load address for the rest of the data.
+You might like to try to figure out how it works!</p>
+<p>This means the standard way of loading a program is to put the program tape
+into the reader and execute a jump to location 0 to invoke the initial instructions.</p>
+<hr>
+<h2 id="cmd">Command Line Interface</h2>
+<p>The simulator can also be run as a command line function, although this is
+probably less useful for most people.</p>
+<h3>Command</h3>
+<blockquote><pre>
+<code>java <b>elliott803.Run</b> [options] programtape [entryaddress]</code>
+</pre></blockquote>
+<h4>Parameters</h4>
+<blockquote><dl>
+<dt><code>programtape</code></dt><dd>The binary program tape to be loaded by
+the initial instructions.</dd>
+<dt><code>entryaddress</code></dt><dd>The program entry point address to jump to
+after the tape is loaded.
+This will be ignored for a self-triggering program tape.</dd>
+</dl></blockquote>
+<h4>Options</h4>
+<blockquote><dl>
+<dt><code>-reader1 <i>inputtape</i></code></dt><dd>The tape to load in reader 1 (after program tape is read)</dd>
+<dt><code>-reader2 <i>inputtape</i></code></dt><dd>The tape to load in reader 2</dd>
+<dt><code>-punch1 <i>outputtape</i></code></dt><dd>The output tape file for punch 1</dd>
+<dt><code>-punch2 <i>outputtape</i></code></dt><dd>The output tape file for punch 2</dd>
+<dt><code>-teletype <i>outputfile</i></code></dt><dd>The output file for teletype, defaults to standard out</dd>
+<dt><code>-wordgen <i>&quot;instruction&quot;</i></code></dt><dd>The value to set on the word 
+generator, formatted as an instruction e.g. <code>"70 1 : 00 1"</code>.</dd>
+<dt><code>-press <i>keynumber</i></code></dt><dd>A key to press if the system waits for keyboard input.
+The top-left key (the Function 1 &quot;40&quot; or sign bit) is keynumber 1, the bottom right key 
+(the Address 2 &quot;1&quot; bit) is keynumber 39.  
+Other typically useful keynumbers are 20 (the B-digit) and 21 (the Function 2 &quot;40&quot; bit).</dd>
+<dt><code>-ascii</code></dt><dd>Print using only US-ASCII characters</dd>
+<dt><code>-dump</code></dt><dd>Produce a system dump on exit</dd>
+<dt><code>-trace</code></dt><dd>Produce a full instruction trace</dd>
+</dl></blockquote>
+<p>As an example the sample <a href="samples.html#charset">Character Set</a> program
+can be run with this command.
+This will result in the telecode character set being printed to the terminal or
+command line session.</p>
+<blockquote><pre>
+<code>java elliott803.Run -ascii tapes/samples/charset.tape</code>
+</pre></blockquote>
+<br/><table border="1" frame="above" rules="none" width="100%">
+<tr><td align="left">Tim Baldwin<br>August 2010
+<br><a href="mailto:tjb803@tinymail.co.uk">tjb803@tinymail.co.uk</a></td>
+<td align="right">Return to <a href="index.html">index</a>
+<br><br>&copy; Tim Baldwin 2009,2010</td></tr>
+</table>
+</body>
+</html>

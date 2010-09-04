@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Elliott 803 Simulator - Sample Programs</title>
+</head>
+<body>
+<table border="2" frame="box" rules="none" cellpadding="10" width="100%">
+<tr align="center"><td><img src="image/e803.gif" alt="Elliott 803"/></td></tr>
+</table>
+<h1>Sample Assembler Programs</h1>
+<p>The following sample assembler programs are provided:</p>
+<ul compact>
+<li><a href="#hello1">Hello World 1</a></li>
+<li><a href="#hello2">Hello World 2</a></li>
+<li><a href="#charset">Character Set</a></li>
+<li><a href="#printer">Tape Printer</a></li>
+<li><a href="#random">Random Storage</a></li>
+</ul>
+<p>Note: the sample assembler programs have been written and assembled using a
+simple <a href="utils.html#assembler">assembler utility</a> provided with the simulator.
+This is similar though not identical to the original 803 assembler.  
+In addition they often use one of the special <a href="extras.htlm#control">simulator
+control</a> instructions to exit in a clean way.</p>
+<p>Some sample programs that can be used with the <a href="algol.html">ALGOL</a>
+compiler are also provided and documented separately.</p>
+<hr>
+<h2 id="hello1">Hello World 1</h2>
+<table frame="box" rules="all" border="1" cellpadding="4">
+<tr><td><b>Source Code</b></td>
+<td><a href="../samples/assembler/hello1.a1"><samp>samples/assembler/hello1.a1</samp></a></td></tr>
+<tr><td><b>Program Tape</b></td>
+<td><samp>tapes/samples/hello1.tape</samp></td></tr>
+</table>
+<p>This is a very simple assembler &quot;hello world&quot; program.
+It just prints a short message to the output teletype and exits.
+It is compiled to a self-triggering tape that can be loaded and run using 
+the initial instructions.
+This program is used in the <a href="quickstart.html">Quick Start Guide</a>.</p>
+<hr>
+<h2 id="hello2">Hello World 2</h2>
+<table frame="box" rules="all" border="1" cellpadding="4">
+<tr><td><b>Source Code</b></td>
+<td><a href="../samples/assembler/hello2.a1"><samp>samples/assembler/hello2.a1</samp></a></td></tr>
+<tr><td><b>Program Tape</b></td>
+<td><samp>tapes/samples/hello2.tape</samp></td></tr>
+</table>
+<p>This is a minor variation on the <a href="#hello1">Hello World 1</a> sample.
+The program is compiled to a binary tape that can be loaded using the initial 
+instructions but the tape does not trigger to the entry point.  
+This program is loaded to a fixed address starting at location 7.  
+As the tape does not &quot;trigger&quot; the initial instructions will try to 
+continue to read past the end and the tape will fall out of the reader - this was
+fairly normal 803 behaviour!  
+When there is no more tape to read the system will show a <b>busy</b> light when
+it gets stuck in a read instruction.  
+At this point you need to press the <i>Reset</i> key on the console, to clear the
+busy condition, and perform a manual jump to the entry point at location 7 - so
+set up the instruction <b>40 7 : 00 0</b> on the word generator and then do the 
+standard sequence <i>Read</i>, <i>Operate</i>, <i>Normal</i>, <i>Operate</i>.
+After this the message should appear in the output teletype.</p>
+<p>This program also enters a spin-loop when it finishes, which was fairly standard
+803 behaviour, again the <i>Reset</i> key needs to be used to regain operator
+control.</p>
+<hr>
+<h2 id="charset">Character Set</h2>
+<table frame="box" rules="all" border="1" cellpadding="4">
+<tr><td><b>Source Code</b></td>
+<td><a href="../samples/assembler/charset.a1"><samp>samples/assembler/charset.a1</samp></a></td></tr>
+<tr><td><b>Program Tape</b></td>
+<td><samp>tapes/samples/charset.tape</samp></td></tr>
+</table>
+<p>This program prints the all 64 telecode characters - the 32 letter-shift versions  
+and the 32 figure-shift versions - to the output teletype then exits.
+This shows all the characters available and also illustrates the use of a 
+<b>73</b> instruction to do a procedure call and return.
+The program is compiled to a self-triggering tape that can be loaded and run
+by the initial instructions.</p>
+<hr>
+<h2 id="charset">Tape Printer</h2>
+<table frame="box" rules="all" border="1" cellpadding="4">
+<tr><td><b>Source Code</b></td>
+<td><a href="../samples/assembler/print.a1"><samp>samples/assembler/print.a1</samp></a></td></tr>
+<tr><td><b>Program Tape</b></td>
+<td><samp>tapes/samples/print.tape</samp></td></tr>
+</table>
+<p>This program will print the contents of the tape in Reader 2 to the output 
+teletype.
+The program is compiled to a self-triggering tape that can be loaded and run
+by the initial instructions.
+The CPU will enter a &quot;busy&quot; wait if there is no tape in Reader 2, as soon 
+as a tape is loaded it should continue and print out the tape contents.</p>
+<p>The behaviour is similar to an online version of 
+the <a href="utils.html#tapeprint">TapePrint</a> utility program.</p>
+<hr>
+<h2 id="random">Random Storage</h2>
+<table frame="box" rules="all" border="1" cellpadding="4">
+<tr><td><b>Source Code</b></td>
+<td><a href="../samples/assembler/random.a1"><samp>samples/assembler/random.a1</samp></a></td></tr>
+<tr><td><b>Program Tape</b></td>
+<td><samp>tapes/samples/random.tape</samp></td></tr>
+</table>
+<p>This program writes random numbers (from 0 to 3) to random storage locations,
+avoiding overwriting the program itself which is loaded into the very top of
+store.
+The program is compiled to a self-triggering tape that can be loaded and run
+by the initial instructions.</p>
+<p>The program is intended to illustrate the use of the 
+<a href="extras.html#random">random number</a> simuator device
+and also shows the <a href="operation.html#opcore">core store window</a>
+updating.</p>
+<br><table border="1" frame="above" rules="none" width="100%">
+<tr><td align="left">Tim Baldwin<br>December 2009
+<br><a href="mailto:tjb803@tinymail.co.uk">tjb803@tinymail.co.uk</a></td>
+<td align="right">Return to <a href="index.html">index</a>
+<br><br>&copy; Tim Baldwin 2009</td></tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Elliott 803 Simulator - Contents</title>
+</head>
+<body>
+<table border="2" frame="box" rules="none" cellpadding="10" width="100%">
+<tr align="center"><td><img src="image/e803.gif"/></td></tr>
+</table>
+<h1>Documentation Contents</h1>
+<p>The documentation for the Elliott 803 simulator consists of the
+following pages:</p>
+<ul>
+<li><a href="#intro">Contents and Introduction.</a>
+Project introduction - this page.</li>
+<li><a href="history.html">History.</a>
+A brief introduction and history of the Elliot 803 computer.</li>
+<li><a href="quickstart.html">Quick Start.</a>
+Using the simulator to run a simple program.</li>
+<li><a href="operation.html">Operation.</a>
+More detailed operating instructions.</li>
+<li><a href="samples.html">Sample Assembler Programs.</a>
+Some details about the sample assembler programs supplied with the simulator.</li>
+<li><a href="algol.html">ALGOL Programming.</a>
+Details about running the ALGOL compiler, including some sample ALGOL programs.</li>
+<li><a href="telecode.html">Telecode</a>
+A summary of the 5-hole paper tape character encoding.</li>
+<li><a href="utilities.html">Utility Applications.</a>
+Details of the utility applications supplied with the simulator.</li>
+<li><a href="extras.html">Additional Functions.</a>
+Details for extra function unique to the simulator.</li>
+</ul>
+<p>For programmers interested in understanding or changing the Java source
+code for the simulator, some extra documentation is available:</p>
+<ul>
+<li><a href="prognotes.html">Source code details</a>.
+Some comments and notes about the source code for the simulator.</li>
+</ul>
+<hr>
+<h2 id=intro>Introduction</h2>
+<h3>Project Aims</h3>
+<p>The aim of this project is to produce a simulation of the Elliott 803
+computer that is capable of running original 803 programs (provided they
+can be made available as system files rather than real paper tapes).
+In particular it is an aim to run ALGOL 60 programs using the original
+Elliott ALGOL compiler and achieve correct results.</p>
+<p>The project has been written in Java to enable it to run easily 
+on most systems and the user interface elements have been written as 
+simple Java Swing interfaces.
+Some elements of the interface such as the 
+<a href="operation.html#opcon">operator's console</a> have been made to 
+look and work in a manner very similar to the real 803 version (as far as 
+the Swing interface allows); other elements such as the 
+<a href="operation.html#optape">paper tape readers and punches</a> are 
+just simple implementations to allow easy operation and don't look
+anything like the real thing.</p>
+<h3>Notable Omissions</h3>
+<p>The following elements of the Elliott 803 are currently not implemented
+in this project.</p>
+<ul>
+<li><b>Sounds</b>
+<br>The real 803 console contained a amplifier and loudspeaker that was pulsed
+by the CPU when executing certain instructions.
+This resulted in some very characteristic noises being produced during execution
+and by careful use of certain instructions and delays it was even possible to 
+produce music.
+<br>The simulation currently produces no sound at all, which some might say is a 
+serious omission for an 803!
+The Java environment doesn't make creating this sort of sound particularly
+easy, but it is definitely something to be worked on in future versions.</li>
+<br>
+<li><b>Correct Instruction Timings</b>
+<br>No attempt has been made to emulate the precise timings of the machine 
+instructions.
+The simulator simply runs as fast as the Java implementation allows (this is not
+especially fast, as the updates to the various Swing windows tend to slow it
+down a little).
+<br>Again some might say this is a serious omission for an 803 emulation, but
+again it will probably be hard to get correct in a Java implementation and I 
+don't feel it detracts too much from providing at least the &quot;spirit&quot; 
+of the 803!
+(Note, to produce accurate sounds would also require accurate timings.)</li>
+<br>
+<li><b>Full Floating Point</b>
+<br>The simulation does fully implement all the group 6 floating point 
+instructions but it currently does this using a little cheating.  
+The Elliott 39-bit floating point values are converted to Java doubles 
+and the operation is performed in Java, the resulting Java double is 
+then converted back to an Elliott 39-bit float format.
+<br>This is a simple and reasonably successful approach (ALGOL programs, for 
+example, run correctly), but the resulting numbers are not always absolutely 
+identical to those that would be produced by the real 803 hardware - sometimes
+there are minor differences in the least significant decimal places.</li>
+<br>
+<li><b>Missing Hardware</b>
+<br>Some bits of the original hardware are currently missing from the simulation.
+It is hoped to add these in the future:
+<ul>
+<li>Film Handlers (although most of the enjoyment of these was in seeing the real
+huge handlers working!).</li>
+</ul></li>
+</ul>
+<br><table border="1" frame="above" rules="none" width="100%">
+<tr><td align="left">Tim Baldwin<br>December 2009
+<br><a href="mailto:tjb803@tinymail.co.uk">tjb803@tinymail.co.uk</a></td>
+<td align="right">
+<br><br>&copy; Tim Baldwin 2009</td></tr>
+</table>
+</body>
+</html>

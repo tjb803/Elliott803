@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Elliott 803 Simulator - Quick Start</title>
+</head>
+<body>
+<table border="2" frame="box" rules="none" cellpadding="10" width="100%">
+<tr align="center"><td><img src="image/e803.gif" alt="Elliott 803"/></td></tr>
+</table>
+<h1>Quick Start</h1>
+<p>This is a quick overview of how to run a simple program using the simulator.
+There is a lot more detail in the <a href="operation.html">Operation Guide</a>.</p>
+<p>In this example we'll just run a small program that prints a short mesage
+on the output teletype.</p>
+<hr>
+<h2>Installation</h2>
+<p>If you haven't already done so install the simulator and the related sample
+programs and documentation by unzipping the rumtime package into a 
+subdirectory on your machine.
+Make sure you have Java 5 (or later) installed and working - try typing the 
+command &quot;<kbd>java -version</kbd>&quot; at a terminal or command prompt 
+if you are not sure.</p>
+<p>After unzipping the runtime package you will find these files and directories:</p>
+<blockquote><table frame="void" rules="none" cellpadding="0">
+<tr><td><code>elliott803-n.n.n.jar</code></td><td/><td>The program JAR file</td></tr>
+<tr><td><code>readme.txt</code></td><td width="15"/><td>Latest information</td></tr>
+<tr><td><code>license.txt</code></td><td/><td>The BSD license file</td></tr>
+<tr><td><code>docs/</code></td><td/><td>A copy of the lastest documentation</td></tr>
+<tr><td><code>icons/</code></td><td/><td>Some icons that can be associated with the 
+program if required</td></tr>
+<tr><td><code>tapes/</code></td><td/><td>System tapes and ready to run sample 
+programs</td></tr>
+<tr><td><code>samples/</code></td><td/><td>Sample program source code</td></tr>
+</table></blockquote>
+<hr>
+<h2>Start Up</h2>
+To start the simulator enter the following command at a terminal or command
+prompt:
+<blockquote><pre>
+<code>java -jar elliott803-n.n.n.jar</code>
+</pre></blockquote>    
+<p>on some systems (such as Windows) you should also be able to double-click
+on the JAR file to to launch the application.</p>
+<p>The simulator should start and display a window containing several smaller
+windows something like this:</p>
+<table frame="void" rules="none">
+<tr>
+<td valign="middle" width="100"><b>Top left is the operator's console</b></td>
+<td rowspan="3"><img src="image/qs1.jpg" alt="Main Frame"/></td>
+<td align="right" valign="middle" width="100"><b>Top right is a view of the
+workings of the CPU and Storage</b></td>
+</tr>
+<tr><td><br><br><br></td></tr>
+<tr>
+<td valign="middle" width="100"><b>Bottom left is the teletype output and 
+graph plotter output</b></td>
+<td align="right" valign="middle" width="100"><b>Bottom right are the paper tape 
+readers and punches</b></td>
+</tr> 
+</table>
+<hr>
+<h2>Loading and Running a Program</h2>
+<p>Programs are loaded from paper tape.
+The program tape needs to be loaded into Reader 1, so hit the &quot;Load...&quot; 
+button on the small window marked <b>Reader 1</b> and use the file selection dialog 
+to choose a tape to load.
+Navigate to the <var>tapes / samples</var> directory and select the tape 
+called <var>hello1.tape</var>.
+Leave the <i>Tape Format</i> option on the right of the dialog set to the default 
+value of <i>Auto</i>.</p>
+<p>To get a tape to load you use a small program called the <i>Initial Instructions</i>
+that is hard-wired into the machine in storage locations 0 to 3.
+This is a bootstrap program that can read a binary coded tape from the tape reader
+and load it into store at a specific address.
+If the binary tape is suitably encoded the initial instructions can also cause 
+a jump to the program entry point when the end of the tape is reached.</p>
+<p>The operator console is used to make the computer run the initial instructions
+by forcing a jump to location 0 where the initial instruction program starts.
+To make a jump the large number of buttons on the left of the console are used 
+to create a machine instruction, the computer is them told to read and execute that
+instructions.</p>
+<p>The 39 buttons on the left of the console are called the <i>Word Generator</i>, there
+is one button per bit of a complete machine word.
+A machine word can hold two full instructions, each instruction being represented as 
+a two (octal) digit op-code (6 bits) and an address from 0 to 8191 (13 bits).
+Two instructions therefore need 38 bits and that leaves one special bit (known as 
+the <i>B digit</i>) that sits between the two.</p>
+<p>Pressing just the single top left most &quot;4&quot; button (shown in the 
+red circle below) creates a pair of instructions that would be written as 
+<b>40&nbsp;0&nbsp;:&nbsp;00&nbsp;0</b>.
+The first instruction has a <b>40</b> op-code which is a jump and the target address 
+is <b>0</b>.
+The second instruction has a <b>00</b> op-code which is a no-op, but it doesn't really
+matter as it will not get executed.</p>
+<center><img src="image/qs2.jpg" alt="Console"/></center>   
+<p>To execute this instruction to cause a jump to the initial instructions which will 
+then load the program in the tape reader, we use the operation buttons at the bottom right 
+(shown in the green circle above).</p>
+<p>First ensure the <i>Read</i> button is selected and then press the <i>Operate</i>
+key.
+This reads the instruction on the word generator into the CPU ready to be run.</p>
+<p>Next select the <i>Normal</i> button and again press the <i>Operate</i> key.
+This sets the CPU running normally and it executes instructions starting with
+the one we just loaded.
+We therefore do a jump to location zero and the hard-wired initial instructions 
+take over.
+These read the tape, load the program into store and jump to its entry point.</p>
+<p>If all is correct you should see a message printed to the output teletype.</p>
+<center><img src="image/optele.jpg" alt="Teletype"/></center>
+<p>If you want to run the program again, you should first press the <i>Reset</i>
+key on the console, reload the program tape in the reader and re-execute the 
+<b>40&nbsp;0</b> instruction - assuming the word generator buttons are still correct 
+just select the sequence <i>Read</i>, <i>Operate</i>, <i>Normal</i>, <i>Operate</i> again.</p>
+<p>Of course, since the program remains in store you don't really need to load it from
+tape again to re-run it, you could just execute a jump to the program entry point
+rather than a jump to location zero.  
+See the <a href="operation.html">Operation Guide</a> or the other 
+<a href="samples.html">Sample Programs</a> for further details.</p>
+<br><table border="1" frame="above" rules="none" width="100%">
+<tr><td align="left">Tim Baldwin<br>August 2010
+<br><a href="mailto:tjb803@tinymail.co.uk">tjb803@tinymail.co.uk</a></td>
+<td align="right">Return to <a href="index.html">index</a>
+<br><br>&copy; Tim Baldwin 2009,2010</td></tr>
+</table>
+</body>
+</html>
