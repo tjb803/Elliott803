@@ -49,13 +49,13 @@
     <target name="buildZip" depends="buildSamples, buildJar">
         <mkdir dir="${pkg-build}"/> 
         <zip destfile="${pkg-build}/${zip-name}">
-            <fileset file="docs/license.txt"/>
-            <fileset file="docs/readme.txt"/>
-            <fileset file="docs/bugs.txt"/>
-            <fileset file="docs/features.txt"/>
+            <fileset file="build/license.txt"/>
+            <fileset file="build/readme.txt"/>
+            <fileset file="build/bugs.txt"/>
+            <fileset file="build/features.txt"/>
             <fileset file="${pkg-build}/${jar-name}"/>
             <zipfileset dir="src/elliott803/icon" prefix="icons"/>
-            <zipfileset dir="docs/html" prefix="docs"/>
+            <zipfileset dir="docs" prefix="docs"/>
             <zipfileset dir="tapes" prefix="tapes"/>
             <zipfileset dir="${tape-build}" prefix="tapes"/>
             <zipfileset dir="samples" prefix="samples"/>         
@@ -66,10 +66,10 @@
     <target name="buildSrc">
         <mkdir dir="${pkg-build}"/> 
         <zip destfile="${pkg-build}/${src-name}">
-            <fileset file="docs/license.txt"/>
-            <fileset file="docs/readme.txt"/>
-            <fileset file="docs/bugs.txt"/>
-            <fileset file="docs/features.txt"/>
+            <fileset file="build/license.txt"/>
+            <fileset file="build/readme.txt"/>
+            <fileset file="build/bugs.txt"/>
+            <fileset file="build/features.txt"/>
             <zipfileset dir="src" prefix="src"/>
         </zip>
     </target>

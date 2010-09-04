@@ -2,37 +2,37 @@
 /.classpath -text
 /.project -text
 build/Elliott803[!!-~]build.launch -text
+build/bugs.txt -text svneol=unset#text/plain
 build/build.xml -text
-docs/bugs.txt -text svneol=unset#text/plain
-docs/features.txt -text svneol=unset#text/plain
-docs/html/algol.html -text svneol=unset#text/plain
-docs/html/extras.html -text
-docs/html/history.html -text
-docs/html/image/creed.jpg -text
-docs/html/image/e803.gif -text
-docs/html/image/elliott803-1.jpg -text
-docs/html/image/lsimg.jpg -text
-docs/html/image/opcon.jpg -text
-docs/html/image/opcore.jpg -text
-docs/html/image/opcpu.jpg -text
-docs/html/image/oppch.jpg -text
-docs/html/image/opplot.jpg -text
-docs/html/image/oppts.jpg -text
-docs/html/image/oprdr.jpg -text
-docs/html/image/optele.jpg -text
-docs/html/image/qs1.jpg -text
-docs/html/image/qs2.jpg -text
-docs/html/image/tmode.jpg -text
-docs/html/image/wordgen1.jpg -text
-docs/html/index.html -text
-docs/html/operation.html -text
-docs/html/prognotes.html -text svneol=unset#text/plain
-docs/html/quickstart.html -text
-docs/html/samples.html -text
-docs/html/telecode.html -text
-docs/html/utilities.html -text
-docs/license.txt -text
-docs/readme.txt -text svneol=unset#text/plain
+build/features.txt -text svneol=unset#text/plain
+build/license.txt -text
+build/readme.txt -text svneol=unset#text/plain
+docs/algol.html -text svneol=unset#text/plain
+docs/extras.html -text
+docs/history.html -text
+docs/image/creed.jpg -text
+docs/image/e803.gif -text
+docs/image/elliott803-1.jpg -text
+docs/image/lsimg.jpg -text
+docs/image/opcon.jpg -text
+docs/image/opcore.jpg -text
+docs/image/opcpu.jpg -text
+docs/image/oppch.jpg -text
+docs/image/opplot.jpg -text
+docs/image/oppts.jpg -text
+docs/image/oprdr.jpg -text
+docs/image/optele.jpg -text
+docs/image/qs1.jpg -text
+docs/image/qs2.jpg -text
+docs/image/tmode.jpg -text
+docs/image/wordgen1.jpg -text
+docs/index.html -text
+docs/operation.html -text
+docs/prognotes.html -text svneol=unset#text/plain
+docs/quickstart.html -text
+docs/samples.html -text
+docs/telecode.html -text
+docs/utilities.html -text
 samples/algol/hello.algol -text
 samples/algol/plot.algol -text
 samples/algol/sort.algol -text
@@ -45,7 +45,6 @@ samples/assembler/random.a1 -text
 samples/extra/factorial4.algol -text
 samples/extra/pi4.algol -text
 samples/machines/algol.803 -text
-samples/machines/algolp.803 -text
 src/elliott803/Main.java -text
 src/elliott803/Run.java -text
 src/elliott803/hardware/ALU.java -text
