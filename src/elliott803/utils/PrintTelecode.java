@@ -11,7 +11,6 @@ import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.util.Map;
 
 import elliott803.telecode.TelecodeInputStream;
 import elliott803.telecode.TelecodeOutputStream;
@@ -43,7 +42,7 @@ public class PrintTelecode {
 
     public static void main(String[] args) throws Exception {
         // Handle parameters
-        Map<String,String> options = Args.optionMap();
+        Args.Map options = Args.optionMap();
         options.put("ascii", null);
         options.put("inputenc", "inputencoding");
         options.put("outputenc", "outputencoding");

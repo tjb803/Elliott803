@@ -10,35 +10,53 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Utility class to process command line arguments.
+ * 
+ * General form is a set of positional arguments (accessed by position
+ * number) and a set of options (introduced by a '-' and accessed by
+ * option name).
+ * 
+ * Options are defined by entries in a Args.Map option map where
+ *   key = option name
+ *   value = option value (as displayed in usage summary)
+ *   
+ * Some special cases for the option value are:
+ *   null - option is a flag, either present or absent
+ *   starts with '+' - usage summary shows next option on the same line
  *
  * @author Baldwin
  */
 public class Args {
+    
+    public static class Map extends LinkedHashMap<String,String> {
+        private static final long serialVersionUID = 1L;
+    }
 
     String name, parms;
-    Map<String,String> opts;
-    Map<String,String> options = new HashMap<String,String>();
+    Args.Map opts;
+    HashMap<String,String> options = new HashMap<String,String>();
     List<String> parameters = new ArrayList<String>();
 
-    public static Map<String,String> optionMap() {
-        return new LinkedHashMap<String,String>();
+    public static Args.Map optionMap() {
+        return new Args.Map();
     }
 
     /*
      * Process a set of arguments, creating a list of options and parameters
      */
-    public Args(String name, String parms, String[] args, Map<String,String> opts) {
+    public Args(String name, String parms, String[] args, Args.Map opts) {
         this.name = name;
         this.parms = parms;
         this.opts = opts;
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
             if (arg.startsWith("-")) {
-                arg = arg.substring(1);
+                arg = arg.substring(1);                
+                if (arg.equals("?")) {
+                    usage();
+                }
                 if (opts != null && opts.containsKey(arg)) {
                     if (opts.get(arg) != null && i < args.length-1)
                         options.put(arg, args[++i]);
@@ -47,6 +65,8 @@ public class Args {
                 } else {
                     error("Incorrect option", arg, true);
                 }
+            } else if (arg.equals("?")) {
+                usage();    
             } else {
                 parameters.add(arg);
             }
@@ -171,17 +191,13 @@ public class Args {
                 hdr = "        ";
                 String value = opts.get(opt);
                 if (value != null) {
-                    if (value.endsWith("-")) {
-                        hdr = ",";
-                    } else {
-                        if (value.endsWith("+")) {
-                            value = value.substring(0, value.length()-1);
-                            hdr = "";
-                        }
-                        System.err.print(" " + value);
-                    }    
+                    if (value.startsWith("+")) {
+                        value = value.substring(1);
+                        hdr = "";
+                    }
+                    System.err.print(" " + value);
                 }
-                if (hdr.length() > 1) {
+                if (hdr.length() > 0) {
                     System.err.println();
                 }    
             }    

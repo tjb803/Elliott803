@@ -7,10 +7,8 @@ package elliott803;
 
 import java.awt.Dimension;
 import java.awt.Image;
-import java.awt.Insets;
 import java.awt.Toolkit;
 import java.io.File;
-import java.util.Map;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -41,9 +39,9 @@ public class Main implements Runnable {
 
     public static void main(String[] args) throws Exception {
         // Handle parameters
-        Map<String,String> options = Args.optionMap();
+        Args.Map options = Args.optionMap();
         options.put("look", "lookAndFeel");
-        Args parms = new Args("View", "[machine]", args, options);
+        Args parms = new Args("elliott803.Main", "[machine]", args, options);
 
         // Set the Swing look and feel
         setLookAndFeel(parms.getOption("look"));

@@ -13,7 +13,6 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Utility program to copy one or more telecode tapes to a single new tape.
@@ -33,7 +32,7 @@ public class TapeCopy {
 
     public static void main(String[] args) throws Exception {
         // Handle parameters
-        Map<String,String> options = Args.optionMap();
+        Args.Map options = Args.optionMap();
         options.put("output", "outputtape");
         Args parms = new Args("TapeCopy", "inputtape1 [inputtape2 ...]", args, options);
 

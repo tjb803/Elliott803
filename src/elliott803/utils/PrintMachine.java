@@ -9,7 +9,6 @@ import java.awt.Rectangle;
 import java.io.File;
 import java.io.PrintStream;
 import java.text.DateFormat;
-import java.util.Map;
 
 import elliott803.machine.Dump;
 import elliott803.view.MachineImage;
@@ -34,7 +33,7 @@ public class PrintMachine {
 
     public static void main(String[] args) throws Exception {
         // Handle parameters
-        Map<String,String> options = Args.optionMap();
+        Args.Map options = Args.optionMap();
         options.put("nodump", null);
         Args parms = new Args("PrintMachine", "machine [outputfile]", args, options);
         

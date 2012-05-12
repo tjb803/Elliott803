@@ -11,7 +11,6 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Map;
 
 import elliott803.hardware.PaperTapeStation;
 import elliott803.hardware.TapeDevice;
@@ -48,18 +47,18 @@ public class Run {
 
     public static void main(String[] args) throws Exception {
         // Handle parameters
-        Map<String,String> options = Args.optionMap();
-        options.put("reader1", "inputtape+");
+        Args.Map options = Args.optionMap();
+        options.put("reader1", "+inputtape");
         options.put("reader2", "inputtape");
-        options.put("punch1", "outputtape+");
+        options.put("punch1", "+outputtape");
         options.put("punch2", "outputtape");
         options.put("teletype", "outputfile");
-        options.put("wordgen", "\"instruction\"+");
+        options.put("wordgen", "+\"instruction\"");
         options.put("press", "button");
         options.put("ascii", null);
         options.put("dump", null);
         options.put("trace", null);
-        Args parms = new Args("Run", "programtape [entryaddress]", args, options);
+        Args parms = new Args("elliott803.Run", "programtape [entryaddress]", args, options);
 
         File inputFile1 = parms.getInputFile("reader1");
         File inputFile2 = parms.getInputFile("reader2");
