@@ -96,7 +96,7 @@ public class Store {
 
     // Mainly for debugging
     public String toString() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("STORE: last write ").append(lastAddr).append("=").append(Word.toOctalString(lastValue));
         return sb.toString();
     }

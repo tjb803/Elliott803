@@ -301,7 +301,7 @@ public class CPU {
 
     // Mainly for debugging
     public String toString() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("CPU:");
         sb.append(" acc=").append(Word.toOctalString(acc));
         sb.append(" scr=").append(scr).append(".").append(scr2);

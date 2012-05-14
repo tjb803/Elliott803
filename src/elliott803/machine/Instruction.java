@@ -50,21 +50,21 @@ public abstract class Instruction {
      *       "nnnn" is the address in decimal left-space padded to 4 characters
      */
     public static final String toOpString(int op) {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         String text = Integer.toOctalString(op);
         result.append("00", 0, 2-text.length()).append(text);
         return result.toString();
     }
 
     public static final String toAddrString(int addr) {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         String text = Integer.toString(addr);
         result.append("    ", 0, 4-text.length()).append(text);
         return result.toString();
     }
 
     public static final String toInstrString(int instr) {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         String text1 = Integer.toOctalString(getOp(instr));
         String text2 = Integer.toString(getAddr(instr));
         result.append("00", 0, 2-text1.length()).append(text1);

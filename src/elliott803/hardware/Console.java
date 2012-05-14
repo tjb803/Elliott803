@@ -148,7 +148,7 @@ public class Console extends Device {
 
     // Mainly for debugging
     public String toString() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("CONSOLE:");
         sb.append(" wordgen=").append(Word.toOctalString(wordGen));
         sb.append(", \"").append(Word.toInstrString(wordGen)).append("\"");

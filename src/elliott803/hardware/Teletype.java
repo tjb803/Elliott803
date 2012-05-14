@@ -31,7 +31,7 @@ public class Teletype extends Punch {
 
     // Mainly for debugging
     public String toString() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("TELETYPE ").append(id).append(":");
         sb.append(" tape=").append(outputTape);
         sb.append(" ").append(deviceBusy() ? "WAITING" : "READY");

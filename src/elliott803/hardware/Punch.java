@@ -68,7 +68,7 @@ public class Punch extends TapeDevice {
 
     // Mainly for debugging
     public String toString() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("PUNCH ").append(id).append(":");
         sb.append(" tape=").append(outputTape);
         sb.append(" ").append(deviceBusy() ? "WAITING" : "READY");

@@ -35,21 +35,21 @@ public abstract class Word {
     }
 
     public static final String toOctalString(long word) {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         String text = Long.toOctalString(getBits(word));
         result.append("0000000000000", 0, 13-text.length()).append(text);
         return result.toString();
     }
 
     public static final String toBinaryString(long word) {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         String text = Long.toBinaryString(getBits(word));
         result.append("000000000000000000000000000000000000000", 0, 39-text.length()).append(text);
         return result.toString();
     }
 
     public static final String toBin38String(long word) {
-        StringBuffer result = new StringBuffer(toBinaryString(word));
+        StringBuilder result = new StringBuilder(toBinaryString(word));
         result.setCharAt(0, ' ');
         return result.toString();
     }
@@ -86,7 +86,7 @@ public abstract class Word {
     }
 
     public static final String toInstrString(long word) {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         result.append(Instruction.toInstrString(getInstr1(word)));
         result.append((getB(word) == 0) ? " : " : " / ");
         result.append(Instruction.toInstrString(getInstr2(word)));
@@ -121,7 +121,7 @@ public abstract class Word {
     }
 
     public static final String toIntegerString(long word) {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         long value = getLong(word);
         String text = Long.toString(getLong(word));
         result.append((value > 0) ? "+" : "").append(text);

@@ -75,7 +75,7 @@ public class Reader extends TapeDevice {
 
     // Mainly for debugging
     public String toString() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("READER ").append(id).append(":");
         sb.append(" tape=").append(inputTape);
         sb.append(" ").append(deviceBusy() ? "WAITING" : "READY");
