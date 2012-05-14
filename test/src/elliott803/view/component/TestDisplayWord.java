@@ -1,14 +1,16 @@
 /**
  * Elliott Model 803B Simulator
  * 
- * (C) Copyright Tim Baldwin 2009
+ * (C) Copyright Tim Baldwin 2009,2012
  */
 package elliott803.view.component;
 
 import java.util.Random;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 
+import elliott803.machine.Instruction;
 import elliott803.machine.Word;
 
 public class TestDisplayWord extends BaseComponentTest {
@@ -21,6 +23,8 @@ public class TestDisplayWord extends BaseComponentTest {
         displayInt = new DisplayWord(DisplayWord.Type.INTEGER);
         displayFloat = new DisplayWord(DisplayWord.Type.FLOAT);
         displayInstruction = new DisplayWord(DisplayWord.Type.INSTRUCTION);
+        displayInstr = new DisplayInstruction();
+        displayAddr = new DisplayAddress();
         
         // Add to the test frame
         testView.setLayout(new BoxLayout(testView, BoxLayout.Y_AXIS));
@@ -30,6 +34,9 @@ public class TestDisplayWord extends BaseComponentTest {
         testView.add(displayInt);
         testView.add(displayFloat);
         testView.add(displayInstruction);
+        testView.add(Box.createVerticalStrut(10));
+        testView.add(displayInstr);
+        testView.add(displayAddr);
     }
     
     private DisplayWord displayBinary;
@@ -38,6 +45,9 @@ public class TestDisplayWord extends BaseComponentTest {
     private DisplayWord displayInt;
     private DisplayWord displayFloat;
     private DisplayWord displayInstruction;
+
+    private DisplayInstruction displayInstr;
+    private DisplayAddress displayAddr;
     
     public void testRandom() throws Exception {
         Random rand = new Random();
@@ -49,7 +59,10 @@ public class TestDisplayWord extends BaseComponentTest {
             displayInt.setValue(word);
             displayFloat.setValue(word);
             displayInstruction.setValue(word);
-            Thread.sleep(100);
+            int instr = Word.getInstr2(word);
+            displayInstr.setValue(instr);
+            displayAddr.setValue(Instruction.getAddr(instr));
+            Thread.sleep(500);
         }
     }
 }

@@ -20,7 +20,7 @@ import javax.swing.Timer;
 
 import elliott803.hardware.CPU;
 import elliott803.view.component.DeviceLight;
-import elliott803.view.component.DisplayAddr;
+import elliott803.view.component.DisplayAddress;
 import elliott803.view.component.DisplayLight;
 import elliott803.view.component.DisplayWord;
 
@@ -37,7 +37,7 @@ public class CpuView extends JInternalFrame implements ActionListener {
     DisplayWord acc;
     DisplayWord ar;
     DisplayWord br;
-    DisplayAddr scr;
+    DisplayAddress scr;
     DisplayWord ir;
     DeviceLight overflow;
     DeviceLight fpOverflow;
@@ -52,7 +52,7 @@ public class CpuView extends JInternalFrame implements ActionListener {
         acc = new DisplayWord("ACC", DisplayWord.Type.OCTAL);
         ar = new DisplayWord("AR", DisplayWord.Type.OCTAL);
         br = new DisplayWord("B", DisplayWord.Type.OCTAL);
-        scr = new DisplayAddr();
+        scr = new DisplayAddress();
         ir = new DisplayWord(DisplayWord.Type.INSTRUCTION);
         overflow = new DeviceLight("Overflow", DisplayLight.CYAN);
         fpOverflow = new DeviceLight("FP Overflow", DisplayLight.CYAN);

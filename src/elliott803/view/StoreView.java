@@ -15,7 +15,7 @@ import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 
 import elliott803.hardware.Store;
-import elliott803.view.component.DisplayAddr;
+import elliott803.view.component.DisplayAddress;
 import elliott803.view.component.DisplayCore;
 import elliott803.view.component.DisplayWord;
 
@@ -35,14 +35,14 @@ public class StoreView extends JInternalFrame {
 
     DisplayCore coreStore;
     DisplayWord lastValue;
-    DisplayAddr lastAddr;
+    DisplayAddress lastAddr;
 
     public StoreView(Store store) {
         super("Core Store", false, false, false, true);
         this.store = store;
 
         coreStore = new DisplayCore();
-        lastAddr = new DisplayAddr("Write");
+        lastAddr = new DisplayAddress("Write");
         lastValue = new DisplayWord(DisplayWord.Type.OCTAL);
 
         JPanel p1 = new JPanel();
