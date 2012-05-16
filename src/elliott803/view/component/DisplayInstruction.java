@@ -16,11 +16,14 @@ public class DisplayInstruction extends DisplayWord {
     private static final long serialVersionUID = 1L;
 
     public DisplayInstruction() {
-        this(null);
+        this(null, 0);
     }
-
+    
     public DisplayInstruction(String name) {
-        super(name, Type.TEXT);
+        this(name, 0);
+    }
+    public DisplayInstruction(String name, int fill) {
+        super(name, Type.TEXT, fill);
         setValue(0);
     }
 

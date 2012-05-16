@@ -9,6 +9,10 @@ import java.util.StringTokenizer;
 
 /**
  * Constants and utility functions to manipulate the 39-bit words.
+ * 
+ * In general:
+ *    getXxxx() methods will extract various values from a word
+ *    asXxxx() methods will turn various values into a word
  *
  * @author Baldwin
  */

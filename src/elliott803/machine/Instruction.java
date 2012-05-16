@@ -9,6 +9,10 @@ import java.util.StringTokenizer;
 
 /**
  * Constants and utility functions to manipulate a single instruction
+ * 
+ * In general:
+ *    getXxxx() methods will extract various values from an instruction
+ *    asXxxx() methods will turn various values into an instruction
  *
  * @author Baldwin
  */
@@ -34,6 +38,10 @@ public abstract class Instruction {
 
     public static final int asInstr(int op, int addr) {
         return asOp(op) | asAddr(addr);
+    }
+    
+    public static final int asInstr(int instr) {
+        return (instr & INSTR_MASK);
     }
 
     public static final int getOp(int instr) {

@@ -8,6 +8,7 @@ package elliott803.view;
 import java.util.Random;
 
 import elliott803.hardware.CPU;
+import elliott803.machine.Instruction;
 import elliott803.machine.Word;
 
 /**
@@ -29,12 +30,12 @@ public class TestCpuView extends BaseViewTest {
         while (true) {
             long a = Word.asWord(rand.nextLong());
             long ar = Word.asWord(rand.nextLong());
-            long b = Word.asWord(rand.nextLong());
+            int ir = Instruction.asInstr(rand.nextInt());
             int pc = rand.nextInt(8192);
             long instr = Word.asWord(rand.nextLong());
-            cpuView.updateRegisters(a, ar, b, pc, instr);
+            cpuView.updateRegisters(a, ar, ir, pc, instr);
             cpuView.updateFlags(rand.nextBoolean(), rand.nextBoolean());
-            Thread.sleep(100);
+            Thread.sleep(500);
         }
     }    
 }

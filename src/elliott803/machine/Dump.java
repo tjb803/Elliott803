@@ -38,8 +38,8 @@ public class Dump implements Serializable {
     // CPU status
     public long acc;           // Accumulator
     public long ar;            // Auxiliary register
-    public long br;            // B-register
-    public long ir;            // Executing instruction
+    public long ir;            // Last read instruction pair
+    public int ix;             // Current (modified) instruction
     public int scr;            // Sequence control;
     public int scr2;           // First/second instruction
     public boolean overflow;   // Overflow state;

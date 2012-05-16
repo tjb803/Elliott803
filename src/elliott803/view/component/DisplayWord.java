@@ -1,7 +1,7 @@
 /**
  * Elliott Model 803B Simulator
  *
- * (C) Copyright Tim Baldwin 2009
+ * (C) Copyright Tim Baldwin 2009, 2012
  */
 package elliott803.view.component;
 
@@ -36,10 +36,14 @@ public class DisplayWord extends JPanel {
     JLabel text;
 
     public DisplayWord(Type type) {
-        this(null, type);
+        this(null, type, 0);
+    }
+    
+    public DisplayWord(String name, Type type) {
+        this(name, type, 0);
     }
 
-    public DisplayWord(String name, Type type) {
+    public DisplayWord(String name, Type type, int fill) {
         this.type = type;
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setAlignmentX(RIGHT_ALIGNMENT);
@@ -49,6 +53,11 @@ public class DisplayWord extends JPanel {
             title.setAlignmentX(RIGHT_ALIGNMENT);
             add(title);
             add(Box.createHorizontalStrut(5));
+        }
+        if (fill > 0) {
+            JLabel filler = new JLabel(new String(new char[fill]).replace('\0', ' '));
+            filler.setFont(monoFont);
+            add(filler);
         }
         text = new JLabel();
         text.setAlignmentY(CENTER_ALIGNMENT);

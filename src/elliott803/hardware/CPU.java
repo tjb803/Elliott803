@@ -1,7 +1,7 @@
 /**
  * Elliott Model 803B Simulator
  *
- * (C) Copyright Tim Baldwin 2009
+ * (C) Copyright Tim Baldwin 2009, 2012
  */
 package elliott803.hardware;
 
@@ -24,16 +24,17 @@ public class CPU {
     // CPU registers and flags
     long acc;               // Accumulator register
     long ar;                // Auxiliary register
-    long br;                // B-line modification value
     boolean overflow;       // Overflow flag
     boolean fpOverflow;     // Floating point overflow
 
-    long ir;                // Instruction register
+    int irx;                // Instruction to execute
+    long ir;                // Last fetched instruction pair
     int scr;                // Sequence control register
     int scr2;               // 0 = first instruction, 1 = second instruction
 
     // Variables used during execution
     boolean jump;
+    boolean fetch;
     boolean running;
     Trace trace;
 
@@ -43,14 +44,18 @@ public class CPU {
     
     // Set the next instruction to be executed
     public void setInstruction(int instruction) {
-        ir = Word.asInstr1(instruction);
-        scr2 = 0;
+        irx = Instruction.asInstr(instruction);
+        fetch = false;
         viewState();
     }
 
     // Reset the CPU - clears overflow and busy states and stops execution
     public void reset() {
         stop();
+        acc = ar = 0;
+        scr2 = scr = 0;
+        ir = irx = 0;
+        fetch = true;
         overflow = fpOverflow = false;
         computer.console.setOverflow(overflow, fpOverflow);
         computer.busyClear();
@@ -60,7 +65,6 @@ public class CPU {
     public void stop() {
         computer.console.setStep(true);
         running = false;
-        jump = true;
     }
 
     // Normal execution, run instructions until told to stop.
@@ -72,34 +76,45 @@ public class CPU {
         }
     }
 
-    // Obey the next instruction from the instruction register.  The scr2 register
-    // will indicate if we should execute the first or second instruction of the pair.
+    // Obey the next instruction. 
     public void obey() {
-        if (trace != null) {
-            // Only trace following a jump or starting a new pair of instructions
-            if (jump || scr2 == 0)
-                trace.trace(scr, scr2, ir, acc, overflow);
-        }    
-        
-        // Get the instruction to be executed and apply any B-digit modification
-        // if executing the second instruction.  A jump to the second instruction
-        // does not do any B-digit modification.
-        int instruction;
-        if (scr2 == 0) {
-            instruction = Word.getInstr1(ir);
-        } else {
-            instruction = Word.getInstr2(ir);
-            if (Word.getB(ir) == 1 && !jump) {
-                instruction += Word.getInstr2(br);
+        // Fetch the next instruction from storage and apply any B-line
+        // modification if needed.
+        if (fetch) {
+            if (scr2 == 0) {
+                // Processing first instruction, so just fetch from store
+                ir = computer.core.fetch(scr);
+                irx = Word.getInstr1(ir);
+            } else {
+                // Processing of second instruction depends on B digit setting,
+                // unless we got here via a jump.
+                if (jump || Word.getB(ir) == 0) {
+                    // No modification needed but we must re-fetch the instruction
+                    // word in case the previous instruction modified it.
+                    ir = computer.core.fetch(scr);
+                    irx = Word.getInstr2(ir);
+                } else {
+                    // B-line modification is applied to the original value of the 
+                    // second instruction (even if it has been modified in store).
+                    long b = computer.core.read(Instruction.getAddr(irx));
+                    irx = Word.getInstr2(ir) + Word.getInstr2(b);
+                }
             }
+            
+            // Trace each new instruction pair or following a jump
+            if (trace != null) {
+                if (jump || scr2 == 0)
+                    trace.trace(scr, scr2, ir, acc, overflow);
+            } 
         }
-        
-        // Execute the instruction and store any potential B-line modification
-        long n = execute(instruction);
-        br = (scr2 == 0) ? n : 0;
+
+        // Execute the instruction and prepare to fetch the next
+        execute();
+        viewState();
         
         // Step to the next instruction, unless we had jump in which case the 
         // new address will already be set in scr/scr2.
+        fetch = true;
         if (!jump) {
             if (scr2 == 0) {
                 scr2 = 1;
@@ -108,17 +123,12 @@ public class CPU {
                 scr = Instruction.getAddr(scr + 1);
             }
         }
-
-        // Fetch the next instruction and display the current register state
-        ir = computer.core.fetch(scr);
-
-        viewState();
     }
 
     // Execute a single instruction
-    long execute(int instruction) {
-        int op = Instruction.getOp(instruction);
-        int addr = Instruction.getAddr(instruction);
+    void execute() {
+        int op = Instruction.getOp(irx);
+        int addr = Instruction.getAddr(irx);
 
         // Perform the operation
         jump = false;
@@ -139,9 +149,6 @@ public class CPU {
             fpOverflow = false;
             computer.console.setOverflow(overflow, fpOverflow);
         }
-        
-        // Return the final value from the storage address
-        return computer.core.read(addr);
     }
 
     // Execute a group 0 to group 3 arithmetic/storage instruction
@@ -285,8 +292,8 @@ public class CPU {
     public void dump(Dump dump) {
         dump.acc = acc;
         dump.ar = ar;
-        dump.br = br;
         dump.ir = ir;
+        dump.ix = irx;
         dump.scr = scr;
         dump.scr2 = scr2;
         dump.overflow = overflow;
@@ -322,7 +329,7 @@ public class CPU {
 
     void viewState() {
         if (view != null) {
-            view.updateRegisters(acc, ar, br, scr, ir);
+            view.updateRegisters(acc, ar, irx, scr, ir);
             view.updateFlags(overflow, fpOverflow);
         }
     }

@@ -21,6 +21,7 @@ import javax.swing.Timer;
 import elliott803.hardware.CPU;
 import elliott803.view.component.DeviceLight;
 import elliott803.view.component.DisplayAddress;
+import elliott803.view.component.DisplayInstruction;
 import elliott803.view.component.DisplayLight;
 import elliott803.view.component.DisplayWord;
 
@@ -36,9 +37,9 @@ public class CpuView extends JInternalFrame implements ActionListener {
 
     DisplayWord acc;
     DisplayWord ar;
-    DisplayWord br;
+    DisplayInstruction ir;
     DisplayAddress scr;
-    DisplayWord ir;
+    DisplayWord iw;
     DeviceLight overflow;
     DeviceLight fpOverflow;
     JRadioButton dump;
@@ -51,9 +52,9 @@ public class CpuView extends JInternalFrame implements ActionListener {
 
         acc = new DisplayWord("ACC", DisplayWord.Type.OCTAL);
         ar = new DisplayWord("AR", DisplayWord.Type.OCTAL);
-        br = new DisplayWord("B", DisplayWord.Type.OCTAL);
+        ir = new DisplayInstruction("IR", 6);
         scr = new DisplayAddress();
-        ir = new DisplayWord(DisplayWord.Type.INSTRUCTION);
+        iw = new DisplayWord(DisplayWord.Type.INSTRUCTION);
         overflow = new DeviceLight("Overflow", DisplayLight.CYAN);
         fpOverflow = new DeviceLight("FP Overflow", DisplayLight.CYAN);
 
@@ -66,7 +67,7 @@ public class CpuView extends JInternalFrame implements ActionListener {
         p1.setAlignmentX(LEFT_ALIGNMENT);
         p1.add(acc);
         p1.add(ar);
-        p1.add(br);
+        p1.add(ir);
         p0.add(p1);
         p0.add(Box.createHorizontalGlue());
 
@@ -87,7 +88,7 @@ public class CpuView extends JInternalFrame implements ActionListener {
         p3.setBorder(BorderFactory.createTitledBorder("Instruction"));
         p3.add(scr);
         p3.add(Box.createHorizontalStrut(5));
-        p3.add(ir);
+        p3.add(iw);
         p3.add(Box.createHorizontalGlue());
 
         JPanel p4 = new JPanel();
@@ -146,13 +147,13 @@ public class CpuView extends JInternalFrame implements ActionListener {
     // These updates slow down processing a lot, so ensure they do nothing if the
     // view window is not displayed.
     
-    public void updateRegisters(long a, long x, long b, int pc, long instr) {
+    public void updateRegisters(long a, long x, int i, int pc, long instr) {
         if (!isIcon()) {
             acc.setValue(a);
             ar.setValue(x);
-            br.setValue(b);
+            ir.setValue(i);
             scr.setValue(pc);
-            ir.setValue(instr);
+            iw.setValue(instr);
         }
     }
 
