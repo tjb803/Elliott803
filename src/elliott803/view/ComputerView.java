@@ -1,7 +1,7 @@
 /**
  * Elliott Model 803B Simulator
  *
- * (C) Copyright Tim Baldwin 2009,2010
+ * (C) Copyright Tim Baldwin 2009, 2012
  */
 package elliott803.view;
 
@@ -28,6 +28,7 @@ public class ComputerView extends JDesktopPane implements ActionListener {
     static final String IMAGE_LOAD = "Load...";
     static final String IMAGE_SAVE = "Save...";
 
+    public ControlView control;
     public ConsoleView console;
     public CpuView cpu;
     public StoreView store;
@@ -43,13 +44,15 @@ public class ComputerView extends JDesktopPane implements ActionListener {
         this.computer = computer;
 
         // Create views for the various devices
-        // Note: PtsView not currently displayed as it does not seem very useful!  
-        console = new ConsoleView(computer.console, this);
+        // Note: PtsView not currently displayed as it does not seem very useful!
+        control = new ControlView(computer, this);
+        console = new ConsoleView(computer.console);
         cpu = new CpuView(computer.cpu);
         store = new StoreView(computer.core);
         pts = new PtsView(computer.pts);
         plotter = new PlotterView(computer.plotter);
 
+        add(control);
         add(console);
         add(cpu);
         add(store);
@@ -77,26 +80,29 @@ public class ComputerView extends JDesktopPane implements ActionListener {
     public boolean defaultLayout() {        
         int plotterX = pts.teletype.getWidth() - pts.teletype.getRootPane().getPreferredSize().width;
         int plotterY = pts.teletype.getHeight() - pts.teletype.getRootPane().getPreferredSize().height;
-        
-        int max1X = console.getWidth() + cpu.getWidth() + store.getWidth() + 20;
-        int max2X = pts.teletype.getWidth() + plotterX + pts.punch[0].getWidth() + pts.reader[0].getWidth() + 20;
-        int maxX = Math.max(max1X, max2X);
+
+        int max1X = Math.max(control.getWidth() + 10, cpu.getWidth() + store.getWidth() + 10);
+        int max2X = console.getWidth() + max1X;
+        int max3X = pts.teletype.getWidth() + plotterX + pts.punch[0].getWidth() + pts.reader[0].getWidth() + 10;
+        int maxX = Math.max(max2X, max3X);
 
         int max1Y = console.getHeight() + pts.teletype.getHeight() + plotterY + 10;
-        int max2Y = cpu.getHeight() + 2*pts.punch[0].getHeight() + 15;
-        int max3Y = store.getHeight() + 2*pts.reader[0].getHeight() + 15;
+        int max2Y = control.getHeight() + cpu.getHeight() + 2*pts.punch[0].getHeight() + 10;
+        int max3Y = control.getHeight() + store.getHeight() + 2*pts.reader[0].getHeight() + 10;
         int maxY = Math.max(Math.max(max1Y, max2Y), max3Y);
 
         int consoleX = 0, consoleY = 0;
-        int storeX = maxX - store.getWidth(), storeY = 0;
-        int cpuX = storeX - cpu.getWidth() - 10, cpuY = 0;
+        int controlX = maxX - control.getWidth(), controlY = 0;
+        int storeX = maxX - store.getWidth(), storeY = control.getHeight();
+        int cpuX = storeX - cpu.getWidth(), cpuY = control.getHeight();
 
         int teletypeX = 0, teletypeY = maxY - pts.teletype.getHeight();
         int punch2X = maxX - pts.punch[1].getWidth(), punch2Y = maxY - pts.punch[1].getHeight();
-        int reader2X = punch2X - pts.reader[1].getWidth() - 5, reader2Y = punch2Y;
+        int reader2X = punch2X - pts.reader[1].getWidth(), reader2Y = punch2Y;
         int punch1X = punch2X,  punch1Y = punch2Y - pts.punch[0].getHeight();
         int reader1X = reader2X, reader1Y = reader2Y - pts.reader[0].getHeight();
 
+        control.setLocation(controlX, controlY);
         console.setLocation(consoleX, consoleY);
         cpu.setLocation(cpuX, cpuY);
         store.setLocation(storeX, storeY);

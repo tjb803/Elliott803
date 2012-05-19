@@ -89,6 +89,7 @@ src/elliott803/utils/TapePrint.java -text
 src/elliott803/utils/TapeWrite.java -text
 src/elliott803/view/ComputerView.java -text
 src/elliott803/view/ConsoleView.java -text
+src/elliott803/view/ControlView.java -text
 src/elliott803/view/CpuView.java -text
 src/elliott803/view/MachineImage.java -text
 src/elliott803/view/PlotterView.java -text
@@ -122,6 +123,7 @@ test/src/elliott803/machine/TestInstruction.java -text svneol=unset#text/plain
 test/src/elliott803/machine/TestWord.java -text svneol=unset#text/plain
 test/src/elliott803/view/BaseViewTest.java -text svneol=unset#text/plain
 test/src/elliott803/view/TestConsoleView.java -text svneol=unset#text/plain
+test/src/elliott803/view/TestControlView.java -text
 test/src/elliott803/view/TestCpuView.java -text svneol=unset#text/plain
 test/src/elliott803/view/TestDeviceView.java -text svneol=unset#text/plain
 test/src/elliott803/view/TestPlotterView.java -text

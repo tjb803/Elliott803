@@ -1,7 +1,7 @@
 /**
  * Elliott Model 803B Simulator
  *
- * (C) Copyright Tim Baldwin 2009,2010
+ * (C) Copyright Tim Baldwin 2009, 2012
  */
 package elliott803.view;
 
@@ -53,24 +53,11 @@ public class ConsoleView extends JInternalFrame implements ActionListener, Focus
     JButton operate;
     DisplayWord wordgen;
 
-    public ConsoleView(Console console, ComputerView computerView) {
+    public ConsoleView(Console console) {
         super("Operator Console", false, false, false, true);
         this.console = console;
         setFocusable(true);
         addFocusListener(this);
-        
-        JPanel ip = new JPanel();
-        ip.setLayout(new BoxLayout(ip, BoxLayout.X_AXIS));
-        ip.setBorder(BorderFactory.createTitledBorder("Machine Image"));
-        JButton lb = new JButton(ComputerView.IMAGE_LOAD);
-        lb.addActionListener(computerView);
-        JButton sb = new JButton(ComputerView.IMAGE_SAVE);
-        sb.addActionListener(computerView);
-        ip.add(Box.createHorizontalStrut(5));
-        ip.add(lb);
-        ip.add(Box.createHorizontalStrut(10));
-        ip.add(sb);
-        ip.add(Box.createHorizontalStrut(5));
 
         JPanel wg = new JPanel();
         wg.setLayout(new BoxLayout(wg, BoxLayout.Y_AXIS));
@@ -78,8 +65,6 @@ public class ConsoleView extends JInternalFrame implements ActionListener, Focus
         f1.setLayout(new BoxLayout(f1, BoxLayout.X_AXIS));
         f1.setAlignmentX(LEFT_ALIGNMENT);
         f1.add(new ConsoleButtons("Function 1", FN_NAMES, 6, 39, console));
-        f1.add(Box.createHorizontalGlue());
-        f1.add(ip);
         f1.add(Box.createHorizontalGlue());
         wg.add(f1);
         wg.add(Box.createVerticalStrut(5));

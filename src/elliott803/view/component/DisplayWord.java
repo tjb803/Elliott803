@@ -26,7 +26,7 @@ import elliott803.machine.Word;
 public class DisplayWord extends JPanel {
     private static final long serialVersionUID = 1L;
 
-    static final Font monoFont = Font.decode("monospaced");
+    public static final Font monoFont = Font.decode("monospaced");
 
     public enum Type {
         BIN39, BIN38, OCTAL, INTEGER, FLOAT, INSTRUCTION, TEXT
