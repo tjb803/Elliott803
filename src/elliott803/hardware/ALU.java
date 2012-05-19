@@ -116,6 +116,7 @@ public class ALU {
             n = makeLong1(result);
         } else {    // Divide by zero
             overflow = true;
+            extension = 0;
         }
         return n;
     }

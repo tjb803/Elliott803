@@ -56,7 +56,13 @@ public class Computer extends Thread {
         if (name == null || version == null) {
             name = "Elliott 803B";
             version = "0.0.0";
-        }    
+        }  
+        
+        // Lower the priority of the CPU thread a little.  803 programs often used tight
+        // spin loops to wait for console input or when they end and we don't want these
+        // tight loops to make the GUI seem unresponsive.
+        setName(name);
+        setPriority(Math.max(Thread.MIN_PRIORITY, getPriority()/2));
         
         // An 8K core store
         core = new Store(this);
@@ -81,6 +87,9 @@ public class Computer extends Thread {
         // And the control console - start in step-by-step mode
         console = new Console(this);
         console.setStep(true);
+        
+        // Default to real time mode
+        setRealTime(true);
     }
 
     /*
@@ -92,6 +101,7 @@ public class Computer extends Thread {
             cpu.stop();
         } else {
             busyWait = true;
+            cpu.busy(busyWait);
             while (busyWait) {
                 try {
                     wait();
@@ -104,6 +114,7 @@ public class Computer extends Thread {
     public synchronized void busyClear() {
         if (busyWait) {
             busyWait = false;
+            cpu.busy(busyWait);
             notify();
         }
         console.setBusy(false);
@@ -111,6 +122,15 @@ public class Computer extends Thread {
 
     public void dump(Dump dump) {
         dump.busy = busyWait;
+    }
+    
+    /*
+     * Set the simulation to run at real 803B speed
+     */
+    public void setRealTime(boolean rt) {
+        // TODO: Currently only the CPU can run in real time - devices  
+        // run as fast as possible.
+        cpu.setRealTime(rt);
     }
 
     /*
@@ -149,11 +169,6 @@ public class Computer extends Thread {
         // Flag to show we are running on a thread and to synchronise thread operations
         threadRun = new Boolean(true);
         
-        // Lower the priority of the CPU thread a little.  803 programs often used tight
-        // spin loops to wait for console input or when they end and we don't want these
-        // tight loops to make the GUI seem unresponsive.
-        setPriority(Math.max(Thread.MIN_PRIORITY, getPriority()-1));
-
         while (true) {
             int act = ACT_WAIT;
             synchronized (threadRun) {
@@ -210,5 +225,6 @@ public class Computer extends Thread {
      */
     public Computer(boolean test) {
         // Dummy for unit tests only
+        cpu = new CPU(this);
     }
 }

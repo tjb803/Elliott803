@@ -27,8 +27,8 @@ public class CPU {
     boolean overflow;       // Overflow flag
     boolean fpOverflow;     // Floating point overflow
 
-    int irx;                // Instruction to execute
     long ir;                // Last fetched instruction pair
+    int irx;                // Instruction to execute
     int scr;                // Sequence control register
     int scr2;               // 0 = first instruction, 1 = second instruction
 
@@ -37,6 +37,13 @@ public class CPU {
     boolean fetch;
     boolean running;
     Trace trace;
+    
+    // Variables used to control instruction timing
+    boolean realTime;
+    int cycles, cpuCycles;
+    long cpuStart, busyStart, cpuBusy; 
+
+    static final int CYCLE_TIME = 288;  // Basic Cycle time in us
 
     public CPU(Computer computer) {
         this.computer = computer;
@@ -65,14 +72,26 @@ public class CPU {
     public void stop() {
         computer.console.setStep(true);
         running = false;
+        cpuCycles = 0;
+    }
+    
+    // Set Real time execution speed
+    public void setRealTime(boolean rt) {
+        realTime = rt;
     }
 
     // Normal execution, run instructions until told to stop.
     public void run() {
         computer.console.setStep(false);
+        
+        cpuStart = System.currentTimeMillis();
+        cpuBusy = 0;
+        cpuCycles = 0;
+
         running = true;
         while (running) {
-            obey();
+            obey();            
+            cpuCycles += cycles;
         }
     }
 
@@ -130,8 +149,9 @@ public class CPU {
         int op = Instruction.getOp(irx);
         int addr = Instruction.getAddr(irx);
 
-        // Perform the operation
+        // Perform the operation.  Default cycle time is 576us (2 cycles)
         jump = false;
+        cycles = 2;
         switch (op >> 3) {
             case 0: case 1: case 2: 
             case 3: group0123(op, addr);  break;
@@ -181,6 +201,7 @@ public class CPU {
             case 3: acc = n;  x = result;  break;
         }
         computer.core.write(addr, x);
+        cycles = 2;                         // All instructions take 576us (2 cycles)
     }
 
     // Execute a group 4 jump instruction
@@ -196,28 +217,41 @@ public class CPU {
             scr = addr;                     //   set new sequence control address
             scr2 = (op & 007) >> 2;         //   and set first/second instruction indication
         }
+        cycles = 1;                         // Jumps take just 288us (1 cycle)
     }
 
     // Execute a group5 logical/arithmetic instruction
     void group5(int op, int addr) {
         long n = computer.core.read(addr);
+        int s = addr & 0x7F;                // Shifts work with lower 7 bits only 
         if ((op & 001) != 0) {
             switch (op & 007) {
-                case 1: acc = computer.alu.shr(acc, addr);  ar = 0;  break;
-                case 5: acc = computer.alu.shl(acc, addr);  ar = 0;  break;
-                case 3: acc = computer.alu.mul(acc, n);  ar = 0;  break;
-                case 7: acc = ar;  break;  // Note: does NOT clear aux register
+                case 1: acc = computer.alu.shr(acc, s); ar = 0; cycles = s+2; break;
+                case 5: acc = computer.alu.shl(acc, s); ar = 0; cycles = s+2; break;
+                case 3: acc = computer.alu.mul(acc, n); ar = 0; cycles = 43-y(); break;
+                case 7: acc = ar; cycles = 2; break;  // Note: does NOT clear aux register
             }
         } else {
             switch (op & 007) {
-                case 0: acc = computer.alu.longShr(acc, ar, addr);  break;
-                case 4: acc = computer.alu.longShl(acc, ar, addr);  break;
-                case 2: acc = computer.alu.longMul(acc, n);  break;
-                case 6: acc = computer.alu.longDiv(acc, ar, n);  ar = 0;  break;
+                case 0: acc = computer.alu.longShr(acc, ar, s); cycles = s+2; break;
+                case 4: acc = computer.alu.longShl(acc, ar, s); cycles = s+2; break;
+                case 2: acc = computer.alu.longMul(acc, n); cycles = 42-y();  break;
+                case 6: acc = computer.alu.longDiv(acc, ar, n); cycles = 42;  break;
             }
             ar = computer.alu.getExtension();
         }
         overflow |= computer.alu.isOverflow();
+    }
+    
+    // Returns the number of consecutive 1's or 0's at the left hand end (MSB)
+    // of the accumulator - this is needed for the instruction timings.
+    int y() {
+        int y;
+        long a = acc;
+        long bit = acc & Word.SIGN_BIT;
+        for (y = 0; y < 39 && (a & Word.SIGN_BIT) == bit; y++)
+            a <<= 1;
+        return y;
     }
 
     // Execute a group 6 floating point instruction
@@ -226,21 +260,23 @@ public class CPU {
         if (computer.fpu != null) {
             long n = computer.core.read(addr);
             switch (op & 007) {
-                case 0: acc = computer.fpu.add(acc, n);  ar = 0;  break;
-                case 1: acc = computer.fpu.sub(acc, n);  ar = 0;  break;
-                case 2: acc = computer.fpu.sub(n, acc);  ar = 0;  break;
-                case 3: acc = computer.fpu.mul(acc, n);  ar = 0;  break;
-                case 4: acc = computer.fpu.div(acc, n);  ar = 0;  break;
+                case 0: acc = computer.fpu.add(acc, n); cycles = 3;   break;
+                case 1: acc = computer.fpu.sub(acc, n); cycles = 3;   break;
+                case 2: acc = computer.fpu.sub(n, acc); cycles = 3;   break;
+                case 3: acc = computer.fpu.mul(acc, n); cycles = 17;  break;
+                case 4: acc = computer.fpu.div(acc, n); cycles = 34;  break;
                 case 5:
                     if (addr < 4096) {
-                        acc = computer.fpu.shl(acc, addr % 64);
+                        acc = computer.fpu.shl(acc, addr % 64); cycles = 2;
                     } else {
-                        acc = computer.fpu.convert(acc);  ar = 0;
+                        acc = computer.fpu.convert(acc); cycles = 2;
                     }
                     break;
-                case 6: acc = computer.fpu.sdiv(acc, n);  break;
-                case 7: acc = computer.fpu.sqrt(acc);     break;
+                case 6: acc = computer.fpu.sdiv(acc, n); cycles = 16; break;
+                case 7: acc = computer.fpu.sqrt(acc); cycles = 15;    break;
             }
+            // All group 6 instructions clear the aux register
+            ar = 0;
 
             // Set the overflow flags
             overflow |= computer.fpu.isOverflow();
@@ -285,6 +321,35 @@ public class CPU {
             case 6: case 7:
                 // TODO: block devices not implemented yet!
                 break;
+        }
+    }
+    
+    // Return the approximate CPU speed as a multiple of a real 803 CPU.
+    // This method is expected to be called periodically.
+    public float getSpeed() {
+        float factor = 0;
+        if (cpuCycles > 0) {
+            float cpuTime = System.currentTimeMillis() - cpuStart - cpuBusy;
+            factor = (float)(cpuCycles*CYCLE_TIME)/(cpuTime*1000);
+        
+            // Reset counters ready for next call
+            cpuStart = System.currentTimeMillis();
+            cpuBusy = 0;
+            cpuCycles = 0;
+        }    
+        return factor;
+    }
+    
+    // Called to indicate start/end of 'busy' wait.  The time in busy
+    // waits needs to be excluded when calculating CPU speed.
+    public void busy(boolean start) {
+        if (start) {
+            busyStart = System.currentTimeMillis();
+        } else {
+            if (busyStart != 0) {
+                cpuBusy += System.currentTimeMillis() - busyStart;
+                busyStart = 0;
+            }    
         }
     }
 

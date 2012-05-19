@@ -104,6 +104,7 @@ public class Run {
 
         // Create computer and set initial program tape and output tapes
         Computer computer = new Computer();
+        computer.setRealTime(false);
         computer.pts.setReaderTape(PaperTapeStation.READER1, programTape);
         computer.pts.setPunchTape(PaperTapeStation.PUNCH1, outputTape1);
         computer.pts.setPunchTape(PaperTapeStation.PUNCH2, outputTape2);
