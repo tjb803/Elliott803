@@ -7,10 +7,8 @@ package elliott803.view;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.AffineTransform;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -18,12 +16,11 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JInternalFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import elliott803.machine.Computer;
-import elliott803.view.component.DisplayWord;
+import elliott803.view.component.DisplaySpeed;
 
 /**
  * The simulation control panel.
@@ -34,17 +31,14 @@ import elliott803.view.component.DisplayWord;
 public class ControlView extends JInternalFrame implements ActionListener {
     private static final long serialVersionUID = 1L;
     
-    static AffineTransform x2 = new AffineTransform(new double[] {1.5, 0.0, 0.0, 1.5});
-    static Font speedFont = DisplayWord.monoFont.deriveFont(Font.BOLD, x2);
-    
     Computer computer;
     
     Timer speedTimer;
-    JLabel speed;
+    DisplaySpeed speed;
     JCheckBox realTime;
     
     public ControlView(Computer computer, ComputerView computerView) {
-        super("Control Panel", false, false, false, true);
+        super("Simulation Control", false, false, false, true);
         this.computer = computer;
         
         // Load/Save of machine image
@@ -65,8 +59,7 @@ public class ControlView extends JInternalFrame implements ActionListener {
         JPanel sp = new JPanel();
         sp.setLayout(new BoxLayout(sp, BoxLayout.X_AXIS));
         sp.setBorder(BorderFactory.createTitledBorder("CPU Speed"));
-        speed = new JLabel(String.format("%5.1f", 1.0));
-        speed.setFont(speedFont);
+        speed = new DisplaySpeed(1.0f);
         realTime = new JCheckBox("Real time", true);
         realTime.addActionListener(this);
         sp.add(Box.createHorizontalStrut(5));
@@ -95,9 +88,8 @@ public class ControlView extends JInternalFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == speedTimer) {
             float sp = computer.cpu.getSpeed();
-            if (sp > 0.1) { 
-                speed.setText(String.format("%5.1f", sp));
-            }    
+            if (sp > 0.1)
+                speed.setValue(sp);
         } else if (e.getSource() == realTime) {
             computer.setRealTime(realTime.isSelected());
         }

@@ -39,14 +39,17 @@ public class CPU {
     Trace trace;
     
     // Variables used to control instruction timing
-    boolean realTime;
+    boolean realTime, busyWait, useSleep;
     int cycles, cpuCycles;
     long cpuStart, busyStart, cpuBusy; 
+    long spinPause, sleepPause;
 
-    static final int CYCLE_TIME = 288;  // Basic Cycle time in us
+    static final int CYCLE_TIME = 288;              // Basic cycle time in us
+    static final int CYCLE_NANO = CYCLE_TIME*1000;  // Basic cycle time in ns
 
     public CPU(Computer computer) {
         this.computer = computer;
+        calibrate();
     }
     
     // Set the next instruction to be executed
@@ -88,10 +91,47 @@ public class CPU {
         cpuBusy = 0;
         cpuCycles = 0;
 
+        long now = System.nanoTime();
+        long end = now;
+        long sync = now;
+        
         running = true;
         while (running) {
             obey();            
             cpuCycles += cycles;
+
+            // It is hard to get timings exact in Java.  This logic assumes we 
+            // are running too fast and adds a delay when enough time has 
+            // accumulated to for a delay to get us back on track.  This means 
+            // that each instruction may not have an exact timing but the CPU 
+            // should average out at the correct speed.
+            if (realTime) {
+                // If the last instruction caused a 'busy' wait, timings will
+                // be messed up, so simply reset them.  There's no need to pause
+                // as the busy wait will have more than covered the time.  We
+                // also re-sync the clocks every 1/2 second or so to ensure things
+                // don#t drift too far.
+                end += cycles * CYCLE_NANO;
+                if (busyWait || end-sync > 500000000) {
+                    sync = now = System.nanoTime();
+                    if (now > end) {
+                        end = now;
+                    }
+                }
+                if (useSleep) {
+                    long pause = end-now;
+                    if (pause > sleepPause) {
+                        try { 
+                            Thread.sleep(pause/1000000, (int)pause%1000000);
+                        } catch (InterruptedException e) { }
+                        now = System.nanoTime();
+                    }    
+                } else {
+                    while (end-now > spinPause) { 
+                        now = System.nanoTime();
+                    }    
+                }
+            }
         }
     }
 
@@ -345,12 +385,35 @@ public class CPU {
     public void busy(boolean start) {
         if (start) {
             busyStart = System.currentTimeMillis();
+            busyWait = true;
         } else {
             if (busyStart != 0) {
                 cpuBusy += System.currentTimeMillis() - busyStart;
                 busyStart = 0;
             }    
         }
+    }
+    
+    // Attempt to calibrate the CPU timings used for real-time operation
+    void calibrate() {
+        // We need to know roughly how long it takes to read the nanosecond
+        // timer and what the typical minimum Thread.sleep() period is.
+        long nt = 0, st = 0;
+        for (int i = 0; i < 5; i++) {
+            long t1 = System.nanoTime();
+            long t2 = System.nanoTime();
+            try { Thread.sleep(0, 1); } catch (InterruptedException e) { }
+            long t3 = System.nanoTime();
+            nt += (t2-t1);
+            st += (t3-t2);
+        }    
+        spinPause = nt/5;
+        sleepPause = st/5;
+        
+        // If the minimum thread sleep time is short enough to cover a few 
+        // typical instructions (say 20 576us instructions) we can use sleeps
+        // to control timing, otherwise we need to use spin loops.
+        useSleep = (sleepPause < 20*2*CYCLE_NANO);
     }
 
     // Dump

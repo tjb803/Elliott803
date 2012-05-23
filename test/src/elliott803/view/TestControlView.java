@@ -24,10 +24,8 @@ public class TestControlView extends BaseViewTest {
     public void testRandom() throws Exception {
         Random rand = new Random();
         while (true) {
-            float sp = rand.nextFloat()*99999;
-            controlView.speed.setText(String.format("%8.2f", sp));
+            controlView.speed.setValue(rand.nextFloat()*9999);
             Thread.sleep(500);
         }
     }  
-
 }

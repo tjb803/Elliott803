@@ -81,10 +81,13 @@ public class ComputerView extends JDesktopPane implements ActionListener {
         int plotterX = pts.teletype.getWidth() - pts.teletype.getRootPane().getPreferredSize().width;
         int plotterY = pts.teletype.getHeight() - pts.teletype.getRootPane().getPreferredSize().height;
 
-        int max1X = Math.max(control.getWidth() + 10, cpu.getWidth() + store.getWidth() + 10);
-        int max2X = console.getWidth() + max1X;
-        int max3X = pts.teletype.getWidth() + plotterX + pts.punch[0].getWidth() + pts.reader[0].getWidth() + 10;
-        int maxX = Math.max(max2X, max3X);
+        int max1X = control.getWidth();
+        int max2X = cpu.getWidth() + store.getWidth();
+        int maxCX = Math.max(max1X, max2X);
+
+        int max3X = console.getWidth() + maxCX + 10;;
+        int max4X = pts.teletype.getWidth() + plotterX + pts.punch[0].getWidth() + pts.reader[0].getWidth() + 10;
+        int maxX = Math.max(max3X, max4X);
 
         int max1Y = console.getHeight() + pts.teletype.getHeight() + plotterY + 10;
         int max2Y = control.getHeight() + cpu.getHeight() + 2*pts.punch[0].getHeight() + 10;
@@ -92,7 +95,7 @@ public class ComputerView extends JDesktopPane implements ActionListener {
         int maxY = Math.max(Math.max(max1Y, max2Y), max3Y);
 
         int consoleX = 0, consoleY = 0;
-        int controlX = maxX - control.getWidth(), controlY = 0;
+        int controlX = maxX - maxCX, controlY = 0;
         int storeX = maxX - store.getWidth(), storeY = control.getHeight();
         int cpuX = storeX - cpu.getWidth(), cpuY = control.getHeight();
 
@@ -102,6 +105,7 @@ public class ComputerView extends JDesktopPane implements ActionListener {
         int punch1X = punch2X,  punch1Y = punch2Y - pts.punch[0].getHeight();
         int reader1X = reader2X, reader1Y = reader2Y - pts.reader[0].getHeight();
 
+        control.setSize(maxCX, control.getHeight());
         control.setLocation(controlX, controlY);
         console.setLocation(consoleX, consoleY);
         cpu.setLocation(cpuX, cpuY);

@@ -61,12 +61,7 @@ public class ConsoleView extends JInternalFrame implements ActionListener, Focus
 
         JPanel wg = new JPanel();
         wg.setLayout(new BoxLayout(wg, BoxLayout.Y_AXIS));
-        JPanel f1 = new JPanel();
-        f1.setLayout(new BoxLayout(f1, BoxLayout.X_AXIS));
-        f1.setAlignmentX(LEFT_ALIGNMENT);
-        f1.add(new ConsoleButtons("Function 1", FN_NAMES, 6, 39, console));
-        f1.add(Box.createHorizontalGlue());
-        wg.add(f1);
+        wg.add(new ConsoleButtons("Function 1", FN_NAMES, 6, 39, console));
         wg.add(Box.createVerticalStrut(5));
         wg.add(new ConsoleButtons("Address 1", ADDR_NAMES, 14, 33, console));
         wg.add(Box.createVerticalStrut(5));

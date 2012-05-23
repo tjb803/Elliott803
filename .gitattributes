@@ -112,6 +112,7 @@ src/elliott803/view/component/DisplayCore.java -text
 src/elliott803/view/component/DisplayInstruction.java -text
 src/elliott803/view/component/DisplayLight.java -text
 src/elliott803/view/component/DisplayPlot.java -text
+src/elliott803/view/component/DisplaySpeed.java -text
 src/elliott803/view/component/DisplayWord.java -text
 tapes/algol/a104-1.tape -text
 tapes/algol/a104-2.tape -text
