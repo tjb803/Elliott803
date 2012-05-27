@@ -61,7 +61,7 @@ public class PrintCore {
             output.println("Core store:");
             formatter.printStore(dump.core, 0, 8192);
         } else {
-            System.err.println("No core dump found");
+            System.out.println("No core dump found");
         }
     }
 

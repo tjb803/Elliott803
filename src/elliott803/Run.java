@@ -147,11 +147,11 @@ public class Run {
 
         for (TapeDevice device : computer.pts.readers) {
             if (device.deviceBusy())
-                System.err.println("*** Waiting for input: READER " + device.id);
+                System.out.println("*** Waiting for input: READER " + device.id);
         }
         for (TapeDevice device : computer.pts.punches) {
             if (device.deviceBusy())
-                System.err.println("*** Waiting for output: PUNCH " + device.id);
+                System.out.println("*** Waiting for output: PUNCH " + device.id);
         }
 
         // Generate dump on exit if required

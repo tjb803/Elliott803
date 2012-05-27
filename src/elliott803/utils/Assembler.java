@@ -338,8 +338,8 @@ public class Assembler {
 
         // Write a warning if there is too much padding
         if (pad > 12) {
-            System.err.println("WARNING: will need " + pad + " blanks words for trigger.");
-            System.err.println("Suggest loading code at address " + (8192-objectCode.size()));
+            System.out.println("WARNING: will need " + pad + " blanks words for trigger.");
+            System.out.println("Suggest loading code at address " + (8192-objectCode.size()));
         }
 
         // Write padding plus 4 extra zeros

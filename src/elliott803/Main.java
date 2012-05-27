@@ -70,7 +70,7 @@ public class Main implements Runnable {
         if (look != null) {
             if (look.equals("LIST")) {
                 for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels())
-                    System.err.println("look: " + info.getName());
+                    System.out.println("look: " + info.getName());
             }
             
             for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {

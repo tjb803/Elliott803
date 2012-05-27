@@ -98,7 +98,7 @@ public class TeletypeView extends TapeDeviceView implements ActionListener {
                     paper.append("\n");
             }    
         } catch (BadLocationException e) {  // Should not happen!
-            System.out.println(e);
+            System.err.println(e);
         }
         
         paper.append(Character.toString(ch));

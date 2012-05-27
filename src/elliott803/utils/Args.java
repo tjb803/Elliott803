@@ -180,14 +180,14 @@ public class Args {
      * Print usage summary
      */
     public void usage() {
-        System.err.println("Usage:\n");
+        System.out.println("Usage:\n");
         if (opts == null) {
-            System.err.println("  " + name + " " + parms + "\n");
+            System.out.println("  " + name + " " + parms + "\n");
         } else {
-            System.err.println("  " + name + " [options] " + parms + "\n");
+            System.out.println("  " + name + " [options] " + parms + "\n");
             String hdr = "options:";
             for (String opt : opts.keySet()) {
-                System.err.print(hdr + " -" + opt);
+                System.out.print(hdr + " -" + opt);
                 hdr = "        ";
                 String value = opts.get(opt);
                 if (value != null) {
@@ -195,10 +195,10 @@ public class Args {
                         value = value.substring(1);
                         hdr = "";
                     }
-                    System.err.print(" " + value);
+                    System.out.print(" " + value);
                 }
                 if (hdr.length() > 0) {
-                    System.err.println();
+                    System.out.println();
                 }    
             }    
         }
@@ -207,9 +207,9 @@ public class Args {
 
     // Error handling
     private void error(String msg, String parm, boolean usage) {
-        System.err.println(msg + ": " + parm);
+        System.out.println(msg + ": " + parm);
         if (usage) {
-            System.err.println();
+            System.out.println();
             usage();
         }
         System.exit(1);
