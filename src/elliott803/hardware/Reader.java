@@ -1,7 +1,7 @@
 /**
  * Elliott Model 803B Simulator
  *
- * (C) Copyright Tim Baldwin 2009
+ * (C) Copyright Tim Baldwin 2009, 2012
  */
 package elliott803.hardware;
 
@@ -22,6 +22,7 @@ public class Reader extends TapeDevice {
 
     public Reader(Computer computer, int id) {
         super(computer, id);
+        setSpeed(500);      // Readers run at 500 cps
     }
 
     // Load a new tape
@@ -42,13 +43,15 @@ public class Reader extends TapeDevice {
     public int read() {
         // Attempt to read the next character, if there is no tape loaded
         // enter a busy wait.  When the busy wait is cleared, attempt to
-        // read a character again.
+        // read a character again.  Finally add the device pause if 
+        // doing real-time simulation.
         int ch = readCh();
         if (inputTape == null) {
             deviceWait();
             ch = readCh();
         }
         if (inputTape != null) {
+            devicePause();
             viewChar(ch);
         }
 

@@ -1,7 +1,7 @@
 /**
  * Elliott Model 803B Simulator
  *
- * (C) Copyright Tim Baldwin 2009
+ * (C) Copyright Tim Baldwin 2009, 2012
  */
 package elliott803.hardware;
 
@@ -22,6 +22,7 @@ public class Punch extends TapeDevice {
 
     public Punch(Computer computer, int id) {
         super(computer, id);
+        setSpeed(100);      // Punches run at 100 cps
     }
 
     // Set a new output tape
@@ -42,7 +43,8 @@ public class Punch extends TapeDevice {
     public void write(int ch) {
         // Attempt to write the next character, if there is no tape loaded
         // enter a busy wait.  When the busy wait is cleared, attempt to
-        // write the character again.
+        // write the character again.  Finally add the device pause if 
+        // doing real-time simulation.
         ch &= Telecode.CHAR_MASK;
         writeCh(ch);
         if (outputTape == null) {
@@ -50,6 +52,7 @@ public class Punch extends TapeDevice {
             writeCh(ch);
         }
         if (outputTape != null) {
+            devicePause();
             viewChar(ch);
         }
     }
@@ -59,6 +62,7 @@ public class Punch extends TapeDevice {
         if (outputTape != null) {
             try {
                 outputTape.write(ch);
+                devicePause();
             } catch (IOException e) {
                 System.err.println(e);
                 setTape(null);

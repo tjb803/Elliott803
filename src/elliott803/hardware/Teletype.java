@@ -1,7 +1,7 @@
 /**
  * Elliott Model 803B Simulator
  *
- * (C) Copyright Tim Baldwin 2009
+ * (C) Copyright Tim Baldwin 2009, 2012
  */
 package elliott803.hardware;
 
@@ -20,12 +20,14 @@ public class Teletype extends Punch {
 
     public Teletype(Computer computer, int id) {
         super(computer, id);
+        setSpeed(10);       // Teletype runs at 10 cps
     }
 
     // Override the write() method to avoid busy wait if no output stream
     public void write(int ch) {
         ch &= Telecode.CHAR_MASK;
         writeCh(ch);
+        devicePause();
         viewChar(ch);
     }
 

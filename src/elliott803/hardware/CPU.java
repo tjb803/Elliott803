@@ -39,9 +39,9 @@ public class CPU {
     Trace trace;
     
     // Variables used to control instruction timing
-    boolean realTime, busyWait, useSleep;
+    boolean realTime, useSleep, busyWait;
     int cycles, cpuCycles;
-    long cpuStart, busyStart, cpuBusy; 
+    long cpuStart, cpuBusy, busyStart; 
     long spinPause, sleepPause;
 
     static final int CYCLE_TIME = 288;              // Basic cycle time in us
@@ -93,10 +93,10 @@ public class CPU {
 
         long now = System.nanoTime();
         long end = now;
-        long sync = now;
         
         running = true;
         while (running) {
+            busyWait = false;
             obey();            
             cpuCycles += cycles;
 
@@ -108,29 +108,25 @@ public class CPU {
             if (realTime) {
                 // If the last instruction caused a 'busy' wait, timings will
                 // be messed up, so simply reset them.  There's no need to pause
-                // as the busy wait will have more than covered the time.  We
-                // also re-sync the clocks every 1/2 second or so to ensure things
-                // don#t drift too far.
+                // as the busy wait will have more than covered the time. 
                 end += cycles * CYCLE_NANO;
-                if (busyWait || end-sync > 500000000) {
-                    sync = now = System.nanoTime();
-                    if (now > end) {
-                        end = now;
-                    }
-                }
-                if (useSleep) {
-                    long pause = end-now;
-                    if (pause > sleepPause) {
-                        try { 
-                            Thread.sleep(pause/1000000, (int)pause%1000000);
-                        } catch (InterruptedException e) { }
-                        now = System.nanoTime();
-                    }    
+                if (busyWait) {
+                    now = end = System.nanoTime();
                 } else {
-                    while (end-now > spinPause) { 
-                        now = System.nanoTime();
-                    }    
-                }
+                    if (useSleep) {
+                        long pause = end-now;
+                        if (pause > sleepPause) {
+                            try { 
+                                Thread.sleep(pause/1000000, (int)pause%1000000);
+                            } catch (InterruptedException e) { }
+                            now = System.nanoTime();
+                        }    
+                    } else {
+                        while (end-now > spinPause) { 
+                            now = System.nanoTime();
+                        }    
+                    }
+                }    
             }
         }
     }
@@ -389,9 +385,14 @@ public class CPU {
         } else {
             if (busyStart != 0) {
                 cpuBusy += System.currentTimeMillis() - busyStart;
-                busyStart = 0;
             }    
         }
+    }
+    
+    
+    // Add additional 'cycles' for real-time device control
+    public void addDelay(int us) {
+        cycles += (us*1000)/CYCLE_NANO;
     }
     
     // Attempt to calibrate the CPU timings used for real-time operation

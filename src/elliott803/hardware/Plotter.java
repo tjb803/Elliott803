@@ -1,7 +1,7 @@
 /**
  * Elliott Model 803B Simulator
  *
- * (C) Copyright Tim Baldwin 2010
+ * (C) Copyright Tim Baldwin 2010, 2012
  */
 package elliott803.hardware;
 
@@ -26,6 +26,7 @@ public class Plotter extends ControlDevice {
 
     public Plotter(Computer computer) {
         this.computer = computer;
+        setSpeed(300);      // Plotter can do 300 steps/second
     }
 
     public int addressBase() {
@@ -55,9 +56,11 @@ public class Plotter extends ControlDevice {
             case 7178: x = -1; y = -1;  break;
         }
         
+        // Move the pen and add the device pause if doing real-time simulation
         if (x != 0 || y != 0) {
             penX += x;  penY += y;
             penX = Math.max(X_MIN, Math.min(X_MAX, penX));
+            devicePause();
             viewPlot(penX, penY, addr);
         }    
     }

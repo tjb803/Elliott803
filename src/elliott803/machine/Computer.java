@@ -1,7 +1,7 @@
 /**
  * Elliott Model 803B Simulator
  *
- * (C) Copyright Tim Baldwin 2009
+ * (C) Copyright Tim Baldwin 2009, 2012
  */
 package elliott803.machine;
 
@@ -128,9 +128,9 @@ public class Computer extends Thread {
      * Set the simulation to run at real 803B speed
      */
     public void setRealTime(boolean rt) {
-        // TODO: Currently only the CPU can run in real time - devices  
-        // run as fast as possible.
         cpu.setRealTime(rt);
+        pts.setRealTime(rt);
+        plotter.setRealTime(rt);
     }
 
     /*

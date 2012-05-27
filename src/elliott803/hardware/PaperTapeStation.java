@@ -1,7 +1,7 @@
 /**
  * Elliott Model 803B Simulator
  *
- * (C) Copyright Tim Baldwin 2009
+ * (C) Copyright Tim Baldwin 2009, 2012
  */
 package elliott803.hardware;
 
@@ -76,6 +76,16 @@ public class PaperTapeStation {
             Punch p = punches[0];  punches[0] = punches[1];  punches[1] = p;
             swapPunch = exchange;
         }
+    }
+    
+    /*
+     * Set real-time flag on all devices
+     */
+    public void setRealTime(boolean rt) {
+        for (Punch punch : punches)
+            punch.setRealTime(rt);
+        for (Reader reader : readers) 
+            reader.setRealTime(rt);
     }
 
     /*
