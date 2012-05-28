@@ -62,7 +62,6 @@ public class Punch extends TapeDevice {
         if (outputTape != null) {
             try {
                 outputTape.write(ch);
-                devicePause();
             } catch (IOException e) {
                 System.err.println(e);
                 setTape(null);

@@ -39,7 +39,7 @@ public class CPU {
     Trace trace;
     
     // Variables used to control instruction timing
-    boolean realTime, useSleep, busyWait;
+    boolean realTime, useSpin, busyWait;
     int cycles, cpuCycles;
     long cpuStart, cpuBusy, busyStart; 
     long spinPause, sleepPause;
@@ -109,19 +109,17 @@ public class CPU {
                 // If the last instruction caused a 'busy' wait, timings will
                 // be messed up, so simply reset them.  There's no need to pause
                 // as the busy wait will have more than covered the time. 
-                end += cycles * CYCLE_NANO;
                 if (busyWait) {
                     now = end = System.nanoTime();
                 } else {
-                    if (useSleep) {
-                        long pause = end-now;
-                        if (pause > sleepPause) {
-                            try { 
-                                Thread.sleep(pause/1000000, (int)pause%1000000);
-                            } catch (InterruptedException e) { }
-                            now = System.nanoTime();
-                        }    
-                    } else {
+                    end += cycles * CYCLE_NANO;
+                    long pause = end-now;
+                    if (pause > sleepPause) {
+                        try { 
+                            Thread.sleep(pause/1000000, (int)pause%1000000);
+                        } catch (InterruptedException e) { }
+                        now = System.nanoTime();
+                    } else if (useSpin) {
                         while (end-now > spinPause) { 
                             now = System.nanoTime();
                         }    
@@ -388,8 +386,7 @@ public class CPU {
             }    
         }
     }
-    
-    
+
     // Add additional 'cycles' for real-time device control
     public void addDelay(int us) {
         cycles += (us*1000)/CYCLE_NANO;
@@ -414,7 +411,7 @@ public class CPU {
         // If the minimum thread sleep time is short enough to cover a few 
         // typical instructions (say 20 576us instructions) we can use sleeps
         // to control timing, otherwise we need to use spin loops.
-        useSleep = (sleepPause < 20*2*CYCLE_NANO);
+        useSpin = (sleepPause > 20*2*CYCLE_NANO);
     }
 
     // Dump
