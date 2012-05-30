@@ -58,6 +58,7 @@ public class Plotter extends ControlDevice {
         
         // Move the pen and add the device pause if doing real-time simulation
         if (x != 0 || y != 0) {
+            computer.console.setBusy(true);
             penX += x;  penY += y;
             penX = Math.max(X_MIN, Math.min(X_MAX, penX));
             devicePause();

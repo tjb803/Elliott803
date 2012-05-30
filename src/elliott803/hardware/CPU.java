@@ -67,8 +67,9 @@ public class CPU {
         ir = irx = 0;
         fetch = true;
         overflow = fpOverflow = false;
-        computer.console.setOverflow(overflow, fpOverflow);
         computer.busyClear();
+        computer.console.setOverflow(false, false);
+        computer.console.setBusy(false);
     }
 
     // Stop execution
@@ -112,7 +113,7 @@ public class CPU {
                 if (busyWait) {
                     now = end = System.nanoTime();
                 } else {
-                    end += cycles * CYCLE_NANO;
+                    end += cycles*CYCLE_NANO;
                     long pause = end-now;
                     if (pause > sleepPause) {
                         try { 
@@ -126,6 +127,9 @@ public class CPU {
                     }
                 }    
             }
+            
+            // Ensure the busy light is off when an instruction finally completes
+            computer.console.setBusy(false);
         }
     }
 

@@ -117,7 +117,6 @@ public class Computer extends Thread {
             cpu.busy(busyWait);
             notify();
         }
-        console.setBusy(false);
     }
 
     public void dump(Dump dump) {

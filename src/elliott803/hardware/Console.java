@@ -97,19 +97,25 @@ public class Console extends Device {
 
     // Set status lights
     public void setBusy(boolean isBusy) {
-        busy = isBusy;
-        viewLights();
+        if (busy != isBusy) {
+            busy = isBusy;
+            viewLights();
+        }    
     }
 
     public void setOverflow(boolean isOverflow, boolean isFpOver) {
-        overflow = isOverflow;
-        fpOverflow = isFpOver;
-        viewLights();
+        if (overflow != isOverflow || fpOverflow != isFpOver) {
+            overflow = isOverflow;
+            fpOverflow = isFpOver;
+            viewLights();
+        }    
     }
 
     public void setStep(boolean isStep) {
-        step = isStep;
-        viewLights();
+        if (step != isStep) {
+            step = isStep;
+            viewLights();
+        }    
     }
     
     // Enter a wait state until the Operate bar is pressed
