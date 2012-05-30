@@ -128,7 +128,9 @@ public class CPU {
                 }    
             }
             
-            // Ensure the busy light is off when an instruction finally completes
+            // Ensure the busy light is off when an instruction finally completes.  We have
+            // to do this here because we want the light to remain on while an I/O operation
+            // occurs, including any delay added to simulate real-time speed. 
             computer.console.setBusy(false);
         }
     }
