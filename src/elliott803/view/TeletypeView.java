@@ -39,6 +39,7 @@ public class TeletypeView extends TapeDeviceView implements ActionListener {
     private static final long serialVersionUID = 1L;
 
     static final int TT_COLUMNS = 80;
+    static final String TT_CURSOR = "\u220e";
     static final String TT_CLEAR = "Clear";
     static final String TT_SCROLL = "Scroll";
     static final String TT_SAVE = "Save...";
@@ -51,7 +52,7 @@ public class TeletypeView extends TapeDeviceView implements ActionListener {
         super("Teletype");
         this.teletype = teletype;
 
-        paper = new JTextArea(15, TT_COLUMNS);
+        paper = new JTextArea(TT_CURSOR, 15, TT_COLUMNS);
         paper.setFont(Font.decode("Monospaced-bold"));
         paper.setLineWrap(false);
         paper.setEditable(false);
@@ -91,22 +92,23 @@ public class TeletypeView extends TapeDeviceView implements ActionListener {
 
     public void setChar(char ch) {
         // Force a new line if we hit the 80-column limit
+        int pos = paper.getDocument().getLength()-1;
         try {
             int line = paper.getLineCount() - 1;
             if (line >= 0 && ch != '\n') {
                 if (paper.getLineEndOffset(line) - paper.getLineStartOffset(line) >= TT_COLUMNS) 
-                    paper.append("\n");
+                    paper.insert("\n", pos++);
             }    
         } catch (BadLocationException e) {  // Should not happen!
             System.err.println(e);
         }
         
-        paper.append(Character.toString(ch));
-        paper.setCaretPosition(paper.getDocument().getLength());
+        paper.insert(Character.toString(ch), pos);
+        paper.setCaretPosition(pos);
     }
 
     public void clearText() {
-        paper.setText(null);
+        paper.setText(TT_CURSOR);
         paper.setCaretPosition(0);
     }
 
