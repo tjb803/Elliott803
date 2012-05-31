@@ -35,15 +35,18 @@ BEGIN
         INTEGER i;
         INTEGER ARRAY deg[1:size];
         REAL ARRAY rad[1:size];
+        REAL sv, cv;
 
         createAngles(size, deg, rad);
 
         punch(3);    COMMENT Send all output to the teletype;
-        PRINT sameline, #      x deg?, #       x rad?, #      sin(x)?, #      cos(x)#L??;
-        PRINT sameline, #    -------?, #    --------?, #   ---------?, #   ---------#L??;
+        PRINT #      x deg?,#       x rad?,#      sin(x)?,#      cos(x)#L??;
+        PRINT #    -------?,#    --------?,#   ---------?,#   ---------#L??;
 
         FOR i := 1 STEP 1 UNTIL size DO BEGIN
-            PRINT prefix(#  ?), deg[i], aligned(2,6), rad[i], sin(rad[i]), cos(rad[i]), ##L??;
+            sv := sin(rad[i]);  cv := cos(rad[i]);
+            PRINT prefix(#  ?), deg[i], aligned(2,6), rad[i];
+            PRINT prefix(#  ?), aligned(2,6), sv, cv, ##L??;
         END print loop;
     END;
 END program;

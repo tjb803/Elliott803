@@ -15,7 +15,8 @@ BEGIN
     INTEGER lastX, lastY;
 
     COMMENT Set plot origin and the X and Y scaling factor;
-    PROCEDURE setOrigin(x, y, sx, sy);  VALUE x, y, sx, sy;  INTEGER x, y, sx, sy;
+    PROCEDURE setOrigin(x, y, sx, sy);  
+              VALUE x, y, sx, sy;  INTEGER x, y, sx, sy;
     BEGIN INTEGER i;
         scaleX := sx;  scaleY := sy;
         orgX := x;  orgY := y;
@@ -30,7 +31,8 @@ BEGIN
         as it just uses the legs of a right angle triangle.  It only really
         works if lines are truly horizontal or vertical or are very short.
         This just happens to be the case for all output from this program.;
-    PROCEDURE plotTo(x, y);  VALUE x, y;  INTEGER x, y;
+    PROCEDURE plotTo(x, y);  
+              VALUE x, y;  INTEGER x, y;
     BEGIN INTEGER i, w, h;
           INTEGER sw, sh, pw, ph;
 
@@ -62,13 +64,15 @@ BEGIN
     END plotTo;
 
     COMMENT Move pen to new location;
-    PROCEDURE moveTo(x, y);  VALUE x, y;  INTEGER x, y;
+    PROCEDURE moveTo(x, y);  
+              VALUE x, y;  INTEGER x, y;
     BEGIN ELLIOTT(7,2,7184, 0, 0,0,0);
           plotTo(x, y);
     END moveTo;
 
     COMMENT Draw line to new location;
-    PROCEDURE drawTo(x, y);  VALUE x, y;  INTEGER x, y;
+    PROCEDURE drawTo(x, y);  
+              VALUE x, y;  INTEGER x, y;
     BEGIN ELLIOTT(7,2,7200, 0, 0,0,0);
           plotTo(x, y);
     END drawTo;
