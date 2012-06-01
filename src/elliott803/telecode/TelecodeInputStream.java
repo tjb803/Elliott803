@@ -1,7 +1,7 @@
 /**
  * Elliott Model 803B Simulator
  *
- * (C) Copyright Tim Baldwin 2009
+ * (C) Copyright Tim Baldwin 2009, 2012
  */
 package elliott803.telecode;
 
@@ -18,7 +18,9 @@ import java.io.Reader;
  * converter class.
  *
  * All line ends in the source data are returned as the [CR] [LF] pair of
- * telecode characters.
+ * telecode characters.  A Java line end is defined as either a single '\n', 
+ * a single '\r' or the pair '\n\r' (which are the same rules used by the 
+ * Java BufferedReader class).
  *
  * @author Baldwin
  */
@@ -28,13 +30,11 @@ public class TelecodeInputStream extends InputStream {
     CharToTelecode converter;
     byte[] bb = new byte[2];
     char[] cc = new char[1];
-    String line;
-    int buffLen;
-    int lineLen, linePos;
+    int bbLen, bbPos;
+    boolean skipLF;
 
-    // The reader needs to be wrapped in a BufferedReader (if it is not already
-    // buffered) so complete lines can be read and the BufferedReader code can
-    // handle correctly detecting line ends.
+    // The reader is wrapped in a BufferedReader (if it is not already
+    // buffered) to improve performance.
 
     public TelecodeInputStream(Reader in) {
         this(new BufferedReader(in));
@@ -51,33 +51,29 @@ public class TelecodeInputStream extends InputStream {
 
     public int read() throws IOException {
         int tc = -1;
-        if (buffLen > 0) {
-            tc = bb[1];
-            buffLen -= 1;
-        } else {
-            if (line == null) {
-                line = inputReader.readLine();
-                if (line != null) {
-                    lineLen = line.length();
-                    linePos = 0;
-                }
-            }
-            if (line != null) {
-                while (buffLen == 0) {
-                    if (linePos == lineLen) {
+        while (bbLen == 0) {
+            if (inputReader.read(cc) > 0) {
+                if (cc[0] == '\n' || cc[0] == '\r') {
+                    if (cc[0] == '\n' || !skipLF) {
                         bb[0] = Telecode.TELE_CR;
                         bb[1] = Telecode.TELE_LF;
-                        buffLen = 2;
-                        line = null;
-                    } else {
-                        cc[0] = line.charAt(linePos++);
-                        buffLen = converter.convert(cc, 1, bb);
-                    }
+                        bbLen = 2;
+                        bbPos = 0;
+                    }    
+                    skipLF = (cc[0] == '\n');
+                } else {
+                    bbLen = converter.convert(cc, 1, bb);
+                    bbPos = 0;
+                    skipLF = false;
                 }
-                tc = bb[0];
-                buffLen -= 1;
+            } else {
+                break;
             }
-        }
+        } 
+        if (bbLen > 0) {
+            tc = bb[bbPos++];
+            bbLen -= 1;
+        } 
         return tc;
     }
 

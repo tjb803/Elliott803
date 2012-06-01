@@ -122,6 +122,9 @@ test/src/elliott803/hardware/TestStore.java -text svneol=unset#text/plain
 test/src/elliott803/machine/TestFloatWord.java -text svneol=unset#text/plain
 test/src/elliott803/machine/TestInstruction.java -text svneol=unset#text/plain
 test/src/elliott803/machine/TestWord.java -text svneol=unset#text/plain
+test/src/elliott803/telecode/BaseTelecodeTest.java -text
+test/src/elliott803/telecode/TestTelecodeInputStream.java -text
+test/src/elliott803/telecode/TestTelecodeOutputStream.java -text
 test/src/elliott803/view/BaseViewTest.java -text svneol=unset#text/plain
 test/src/elliott803/view/TestConsoleView.java -text svneol=unset#text/plain
 test/src/elliott803/view/TestControlView.java -text
