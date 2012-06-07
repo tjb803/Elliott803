@@ -98,7 +98,7 @@ public class Computer extends Thread {
     public synchronized void busyWait() {
         console.setBusy(true);
         if (busyExit) {
-            cpu.stop();
+            cpu.exit();
         } else {
             busyWait = true;
             cpu.busy(busyWait);

@@ -72,13 +72,19 @@ public class CPU {
         computer.console.setBusy(false);
     }
 
+    // Exit execution 
+    public void exit() {
+        stop();
+        jump = true;
+    }
+    
     // Stop execution
     public void stop() {
         computer.console.setStep(true);
         running = false;
         cpuCycles = 0;
     }
-    
+ 
     // Set Real time execution speed
     public void setRealTime(boolean rt) {
         realTime = rt;
