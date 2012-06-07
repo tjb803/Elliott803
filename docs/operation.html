@@ -229,13 +229,6 @@ The CPU will be in a busy wait until either a tape file is loaded into the
 device so operation can continue or the <i>Reset</i> key on the operators
 console is pressed.</li>
 </ul>
-<h4 id="oppts">The Paper Tape Station</h4>
-<img src="image/oppts.jpg" alt="Tape Reader" align="left"/>
-<p>The paper tape station provides additional control over the tape
-readers and punches allowing the readers amd/or punches to be exchanged.
-When the appropriate option is selected the CPU will see Reader 1
-(or Punch 1) as Reader 2 (or Punch 2) and <i>vice-versa</i>.
-<br clear="left">
 <h4 id="tmode">Tape Formats</h4>
 <p>When reading or writing files using the tape readers and tape punches you need
 to consider the format of the tape file that is to be read or written.
@@ -362,8 +355,14 @@ This will be ignored for a self-triggering program tape.</dd>
 </dl></blockquote>
 <h4>Options</h4>
 <blockquote><dl>
-<dt><code>-reader1 <i>inputtape</i></code></dt><dd>The tape to load in reader 1 (after program tape is read)</dd>
-<dt><code>-reader2 <i>inputtape</i></code></dt><dd>The tape to load in reader 2</dd>
+<dt><code>-reader1</code> or <code>-sysreader1 <i>inputtape</i></code></dt>
+<dd>The tape to load in reader 1 (after program tape is read).
+The <code>reader</code> option expects a telecode encoded tape; 
+the <code>sysreader</code> option takes a standard system text file.</dd>
+<dt><code>-reader2</code> or <code>-sysreader2 <i>inputtape</i></code></dt>
+<dd>The tape to load in reader 2.
+The <code>reader</code> option expects a telecode encoded tape; 
+the <code>sysreader</code> option takes a standard system text file.</dd>
 <dt><code>-punch1 <i>outputtape</i></code></dt><dd>The output tape file for punch 1</dd>
 <dt><code>-punch2 <i>outputtape</i></code></dt><dd>The output tape file for punch 2</dd>
 <dt><code>-teletype <i>outputfile</i></code></dt><dd>The output file for teletype, defaults to standard out</dd>
@@ -385,10 +384,10 @@ command line session.</p>
 <code>java elliott803.Run -ascii tapes/samples/charset.tape</code>
 </pre></blockquote>
 <br/><table border="1" frame="above" rules="none" width="100%">
-<tr><td align="left">Tim Baldwin<br>August 2010
+<tr><td align="left">Tim Baldwin<br>June 2012
 <br><a href="mailto:tjb803@tinymail.co.uk">tjb803@tinymail.co.uk</a></td>
 <td align="right">Return to <a href="index.html">index</a>
-<br><br>&copy; Tim Baldwin 2009,2010</td></tr>
+<br><br>&copy; Tim Baldwin 2009,2012</td></tr>
 </table>
 </body>
 </html>
