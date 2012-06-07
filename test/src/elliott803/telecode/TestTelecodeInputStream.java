@@ -33,8 +33,8 @@ public class TestTelecodeInputStream extends BaseTelecodeTest {
         { "a1",          "LS 01 FS 01" }, 
         { "a\nb",        "LS 01 CR LF 02" }, 
         { "a\r2",        "LS 01 CR LF FS 02" }, 
-        { "a\n\rb",      "LS 01 CR LF 02" }, 
-        { "a\n\r\rb",    "LS 01 CR LF CR LF 02" }, 
+        { "a\r\nb",      "LS 01 CR LF 02" }, 
+        { "a\r\n\rb",    "LS 01 CR LF CR LF 02" }, 
         { "a\n",         "LS 01 CR LF" }, 
         { "a_~\u220eb",  "LS 01 00 02" },   // Note: _=blank, ~ and u220e should be ignored 
     };

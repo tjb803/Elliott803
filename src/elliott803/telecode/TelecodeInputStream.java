@@ -18,8 +18,8 @@ import java.io.Reader;
  * converter class.
  *
  * All line ends in the source data are returned as the [CR] [LF] pair of
- * telecode characters.  A Java line end is defined as either a single '\n', 
- * a single '\r' or the pair '\n\r' (which are the same rules used by the 
+ * telecode characters.  A Java line end is defined as either a single '\r', 
+ * a single '\n' or the pair '\r\n' (which are the same rules used by the 
  * Java BufferedReader class).
  *
  * @author Baldwin
@@ -53,14 +53,14 @@ public class TelecodeInputStream extends InputStream {
         int tc = -1;
         while (bbLen == 0) {
             if (inputReader.read(cc) > 0) {
-                if (cc[0] == '\n' || cc[0] == '\r') {
-                    if (cc[0] == '\n' || !skipLF) {
+                if (cc[0] == '\r' || cc[0] == '\n') {
+                    if (cc[0] == '\r' || !skipLF) {
                         bb[0] = Telecode.TELE_CR;
                         bb[1] = Telecode.TELE_LF;
                         bbLen = 2;
                         bbPos = 0;
                     }    
-                    skipLF = (cc[0] == '\n');
+                    skipLF = (cc[0] == '\r');
                 } else {
                     bbLen = converter.convert(cc, 1, bb);
                     bbPos = 0;
