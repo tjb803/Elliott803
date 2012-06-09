@@ -43,4 +43,11 @@ v1.0.0
     - Support full save and restore of machine images including the core 
       store contents and all window positions and layout
     - Improve appearance when using Nimbus look-and-feel
-       
+    
+v1.1.0
+------
+  Improvements:
+    - Add correct instruction and device I/O timings
+    - Add 'control' window to set real-time mode and display CPU speed    
+    - Remove Paper Tape Station view (it wasn't very useful)
+    - Add a 'cursor' to the teletype to show the print head position 

@@ -14,7 +14,7 @@ BEGIN
     INTEGER size, repeat;
 
     COMMENT The recursive QUICKSORT procedure;
-    PROCEDURE quickSort(data, first, last);
+    PROCEDURE quickSort(data) from: (first) to: (last);
     VALUE first, last;  INTEGER first, last;  INTEGER ARRAY data;
     BEGIN
         INTEGER pivot, i, j, k;
@@ -68,7 +68,7 @@ BEGIN
 
         printData(##L?Original Data:?, data, size);
 
-        quickSort(data) from:(1) to:(size);
+        quickSort(data, 1, size);
 
         printData(##L?Sorted Data:  ?, data, size);
         PRINT ##L2??;

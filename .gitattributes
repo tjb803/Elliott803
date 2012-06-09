@@ -10,6 +10,7 @@ build/readme.txt -text svneol=unset#text/plain
 docs/algol.html -text svneol=unset#text/plain
 docs/extras.html -text
 docs/history.html -text
+docs/image/cpuspd.jpg -text
 docs/image/creed.jpg -text
 docs/image/e803.gif -text
 docs/image/elliott803-1.jpg -text
@@ -19,8 +20,8 @@ docs/image/opcore.jpg -text
 docs/image/opcpu.jpg -text
 docs/image/oppch.jpg -text
 docs/image/opplot.jpg -text
-docs/image/oppts.jpg -text
 docs/image/oprdr.jpg -text
+docs/image/opsim.jpg -text
 docs/image/optele.jpg -text
 docs/image/qs1.jpg -text
 docs/image/qs2.jpg -text

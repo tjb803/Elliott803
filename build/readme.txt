@@ -34,6 +34,17 @@ be written using:
  - A simple assembler for short test programs
  - The original Elliott ALGOL 60 compiler     
 
+Licence Information
+-------------------
+All new software for this project is covered by the project's BSD
+open source licence.  But please note that some of the included 
+system tapes come from original Elliott sources and I do not 
+own the copyright for these.  I do not know who the current copyright
+owners are and I sincerely hope no one will mind this 45-year old 
+software being included in my packages.  If any of the copyright
+owners have an issue with this, please contact me and I will gladly 
+remove anything that should not be here.  
+
 Installation and Operation 
 --------------------------
 The program, sample code and a copy of the latest documentation are 
@@ -50,6 +61,10 @@ Latest Improvements
 -------------------
 The latest release will always include various minor bug fixes.  In 
 addition the following are notable improvements:
+
+v1.1.0:
+ - Added correct instruction and device I/O timimgs to allow the
+   option of running programs at the original machine speed
 
 v1.0.0:
  - Added the Graph Plotter support
@@ -87,6 +102,7 @@ v0.5.0  December 2009    First public release
 v0.6.0  December 2009    Includes Algol compiler and samples
 v0.7.0  June 2010        Bug fixes and small improvements
 v1.0.0  August 2010      Initial intended function fully complete
+v1.1.0  June 2012        Add correct instruction and I/O timings
 
 ===========
 Tim Baldwin

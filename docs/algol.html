@@ -9,7 +9,7 @@
 <tr align="center"><td><img src="image/e803.gif" alt="Elliott 803"/></td></tr>
 </table>
 <h1>The ALGOL Compiler</h1>
-<p>The Elliott 803 had an excellent compiler for the (then) new ALGOL 60
+<p>The Elliott 803 had an excellent compiler for the then new ALGOL 60
 programming language.
 ALGOL 60 was pretty much the first &quot;block structured&quot; language and was 
 hugely influential on just about everything that has come since.
@@ -29,10 +29,10 @@ For more information on ALGOL 60 itself try Wikipedia
 reference language.
 In no particular order:</p>
 <ul>
-<li>The limited telecode character set meant that all keywords, variables 
-etc had to be in uppercase only and many of the special symbols used in
-ALGOL were not available.
-There were substituted using using available symbols and letter sequences, 
+<li>The limited telecode character set meant that all keywords and variables 
+had to be in uppercase only and many of the special symbols used in ALGOL 
+were not available.
+The unavailable symbols were replaced with various symbol and letter sequences, 
 for example:<blockquote><table frame="void" rules="none">
 <tr><td><code>GR</code></td><td width="15"/><td>for</td><td width="15"/><td><code>&gt;</code></td></tr>
 <tr><td><code>DIV</code></td><td/><td>for</td><td/><td><code>&divide;</code></td></tr>
@@ -71,7 +71,7 @@ BEGIN INTEGER I'  REAL X'
       SWITCH SS := S1'
       I := 1'  X := 0'
   S1: Y(I) := SIN(X/180 * 3.14159)'
-      PRINT SAMELINE X, Y(I)'
+      PRINT X, SAMELINE, Y(I)'
       I := I + 1'  X := X + 30'
       IF I LESSEQ 12 THEN GOTO S1'
 END'</code></pre></td></tr>
@@ -106,8 +106,11 @@ be compiled and run without the need to reload the compiler tapes.</p>
 <li>Use the console to execute a jump to location 0 to run the 
 <a href="operation.html#boot">initial instructions</a> to load the tape.</li>
 <li>Wait for the tape to finish loading.
-You should see it being written to the <a href=operation.html#opcore">core store</a>
-window and, when complete, the <i>busy</i> light will go out on the reader.</li>
+You should see it being written to the <a href="operation.html#opcore">core store</a>
+window and, when complete, the <i>busy</i> light will go out on the reader.
+<br><i>Note: </i>When running in <a href="operation.html#speed"><i>real time</i></a>
+it will take around 2 minutes 25 seconds to load this tape - it may be sensible to 
+switch out of real time mode while loading the compiler tapes.</li>
 <li>Place the ALGOL compiler tape 2 in the reader.
 <br>The tape is found in the directory <code>tapes/algol</code> and is called 
 <code>a104-2.tape</code></li>
@@ -117,7 +120,9 @@ second tape should load.
 (To change the state of the button: if it is already pressed - as it probably 
 will be - release it by pressing the red release key at the far left; if it is 
 already released press it down.)</li>
-<li>Wait for the tape to finish loading.</li>
+<li>Wait for the tape to finish loading.
+<br><i>Note: </i>When running in <i>real time</i> it will take about 1 minute 
+10 seconds to load this tape.</li>
 </ol>
 <p>At this point the system is ready to compile a program.
 A real 803 would now be producing a particular warbling noise from its
@@ -126,7 +131,8 @@ loudspeaker!</p>
 <p>As an alternative to loading the two compiler tapes each time they are 
 required it is possible to either start the simulator using a <i>machine image</i>
 parameter or use the <a href="operation.html#image"><i>Load...</i></a> button on 
-the operator console to restore a machine image containing a pre-loaded compiler.
+the simulation control window to restore a machine image containing a pre-loaded 
+compiler.
 A pre-loaded compiler image can be found in <code>samples/machines/algol.803</code>.</p>
 <p>If the pre-loaded image is used you will need to execute a <b>40 7</b> instruction
 to begin compiling a new program.
@@ -140,9 +146,9 @@ one of your own.</li>
 40 button) on the word generator.
 <br>The program source should be read and compiled, when compilation is complete 
 the program title and message about the amount of <code>FREE STORE</code> will be
- printed on the teletype.</li>
+ printed on the teletype.
 <p>The program is now waiting to run, again a real 803 would be making a 
-recognisable chirping sound!</p>
+recognisable chirping sound!</p></li>
 <li>This time change the state of the &quot;Function 2&quot; left-most 40 
 button and the program should run.
 <br>The sample programs will all produce some output on the teletype.</li>
@@ -213,16 +219,23 @@ to telecode characters provided by the simulator to provide better looking
 source code.</p>
 <p>A few comments on the code:</p>
 <table frame="void" rules="none" cellpadding="5">
+<tr><td valign="top">Line&nbsp;17:</td>
+<td>This procedure declaration uses the somewhat odd and obscure 
+&quot;long comma&quot; that was unique to ALGOL 60.
+In a procedure declaration or procedure call the sequence of characters
+&quot;<code>)&lt;any&nbsp;chars&gt;:&nbsp;(</code>&quot; is syntactically 
+equivalent to a comma!</td></tr>
 <tr><td valign="top">Lines&nbsp;21&nbsp;and&nbsp;57:</td>
 <td>All labels have to be declared on a <code>SWITCH</code> statement.</td></tr>
 <tr><td valign="top">Lines&nbsp;28&nbsp;and&nbsp;29:</td>
-<td>ALGOL 60 does not a &quot;while&quot; loop as such, only a <code>WHILE</code>
+<td>ALGOL 60 does not have a &quot;while&quot; loop as such, only a <code>WHILE</code>
 clause on the <code>FOR</code> loop.
 These two lines really only want the <code>WHILE</code> part but have to include 
 a redundant <code>FOR I:=0</code> control variable part of the statement.</td></tr>
 <tr><td valign="top">Line&nbsp;51:</td>
-<td>A rather pointless procedure definition, but it does demonstrate some 
-aspects of the language.</td></tr>
+<td>A rather pointless function procedure definition, but it does demonstrate 
+some aspects of the language, such as assigning the function result to the 
+procedure name.</td></tr>
 <tr><td valign="top">Line&nbsp;53:</td>
 <td>This statement reads two integer values from the tape reader.
 The actual values to be read are appended to the source code tape after
@@ -241,11 +254,6 @@ The <code>ELLIOTT(...)</code> statement inserts a single line of machine
 code, in this case it reads the random number generator to the accumulator 
 and ANDs the value with 511 (i.e. 9 bits) to create the result.
 The real Elliott 803 did not have a random number generator.</td></tr>
-<tr><td valign="top">Line&nbsp;71:</td>
-<td>This procedure call uses the somewhat odd and obscure &quot;long comma&quot;
-that was unique to ALGOL 60.
-In a procedure definition or procedure call the sequence of characters
-&quot;)&lt;any chars&gt;:(&quot; is syntactically equivalent to a comma!</td></tr>
 <tr><td valign="top">Lines&nbsp;80&nbsp;and&nbsp;81:</td>
 <td>These are the data values for the program that are read by the 
 <code>READ</code> statement on line 53.
@@ -292,15 +300,16 @@ instructions:</p>
 that would normally be used to drive the plotter.
 This provided a set of procedures that could be used to set the origin, scale
 output, draw lines and various other options - including directing the output
-of PRINT statements to the plotter.
-The sample program however does not use the Plotter Package, mostly because I
+of PRINT statements to the plotter to add text and labels to graphs.
+The sample program however does not use the plotter Ppckage, mostly because I
 simply can't remember exactly how it all worked!</p>
 <hr>
 <h2 id="contrib">Contributed Programs</h2>
 <p>These are some rather more complex example ALGOL programs that have been 
 kindly contributed by <a href="mailto:general_factotum@hotmail.co.uk">Bob Firth</a>.
 Both these programs do a lot of intensive calculation and both will run very
-much faster if the CPU and Core Store windows are minimized.</p>
+much faster if the CPU and Core Store windows are minimized and the <i>Real time</i>
+option is deselected.</p>
 <h3 id="factorial">Large Factorials</h3>
 <table frame="box" rules="all" border="1" cellpadding="4">
 <tr><td><b>Source Code</b></td>
@@ -316,10 +325,10 @@ The value to be calculated should be provided on a tape placed into reader 2.</p
 <p>This will calculate the value of PI to many decimal places (e.g. 1000).
 The number of places required should be provided on a tape placed into reader 2.</p>
 <br><table border="1" frame="above" rules="none" width="100%">
-<tr><td align="left">Tim Baldwin<br>August 2010
+<tr><td align="left">Tim Baldwin<br>June 2012
 <br><a href="mailto:tjb803@tinymail.co.uk">tjb803@tinymail.co.uk</a></td>
 <td align="right">Return to <a href="index.html">index</a>
-<br><br>&copy; Tim Baldwin 2009,2010</td></tr>
+<br><br>&copy; Tim Baldwin 2009,2012</td></tr>
 </table>
 </body>
 </html>

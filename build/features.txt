@@ -1,7 +1,7 @@
 Elliott 803 Simulation - Possible New Features
 ==============================================
 
-The v1.0.0 release contains pretty much all the function I had originally
+The v1.1.0 release contains pretty much all the function I had originally
 intended to implement in this project.  The following is a list of 
 possible enhancements - some large, some small - that could be added or
 have been suggested by people who have used the program.
@@ -18,18 +18,6 @@ have been suggested by people who have used the program.
   Java classes from the javax.sound.sampled package.  Producing correct
   sounds will need the simulation to run at approximately the same speed
   as a real 803 - see next feature ...  
- 
-  Timing
-  ------
-  Currently the simulation runs as fast (or as slow) as it can, no attempt is
-  made to regulate the speed.  When displaying the CPU and Core Store window
-  updates it runs quite slowly, if these are minimised it runs very quickly.
-  
-  The timings of all the original 803 instructions are known, so it would be 
-  possible to record this as the emulation proceeds.  These timings could then 
-  be used to either slow down the simulation to real 803 speeds, or to 
-  maintain a kind of 'clock' that could show, perhaps as a percentage, how 
-  fast or slow it is operating compared to a real system.  
   
   Tape Readers and Punches
   ------------------------
@@ -97,4 +85,4 @@ If anyone is interested in working on any of these or other enhancements
 please drop me an email at tjb803@tinymail.co.uk.
 
 Tim Baldwin
-August 2010  
+June 2012  

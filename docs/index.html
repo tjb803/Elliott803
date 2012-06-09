@@ -55,6 +55,10 @@ the Swing interface allows); other elements such as the
 <a href="operation.html#optape">paper tape readers and punches</a> are 
 just simple implementations to allow easy operation and don't look
 anything like the real thing.</p>
+<p>The simulation can be set to run at a very close approximation to the 
+speed of a real 803B, or can be set to run as fast as the implementation
+allows - which can be useful for speeding up tedious operations such as
+loading the large compiler tapes.</p>
 <h3>Notable Omissions</h3>
 <p>The following elements of the Elliott 803 are currently not implemented
 in this project.</p>
@@ -67,21 +71,8 @@ and by careful use of certain instructions and delays it was even possible to
 produce music.
 <br>The simulation currently produces no sound at all, which some might say is a 
 serious omission for an 803!
-The Java environment doesn't make creating this sort of sound particularly
-easy, but it is definitely something to be worked on in future versions.</li>
-<br>
-<li><b>Correct Instruction Timings</b>
-<br>No attempt has been made to emulate the precise timings of the machine 
-instructions.
-The simulator simply runs as fast as the Java implementation allows (this is not
-especially fast, as the updates to the various Swing windows tend to slow it
-down a little).
-<br>Again some might say this is a serious omission for an 803 emulation, but
-again it will probably be hard to get correct in a Java implementation and I 
-don't feel it detracts too much from providing at least the &quot;spirit&quot; 
-of the 803!
-(Note, to produce accurate sounds would also require accurate timings.)</li>
-<br>
+This is definitely something to be worked on in future versions.
+<br><br></li>
 <li><b>Full Floating Point</b>
 <br>The simulation does fully implement all the group 6 floating point 
 instructions but it currently does this using a little cheating.  
@@ -91,8 +82,8 @@ then converted back to an Elliott 39-bit float format.
 <br>This is a simple and reasonably successful approach (ALGOL programs, for 
 example, run correctly), but the resulting numbers are not always absolutely 
 identical to those that would be produced by the real 803 hardware - sometimes
-there are minor differences in the least significant decimal places.</li>
-<br>
+there are minor differences in the least significant decimal places.
+<br><br></li>
 <li><b>Missing Hardware</b>
 <br>Some bits of the original hardware are currently missing from the simulation.
 It is hoped to add these in the future:
@@ -102,10 +93,10 @@ huge handlers working!).</li>
 </ul></li>
 </ul>
 <br><table border="1" frame="above" rules="none" width="100%">
-<tr><td align="left">Tim Baldwin<br>December 2009
+<tr><td align="left">Tim Baldwin<br>June 2012
 <br><a href="mailto:tjb803@tinymail.co.uk">tjb803@tinymail.co.uk</a></td>
 <td align="right">
-<br><br>&copy; Tim Baldwin 2009</td></tr>
+<br><br>&copy; Tim Baldwin 2009,2012</td></tr>
 </table>
 </body>
 </html>

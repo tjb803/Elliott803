@@ -11,25 +11,26 @@
 <h1>Operation Guide</h1>
 <p>There are two ways to run the Elliott 803 simulator:</p>
 <ul>
-<li><a href="#gui">Interactive GUI Interface</a></li>
+<li><a href="#gui">Interactive GUI Interface</a>
 <ul>
 <li><a href="#start">Start Up and Shut Down</a></li>
-<li><a href="#opcon">The Operator Console</a></li>
+<li><a href="#opsim">The Simulation Control Window</a>
 <ul>
+<li><a href="#speed">Controlling the Simulation Speed</a></li>
 <li><a href="#image">Loading and Saving Machine Images</a></li>
-</ul>
-<li><a href="#opcpu">The CPU and Core Store</a></li>
+</ul></li>
+<li><a href="#opcon">The Operator Console</a></li>
+<li><a href="#opcpu">The CPU and Core Store</a>
 <ul>
 <li><a href="#perf">Performance Note</a></li>
-</ul>
+</ul></li>
 <li><a href="#optele">The Output Teletype</a></li>
 <li><a href="#opplot">The Graph Plotter</a></li>
-<li><a href="#optape">The Paper Tape Readers and Punches</a></li>
+<li><a href="#optape">The Paper Tape Readers and Punches</a>
 <ul>
-<li><a href="#oppts">The Paper Tape Station</a></li>
 <li><a href="#tmode">Tape Formats</a></li>
-</ul>
-</ul>
+</ul></li>
+</ul><br></li>
 <li><a href="#cmd">Command Line Interface</a></li>
 </ul>
 <p>Most people will want to use the <a href="#gui">GUI interface</a>.</p>
@@ -70,18 +71,41 @@ in a later run.</p>
 devices and with the system operator's console.</p>
 <h3 id="start">Start Up and Shut Down</h3>
 <p>When the simulator starts up it can load a pre-saved machine image containing
-the complete core memeory contents and the size, position any layout of all
-the application windows.</p>
-<p>The image can either be provided as a parameter when starting the application
-or the option <code><b>-load</b></code> can be used and the system will prompt
-to select the image to use.
+the complete core memory contents and the size, position any layout of all
+the application windows.
+This image can either be provided as a parameter when starting the application
+or can be loaded later.
 If no image is provided a default window layout will be used. 
-<p>When the simulator is closed it can optionally prompt to save the current
-machine image ready to restart next time.  
-This can be useful if you have resized and re-arranged the windows or if you
-want to avoid having to reload large data tapes such as the ALGOL compiler.
-The option <code><b>-save</b></code> should be used when starting the application 
-to tell it to prompt to save the image when it closes.
+<br clear="left">
+<h3 id="opsim">The Simulation Control Window</h3>
+<img src="image/opsim.jpg" alt="Simulator Control" align="left"/>
+<p>The simulation control window provides functions not present on a real 
+803 that are used to perform additional control of the simulation.
+The two additional functions provided are controlling the simulation speed
+and loading and saving machine images.
+<br clear="left">
+<h4 id="speed">Controlling the Simulation Speed</h4>
+<img src="image/cpuspd.jpg" alt="RealTime" align="left">
+<p>The <i>CPU Speed</i> section is used to control and display the simulated
+CPU speed.
+The speed can be set to <i>Real time</i> which should run at a very close 
+approximation to the speed of a real 803B or, if the checkbox is cleared, it
+can be set to run as fast as the implementation will allow.</p>
+<p>The CPU speed number displays the current simulation speed in relation 
+to  real machine - so <b>1.0</b> means it is running at the same speed 
+as a real machine (which should be the case when the <i>Real time</i> option 
+is selected) and values greater than 1 indicate running faster than a real
+machine.
+<br clear="left">
+<h4 id="image">Loading and Saving Machine Images</h4>
+<img src="image/lsimg.jpg" alt="LoadSave" align="left">
+<p>The <i>Machine Image</i> section is used to save the current machine image 
+or restore a previously saved machine image.
+A machine image consists of the complete core memory and may also include the 
+size, position and layout of all the windows on the screen.
+They are typically saved as files with an extension of 
+&quot;<code>.803</code>&quot;.</p>
+<br clear="left">
 <h3 id="opcon">The Operator Console</h3>
 <img src="image/opcon.jpg" alt="Operator Console" align="left"/>
 <p>The operator console is the mechanism by which the computer is operated.
@@ -121,32 +145,26 @@ running normally.</li>
 bar is pressed) whenever an instruction to read the word generator is executed.
 If this button is not pressed the word generator value will be read without
 any pause.</p>
-<p>The indicator lights show the following conditions:
-<img src="image/wordgen1.jpg" alt="Word Generator" align="right"/></p>
+<p>The indicator lights show the following conditions:</p>
 <ul compact>
-<li><b>Busy</b> the system is waiting for input or output - typically waiting
+<li><b>Busy</b>
+<img src="image/wordgen1.jpg" alt="Word Generator" align="right"/>
+<br>the system is waiting for input or output - typically waiting
 for a tape to loaded in a tape reader or punch.</li>
-<li><b>Floating Point Overflow</b> a floating point operation has overflowed.
+<li><b>Floating Point Overflow</b> 
+<br>a floating point operation has overflowed.
 Execution stops if this occurs and will only continue when the <i>Operate</i>
 bar is pressed.</li>
-<li><b>Step by Step</b> the system is stopped waiting for operator action.
+<li><b>Step by Step</b> 
+<br>the system is stopped waiting for operator action.
 This is the condition on start up, after the <i>Reset</i> key is pressed or 
 if the <i>Read</i> or <i>Obey</i> buttons are selected.</li>
-<li><b>Overflow</b> the overflow condition is set.  
+<li><b>Overflow</b> 
+<br>the overflow condition is set.  
 This will usually flicker on and off as programs are loaded or run.</li>
 </ul>
 <p>This window is supposed to look and operate somewhat like the real Elliott
-803 operator console</p>
-<h4 id="image">Loading and Saving Machine Images</h4>
-<img src="image/lsimg.jpg" alt="LoadSave" align="left">
-<p>The two additional console buttons in the <i>Machine Image</i> section are 
-used to save the current machine image or restore a previously saved machine
-image.
-A machine image consists of the complete core memory and may also include the 
-size, position and layout of all the windows on the screen.
-They are typically saved as files with an extension of 
-&quot;<code>.803</code>&quot;.</p>
-<br clear="left">
+803 operator console.</p>
 <h3 id="opcpu">The CPU and Core Store</h3>
 <img src="image/opcpu.jpg" alt="CPU" align="left"/>
 <img src="image/opcore.jpg" alt="Core Store" align="right"/>
@@ -161,9 +179,10 @@ accumulator and auxiliary registers.</p>
 <li>Pressing the <i>Dump</i> button will produce a
 <a href="extras.html#dump">system core dump</a>.
 This can be formatted and displayed using the
-<a href="utilities.html#pdump">Core File Formatter</a> utility.</li>
+<a href="utilities.html#pdump">Core File Formatter</a> utility.
+<br><br></li>
 <li>Selecting the <i>Trace</i> option will turn on and off the
-<a href=extras.html#trace">system instruction trace</a>.
+<a href="extras.html#trace">system instruction trace</a>.
 This can be formatted and displayed using the
 <a href="utilities.html#ptrace">Trace File Formatter</a> utility.</li>
 </ul>
@@ -176,14 +195,17 @@ It is intended to give a rough idea of where in store work is taking place.</p>
 word of store.
 The block will be white if the word of store contains zero, otherwise it will
 alternate between light and dark grey whenever a value is written to the
-storage location.
-The core store is an output only window.</p>
+storage location.</p>
 <h4 id="perf">Important Performance Note</h4>
-<p>The frequent updates to the CPU and Core Store windows that take place as 
-execution proceeds considerably slow down the speed of the emulation.  
+<p>When running in <a href="#speed"><i>real time</i></a> mode the the simulation 
+will operate at a very close approximation to the speed of a real Elliott 803B - 
+this can be quite slow compared to modern machines especially when reading tapes
+or printing output (the teletype operates at about 10 characters per second).</p>
+<p>If <i>real time</i> mode is deselected the simulation will simply run as fast
+as possible, however the frequent updates to the CPU and Core Store windows that 
+take place as execution proceeds considerably slow down the speed of the emulation.  
 If you want processing to run at a much faster speed one or both of these
-windows should be minimized.
-<br clear="left">
+windows should be minimized.</p>
 <h3 id="optele">The Output Teletype</h3>
 <img src="image/optele.jpg" alt="Output Teletype" align="left"/>
 <p>The output teletype shows the printed output from the computer.
@@ -255,7 +277,7 @@ This is the default format for the tape punches, as it is assumed they may
 be writing binary data (such as compiler output tapes).
 If the output is text it will be encoded in telecode and can be converted
 to the system character set using the
-<a href=utilites.html#tprint">TapePrint</a> utility</dd>
+<a href="utilites.html#tprint">TapePrint</a> utility.</dd>
 <dt><b>System</b></dt><dd>The tape is in standard system format.
 This is the default format for teleprinter output.
 This is only suitable for text input or output - the characters read or
@@ -289,7 +311,7 @@ instruction register ready to be obeyed (but not run yet)</td></tr>
 <tr><td><b><code>74&nbsp;4127&nbsp;:&nbsp;74&nbsp;4097</code></b></td>
 <td><i>Obey</i>,&nbsp;<i>Operate</i></td>
 <td>Obey the previous 70&nbsp;0 instruction so the accumulator now contains the
-instruction 74&nbsp;4127&nbsp;:&nbsp;74&nbsp;4097)
+instruction 74&nbsp;4127&nbsp;:&nbsp;74&nbsp;4097
 <br>(Hint: 4127 = 4096 + 31, 4097 = 4096 + 1)</td></tr>
 <tr><td><b><code>20&nbsp;128&nbsp;:&nbsp;00&nbsp;0</code></b></td>
 <td><i>Read</i>, <i>Operate</i>, <i>Obey</i>, <i>Operate</i></td>
