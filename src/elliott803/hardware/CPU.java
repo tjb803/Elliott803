@@ -71,18 +71,20 @@ public class CPU {
         computer.console.setOverflow(false, false);
         computer.console.setBusy(false);
     }
-
-    // Exit execution 
-    public void exit() {
-        stop();
-        jump = true;
-    }
     
-    // Stop execution
+    // Stop execution after the current instruction
     public void stop() {
         computer.console.setStep(true);
         running = false;
         cpuCycles = 0;
+    }
+    
+    // Exit execution.  Does not advance the instruction counter, so
+    // execution can resume and restart the same instruction.
+    public void exit() {
+        stop();
+        jump = true;
+        fetch = false;
     }
  
     // Set Real time execution speed
@@ -171,15 +173,15 @@ public class CPU {
                 if (jump || scr2 == 0)
                     trace.trace(scr, scr2, ir, acc, overflow);
             } 
-        }
+        }    
+        fetch = true;
 
-        // Execute the instruction and prepare to fetch the next
+        // Execute the instruction
         execute();
         viewState();
         
         // Step to the next instruction, unless we had jump in which case the 
         // new address will already be set in scr/scr2.
-        fetch = true;
         if (!jump) {
             if (scr2 == 0) {
                 scr2 = 1;
@@ -290,7 +292,7 @@ public class CPU {
     }
     
     // Returns the number of consecutive 1's or 0's at the left hand end (MSB)
-    // of the accumulator - this is needed for the instruction timings.
+    // of the accumulator - this is needed for some instruction timings.
     int y() {
         int y;
         long a = acc;
