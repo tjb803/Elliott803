@@ -76,11 +76,13 @@
 
     <!-- Build the samples -->
     <target name="buildSamples" depends="buildJar">
+    	<property name="java-cmd" value="${java.home}/bin/java"/>
         <property name="sample-src" value="samples/assembler"/>
         <property name="sample-build" value="${tape-build}/samples"/>
         <mkdir dir="${sample-build}"/>
-        <apply executable="java" dest="${sample-build}" verbose="true">
-            <arg line="-cp ${pkg-build}/${jar-name} elliott803.utils.Assembler"/>
+        <apply executable="${java-cmd}" dest="${sample-build}" verbose="true">
+            <arg line="-cp ${pkg-build}/${jar-name}"/> 
+            <arg line="elliott803.utils.Assembler"/>
             <srcfile/>
             <targetfile/>
             <fileset dir="${sample-src}"/>
