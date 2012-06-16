@@ -1,0 +1,274 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Elliott 803 Simulation - Utilities</title>
+</head>
+<body>
+<table border="2" frame="box" rules="none" cellpadding="10" width="100%">
+<tr align="center"><td><img src="image/e803.gif" alt="Elliott 803"/></td></tr>
+</table>
+<h1>Utility Applications</h1>
+<p>The simulation contains a number of utility programs that can be used for 
+various off-line tasks.</p>
+<ul>
+<li><a href="#asm">Simple Assembler</a></li>
+<li><a href="#tprint">Telecode Tape Printer</a></li>
+<li><a href="#twrite">Telecode Tape Writer</a></li>
+<li><a href="#tcopy">Tape Copier</a></li>
+<li><a href="#pcore">Core File Formatter</a></li>
+<li><a href="#ptrace">Trace File Formatter</a></li>
+<li><a href="#pt1">Binary Tape Formatter</a></li>
+<li><a href="#ptele">Telecode File Formatter</a></li>
+<li><a href="#pimage">Machine Image Formatter</a></li>
+</ul>
+<p>To run any of these utility programs you must ensure the simulator JAR
+file is on the Java CLASSPATH.</p>
+<hr><h2 id="asm">Simple Assembler</h2>
+<h3>Command</h3>
+<blockquote><pre>
+<code>java <b>elliott803.utils.Assembler</b> inputfile outputtape</code>
+</pre></blockquote>
+<h4>Parameters</h4>
+<blockquote><dl>
+<dt><code>inputfile</code></dt><dd>The assembler source code file.</dd>
+<dt><code>outputtape</code></dt><dd>The name of the output binary tape file.</dd>
+</dl></blockquote>
+<p>The simple assembler will create binary program tapes that can be loaded
+by the 803 initial instructions.
+It can create standard tapes or self-triggering tapes that will automatically
+jump to the program entry point when the tape is loaded.
+This is a very simple assembler intended to produce fairly basic test programs.
+<ul>
+<li>The assembler source consists of a set of lines.  
+Blank lines are ignored and any characters following a &quot;*&quot; are comments and 
+are also ignored.</li>
+<li>A line may start with a label (an identifier followed by a &quot;:&quot;) and this
+will assign the address of the next instruction to that label.</li>
+<li>A line may define a single instruction or a pair of instructions in the form
+<br><kbd><i>&nbsp;&nbsp;&nbsp;</i><b>op1 addr1</b></kbd>
+<br><kbd><i>or </i><b>op1 addr1 b op2 addr</b></kbd>
+<br>where <b>op1</b> and <b>op2</b> are two digit octal instruction op-codes and 
+<b>addr1</b> and <b>addr2</b> are either integer storage addresses or labels.
+<b>b</b> is either the character &quot;:&quot; or &quot;/&quot;.</li>
+<li>A line may be a constant which is a positive or negative integer.</li>
+<li>A line may contain a string in 'single quote' characters which will be
+turned into a sequence of telecode characters (including any necessary 
+shift characters) one character per subsequent words.</li>
+<li>A directive <b>=nnnn</b> (where <i>nnnn</i> is a storage address) can be used to 
+define the load address of the program.
+If this is omitted the program will be loaded into the high end of store.</li>
+<li>A directive <b>@addr</b> (where <i>addr</i> is either a storage address or label) 
+can be used to define an entry point.
+A trigger will be generated at the end of the tape to jump to the entry point.</li>
+</ul>
+<p>Here is an example of the assembler source, showing just about all the function:</p>
+<pre>
+     * 
+     * Simple Hello World program
+     *
+              @entry               * Define the entry address
+                                   * (no =nnnn directive so program loaded at top of store)  
+                   
+     entry:                        * Program entry point	
+     loop:   22 index / 30 hello   * Get next character 
+             42 end   : 40 write   * Check for zero at end of string or write char 
+     write:  20 char  / 74 4096    * Write character to teletype
+             40 loop               * Loop back to next character  
+     end:    74 4125  : 74 4126    * Write CR and LF to finish line   
+     done:   72 8191               * Exit when finished         
+              
+     char:    0                    * Character workspace
+     index:  -1                    * index into string 
+     hello:  'Hello World?'        * Text - will be {LS}HELLO WORLD{FS}? in telecode
+              0                    * zero marks end of string   
+</pre>
+<p>Note: This exmaple uses the <a href="extras.html#control">simulator control</a> 
+instruction <b><code>72&nbsp;8191</code></b> to cause the simuation to stop.</p>
+<hr><h2 id="tprint">Telecode Tape Printer</h2>
+<h3>Command</h3>
+<blockquote><pre>
+<code>java <b>elliott803.utils.TapePrint</b> [options] inputtape [outputfile]</code>
+</pre></blockquote>
+<h4>Parameters</h4>
+<blockquote><dl>
+<dt><code>inputtape</code></dt><dd>The telecode tape to be printed.</dd>
+<dt><code>outputfile</code></dt><dd>The name of an output file.  
+Defaults to standard out.</dd>
+</dl></blockquote>
+<h4>Options</h4>
+<blockquote><dl>
+<dt><code>-ascii</code></dt><dd>Print using only US-ASCII characters</dd>
+<dt><code>-encoding <i>encoding_name</i></code></dt><dd>The output file encoding. 
+Defaults to the standard platform encoding. 
+This option is rarely needed.</dd>
+</dl></blockquote>
+<p>This will print out the contents of an Elliott telecode encoded tape, as
+defined by the <a href="telecode.html#tcconv">telecode conversion</a> methods.
+If the <code>-ascii</code> is used only characters from the US-ASCII code set
+will be used when printing, in particular the GB-pound sign (<code>&pound;</code>)
+(telecode character figure-shift 26) will be printed as the number sign (<code>#</code>).</p>
+<hr><h2 id="twrite">Telecode Tape Writer</h2>
+<h3>Command</h3>
+<blockquote><pre>
+<code>java <b>elliott803.utils.TapeWrite</b> [options] inputfile outputtape</code>
+</pre></blockquote>
+<h4>Parameters</h4>
+<blockquote><dl>
+<dt><code>inputfile</code></dt><dd>The name of the input file to be encoded.</dd>
+<dt><code>outputtape</code></dt><dd>The name of the telecode output tape.</dd>  
+</dl></blockquote>
+<h4>Options</h4>
+<blockquote><dl>
+<dt><code>-encoding <i>encoding_name</i></code></dt><dd>The input file encoding. 
+Defaults to the standard platform encoding.
+This option is rarely needed.</dd>
+</dl></blockquote>
+<p>This will take a standard system text file and write an equivalent telecode
+encoded tape, according to the <a href="telecode.html#tcconv">telecode 
+conversion</a> methods.</p>
+<hr><h2 id="tcopy">Tape Copier</h2>
+<h3>Command</h3>
+<blockquote><pre>
+<code>java <b>elliott803.utils.TapeCopy</b> [options] inputtape1 [inputtape2 ...]</code>
+</pre></blockquote>
+<h4>Parameters</h4>
+<blockquote><dl>
+<dt><code>inputtapeN</code></dt><dd>One or more input tape names.</dd>
+</dl></blockquote>
+<h4>Options</h4>
+<blockquote><dl>
+<dt><code>-output<i>outputtape</i></code></dt><dd>The output tape name.</dd>
+</dl></blockquote>
+<p>This will make a copy of one or more input tapes, producing a single new
+output tape.
+If more than one input tape is specified the output tape will include a 
+small amount of runout between each tape as it is copied.</p>
+<hr><h2 id="pcore">Core File Formatter</h2>
+<h3>Command</h3>
+<blockquote><pre>
+<code>java <b>elliott803.utils.PrintCore</b> corefile [outputfile]</code>
+</pre></blockquote>
+<h4>Parameters</h4>
+<blockquote><dl>
+<dt><code>corefile</code></dt><dd>The name of simulator core dump file.</dd>
+<dt><code>outputfile</code></dt><dd>The name of an output file.  
+Defaults to standard out.</dd> 
+</dl></blockquote>
+<p>This will format and print the output of a simulator core dump file.
+The core dump files usually have a name like 
+<code>elliott&#8209;yyyyMMdd&#8209;HHmmss&#8209;SSS.core</code></p>
+<p>The formatted core output shows the state of the machine registers and
+flags when the system dump was performed, followed by the full 8K words
+of store.  
+To save space any consecutive words with the same value are omitted.</p>
+<p>Each storage word will be output something like this:</p>
+<pre><code>
+ 742:    00  553 : 63 6766   [0004245475156]   (+580287086)       ".BEGIN"
+ 743:    00    0 : 00    6   [0000000000006]   (+6)   'F ='
+</code></pre> 
+<p>This shows the address of the word followed by its value as a pair of
+instructions, its value in octal (in square brackets) and its value in 
+decimal (in round brackets).  
+For values that might represent a single telecode character the character
+in letter-shift and figure-shift form is displayed in single quotes,
+for values that might represent packed text characters the possible 
+packed text is displayed in double quotes.  
+<p>Core dump files can be produced by using the special  
+<a href="extras.html#control">simulator control</a> instruction, or by pressing
+the <i>Dump</i> button on the CPU view window.</p>
+<hr><h2 id="ptrace">Trace File Formatter</h2>
+<h3>Command</h3>
+<blockquote><pre>
+<code>java <b>elliott803.utils.PrintTrace</b> tracefile [outputfile]</code>
+</pre></blockquote>
+<h4>Parameters</h4>
+<blockquote><dl>
+<dt><code>tracefile</code></dt><dd>The name of simulator instruction trace file.</dd>
+<dt><code>outputfile</code></dt><dd>The name of an output file.  
+Defaults to standard out.</dd> 
+</dl></blockquote>
+<p>This will format and print the output of a simulator instruction trace file.
+The instruction trace files usually have a name like 
+<code>elliott&#8209;yyyyMMdd&#8209;HHmmss&#8209;SSS.trace</code></p>
+<p>The output of the trace formatter will be something like this:</p>
+<pre><code>
+8169.0:  22 8176 / 30 8177   -   0007100000000 (+956301312)
+8170.0:  46 8173 : 20 8175   O   0000000000037 (+31)
+8171.0:  00 8175 / 74 4096   -   0000000000037 (+31)
+</code></pre>
+<p>This shows the address of an instruction pair with a .0 or .1 suffix - 
+normally this is .0 meaning execution starts with the first of the pair
+but it may be .1 following a jump to the second instruction.
+This is followed by the pair of instructions themselves.</p>
+<p>Following the instruction is the state of the overflow flag (shown
+as '-' for no overflow and 'O' for overflow) and the value of the 
+accumulator (in octal and in decimal) before execution of the instruction(s).</p>
+<p>Trace files can be produced by using the special  
+<a href="extras.html#control">simulator control</a> instructions, or by selecting
+the <i>Trace</i> action on the CPU view window.</p>
+<hr><h2 id="pt1">Binary Tape Formatter</h2>
+<h3>Command</h3>
+<blockquote><pre>
+<code>java <b>elliott803.utils.PrintT1</b> binarytapefile [outputfile]</code>
+</pre></blockquote>
+<h4>Parameters</h4>
+<blockquote><dl>
+<dt><code>binarytapefile</code></dt><dd>The name of binary program tape file.</dd>
+<dt><code>outputfile</code></dt><dd>The name of an output file.  
+Defaults to standard out.</dd> 
+</dl></blockquote>
+<p>This will format and print the contents of a binary program tape.
+a binary program tape is a tape that can be loaded using the initial instructions.</p>
+<hr><h2 id="ptele">Telecode File Formatter</h2>
+<h3>Command</h3>
+<blockquote><pre>
+<code>java <b>elliott803.utils.PrintTelecode</b> [options] inputfile [outputfile]</code>
+</pre></blockquote>
+<h4>Parameters</h4>
+<blockquote><dl>
+<dt><code>inputfile</code></dt><dd>The name of system text file</dd>
+<dt><code>outputfile</code></dt><dd>The name of an output file.  
+Defaults to standard out.</dd> 
+</dl></blockquote>
+<h4>Options</h4>
+<blockquote><dl>
+<dt><code>-ascii</code></dt><dd>Print using only US-ASCII characters</dd>
+<dt><code>-inputenc <i>encoding_name</i></code></dt><dd>The input file encoding. 
+Defaults to the standard platform encoding. 
+This option is rarely needed.</dd>
+<dt><code>-outputenc <i>encoding_name</i></code></dt><dd>The output file encoding. 
+Defaults to the standard platform encoding. 
+This option is rarely needed.</dd>
+</dl></blockquote>
+<p>This will print the contents of a input file converting to only use
+characters from the telecode character set.
+It can used, for example, to print an ALGOL program that has been written using
+the <a href="telecode.html#jtotc">extended character mappings</a> to the form it 
+would have had on a real 803.</p>
+<hr><h2 id="pimage">Machine Image Formatter</h2>
+<h3>Command</h3>
+<blockquote><pre>
+<code>java <b>elliott803.utils.PrintMachine</b> [options] machine [outputfile]</code>
+</pre></blockquote>
+<h4>Parameters</h4>
+<blockquote><dl>
+<dt><code>machine</code></dt><dd>The name of a saved machine image file</dd>
+<dt><code>outputfile</code></dt><dd>The name of an output file.  
+Defaults to standard out.</dd> 
+</dl></blockquote>
+<h4>Options</h4>
+<blockquote><dl>
+<dt><code>-nodump</code></dt><dd>Omit the core dump from the output</dd>
+</dl></blockquote>
+<p>This will print the contents of a previously saved machine image.
+It will show the saved window positions (if present) and will optionally
+show the saved core store.</p>
+<br><table border="1" frame="above" rules="none" width="100%">
+<tr><td align="left">Tim Baldwin<br>June 2012
+<br><a href="mailto:tjb803@tinymail.co.uk">tjb803@tinymail.co.uk</a></td>
+<td align="right">Return to <a href="index.html">index</a>
+<br><br>&copy; Tim Baldwin 2009,2012</td></tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,26 @@
+**                              **
+* Elliott Model 803B Simulator   *
+*                                *
+* (C) Copyright Tim Baldwin 2009 *
+**                              **
+
+**
+* Tape Printer
+*
+* Prints the contents of the tape in reader 2 to the teletype.
+*
+* This will skip leading blanks and will terminate when a trailing blank
+* is found.
+**
+
+       @entry               * Entry point
+
+entry: 06    0 : 20 char    * Set ACC and workspace to zero
+skip:  71 2048 : 42 skip    * Skip leading blanks
+loop:  20 char / 74 4096    * Write character to teletype
+       06    0 : 71 2048    * Read next character
+       42  end : 40 loop    * End when blank tape found
+
+end:   72 8191              * Exit
+
+char:  0                    * Character workspace

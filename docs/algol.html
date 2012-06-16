@@ -1,0 +1,334 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Elliott 803 Simulation - ALGOL</title>
+</head>
+<body>
+<table border="2" frame="box" rules="none" cellpadding="10" width="100%">
+<tr align="center"><td><img src="image/e803.gif" alt="Elliott 803"/></td></tr>
+</table>
+<h1>The ALGOL Compiler</h1>
+<p>The Elliott 803 had an excellent compiler for the then new ALGOL 60
+programming language.
+ALGOL 60 was pretty much the first &quot;block structured&quot; language and was 
+hugely influential on just about everything that has come since.
+For more information on ALGOL 60 itself try Wikipedia
+<a href="http://en.wikipedia.org/wiki/ALGOL">http://en.wikipedia.org/wiki/ALGOL</a>.</p>
+<p>These notes contain the following sections:</p>
+<ul compact>
+<li><a href="#ealgol">Elliott ALGOL Notes</a></li>
+<li><a href="#using">Running ALGOL Programs</a></li>
+<li><a href="#samples">Sample Programs</a></li>
+<li><a href="#contrib">Contributed Programs</a></li>
+</ul>
+<hr>
+<h2 id="ealgol">Elliott ALGOL Notes</h2>
+<p>The Elliott ALGOL compiler was an almost complete implementation of ALGOL 
+60, however there were a few limitations and some changes from the defined 
+reference language.
+In no particular order:</p>
+<ul>
+<li>The limited telecode character set meant that all keywords and variables 
+had to be in uppercase only and many of the special symbols used in ALGOL 
+were not available.
+The unavailable symbols were replaced with various symbol and letter sequences, 
+for example:<blockquote><table frame="void" rules="none">
+<tr><td><code>GR</code></td><td width="15"/><td>for</td><td width="15"/><td><code>&gt;</code></td></tr>
+<tr><td><code>DIV</code></td><td/><td>for</td><td/><td><code>&divide;</code></td></tr>
+<tr><td><code>NOTEQ</code></td><td/><td>for</td><td/><td><code>&ne;</code></td></tr>
+<tr><td><code>**</code></td><td/><td>for</td><td/><td><code>&uarr;</code></td>
+<td>... and several others</td></tr> 
+<tr><td colspan="6">Three particularly important (but slightly odd) substitutions are:</td></tr>
+<tr><td><code>'</code>  (apostrophe)</td><td/><td>for</td><td/><td><code>;</code>  (semicolon)</td></tr>
+<tr><td><code>&pound;</code>  (GB pound sign)</td><td/><td>for</td><td/><td><code>&lsquo;</code>  (open string quote)</td></tr>
+<tr><td><code>?</code>  (question mark)</td><td/><td>for</td><td/><td><code>&rsquo;</code>  (close string quote)</td></tr>
+</table></blockquote></li>
+<li>All ALGOL programs must start with a title followed by an apostrophe.</li>
+<li>The final END keyword must be followed by an apostrophe.</li>
+<li>All identifiers are distinguished only by their first 6 characters.</li>
+<li>All labels used must be declared in a SWITCH statement</li>
+<li>There were special PRINT and READ statements to perform I/O to and from the 
+tape punches, tape readers and output teletype.</li>
+<li>... and several others</li>
+</ul>
+<p>As an example here's a simple program in the ALGOL reference notation 
+and in the Elliott format:</p>
+<table frame="box" rules="all" cellpadding="3" width="100%">
+<tr><th>ALGOL reference language</th><th>Elliott Representation</th></tr>
+<tr><td><pre><code><br></br><b>begin</b> <b>integer</b> i;  <b>real</b> x;  
+      <b>real</b> <b>array</b> y[1:12];
+      
+      i := 1;  x := 0;
+  s1: y[i] := sin((x/180 x 3.14159);
+      <b>comment</b> No I/O functions are defined in Algol;
+      i := i + 1;  x := x + 30;
+      <b>if</b> i &le; 12 <b>then</b> <b>go to</b> s1;      
+<b>end</b></code></pre></td>
+<td><pre><code>CALCULATE SOME SINE VALUES'
+BEGIN INTEGER I'  REAL X'  
+      REAL ARRAY Y(1:12)'
+      SWITCH SS := S1'
+      I := 1'  X := 0'
+  S1: Y(I) := SIN(X/180 * 3.14159)'
+      PRINT X, SAMELINE, Y(I)'
+      I := I + 1'  X := X + 30'
+      IF I LESSEQ 12 THEN GOTO S1'
+END'</code></pre></td></tr>
+</table>
+<hr>
+<h2 id="using">Running ALGOL Programs</h2>
+<p>To run ALGOL programs on the Elliott 803 you must first load the ALGOL compiler.
+The compiler was supplied as two large reels of paper tape - tape 1 was the 
+compiler itself and tape 2 was a set of run-time routines used by both the 
+compiler and the executing program.
+Getting everything to fit in 8K of store was something of a miracle and large
+programs would often need to overwrite some of the compiler space when they ran,
+requiring the compiler tapes to be loaded again before the next program could
+be run.
+Loading, and particularly re-winding, those large reels of tape was a slow 
+and rather tiresome process - this is something that is much quicker and 
+simpler using the simulator!</p>
+<p>Short programs, such as the included samples, were normally run in a 
+&quot;compile, load and go&quot; mode.
+Once the compiler was loaded, a program source tape was put in the reader
+and compiled in-store, when compiled it was run and its output was printed to 
+the output teletype.
+As long as the compiler was not overwritten, further programs could then 
+be compiled and run without the need to reload the compiler tapes.</p>
+<h3 id="loadc">Loading the Compiler</h3>
+<p>Use this sequence of operations to load the ALGOL compiler.</p>
+<ol>
+<li>Place the ALGOL compiler tape 1 in the reader.
+<br>The tape is found in the directory <code>tapes/algol</code> and is called 
+<code>a104-1.tape</code>
+(A104 was the name of the ALGOL library tapes).</li>
+<li>Use the console to execute a jump to location 0 to run the 
+<a href="operation.html#boot">initial instructions</a> to load the tape.</li>
+<li>Wait for the tape to finish loading.
+You should see it being written to the <a href="operation.html#opcore">core store</a>
+window and, when complete, the <i>busy</i> light will go out on the reader.
+<br><i>Note: </i>When running in <a href="operation.html#speed"><i>real time</i></a>
+it will take around 2 minutes 25 seconds to load this tape - it may be sensible to 
+switch out of real time mode while loading the compiler tapes.</li>
+<li>Place the ALGOL compiler tape 2 in the reader.
+<br>The tape is found in the directory <code>tapes/algol</code> and is called 
+<code>a104-2.tape</code></li>
+<li>On the word generator section of the operator console, change the state
+of the top left-most button (the &quot;Function 1&quot; 40 button) and the 
+second tape should load.
+(To change the state of the button: if it is already pressed - as it probably 
+will be - release it by pressing the red release key at the far left; if it is 
+already released press it down.)</li>
+<li>Wait for the tape to finish loading.
+<br><i>Note: </i>When running in <i>real time</i> it will take about 1 minute 
+10 seconds to load this tape.</li>
+</ol>
+<p>At this point the system is ready to compile a program.
+A real 803 would now be producing a particular warbling noise from its
+loudspeaker!</p>
+<h3>Using a Preloaded Machine Image</h3>
+<p>As an alternative to loading the two compiler tapes each time they are 
+required it is possible to either start the simulator using a <i>machine image</i>
+parameter or use the <a href="operation.html#image"><i>Load...</i></a> button on 
+the simulation control window to restore a machine image containing a pre-loaded 
+compiler.
+A pre-loaded compiler image can be found in <code>samples/machines/algol.803</code>.</p>
+<p>If the pre-loaded image is used you will need to execute a <b>40 7</b> instruction
+to begin compiling a new program.
+<h3>Compiling and Running a Program</h3>
+<p>When the compiler has been loaded it is ready to compile and run programs.</p>
+<ol>
+<li>Place a program source tape into the reader.
+<br>Pick one of the <a href="#samples">sample ALGOL programs</a> or choose 
+one of your own.</li>
+<li>Again change the state of the top left-most button (the &quot;Function 1&quot;
+40 button) on the word generator.
+<br>The program source should be read and compiled, when compilation is complete 
+the program title and message about the amount of <code>FREE STORE</code> will be
+ printed on the teletype.
+<p>The program is now waiting to run, again a real 803 would be making a 
+recognisable chirping sound!</p></li>
+<li>This time change the state of the &quot;Function 2&quot; left-most 40 
+button and the program should run.
+<br>The sample programs will all produce some output on the teletype.</li>
+<li>When finished an <code>END OF PROGRAM</code> message will be produced.</li>
+</ol>
+<p>If all went well the system is now back waiting to compile and run another 
+program.
+You can repeat from step (1) above.</p>
+<p>If things didn't quite go to plan you may need to press the <i>Reset</i> key
+on the operator console to get control back.
+You may then execute a jump (i.e. a <b>40</b> instruction to one of several 
+locations to continue.
+The two most useful are probably:</p>
+<ul>
+<li><b>40 6</b> to re-run the last compiled program.</li>
+<li><b>40 7</b> to reset to step (1) above to compile and run a new program.</li>
+</ul>
+<p>If things go very wrong the simplest action is to <i>Reset</i> and to 
+reload the whole ALGOL system starting again from
+<a href="#loadc">Loading the Compiler</a>.</p>
+<p>For full details of the compiler (and there is a lot more detail) you can
+refer to Bill Purvis' scans of the <a href="http://www.billp.org/ccs/A104">803
+ALGOL Library Program A104</a> reference manual.</p>
+<hr>
+<h2 id="samples">Sample Programs</h2>
+<h3 id="hello">Hello World</h3>
+<table frame="box" rules="all" border="1" cellpadding="4">
+<tr><td><b>Source Code</b></td>
+<td><a href="../samples/algol/hello.algol"><samp>samples/algol/hello.algol</samp></a></td></tr>
+</table>
+<p>This is a very simple algol &quot;hello world&quot; program.
+It just prints a short message to the output teletype.</p>
+<p>The source code for this program uses only characters from the
+standard Elliott telecode character set, so it looks exactly like a
+genuine 803 ALGOL program. 
+Note that it is all in uppercase and has apostrophes (rather than semicolons) 
+as statement separators. 
+It also uses the GB pound sign and the question mark as string delimiters.
+The <code>PUNCH(3)</code> command on the <code>PRINT</code> statement directs
+the output to the teletype (rather than a tape punch which would otherwise 
+be the default).</p>
+<h3 id="trig">Trigonometric Table</h3>
+<table frame="box" rules="all" border="1" cellpadding="4">
+<tr><td><b>Source Code</b></td>
+<td><a href="../samples/algol/trig.algol"><samp>samples/algol/trig.algol</samp></a></td></tr>
+</table>
+<p>This program prints out a table of sine and cosine values for some angles
+between 0 and 360 degrees.</p>
+<p>The source code for the program makes use of the 
+<a href="telecode.html#jtotc">extended mapping</a> from Java system characters 
+to telecode characters provided by the simulator to provide better looking 
+source code.
+In particular both upper- and lowercase characters can be used (though they
+are treated identically), semicolons can be used as statement separators (rather than 
+apostrophes) and square brackets can be used for array subscripts.
+The code also uses the number sign (#) instead of the GB pound sign (&pound;)
+for the open string quote, for easier use on non UK keyboards.</p>
+<h3 id="qsort">QuickSort</h3>
+<table frame="box" rules="all" border="1" cellpadding="4">
+<tr><td><b>Source Code</b></td>
+<td><a href="../samples/algol/sort.algol"><samp>samples/algol/sort.algol</samp></a></td></tr>
+</table>
+<p>This program creates a array of small random integers then sorts them into 
+ascending order using the recursive Quicksort algorithm.</p>
+<p>The source code for the program also makes use of the 
+<a href="telecode.html#jtotc">extended mapping</a> from Java system characters 
+to telecode characters provided by the simulator to provide better looking 
+source code.</p>
+<p>A few comments on the code:</p>
+<table frame="void" rules="none" cellpadding="5">
+<tr><td valign="top">Line&nbsp;17:</td>
+<td>This procedure declaration uses the somewhat odd and obscure 
+&quot;long comma&quot; that was unique to ALGOL 60.
+In a procedure declaration or procedure call the sequence of characters
+&quot;<code>)&lt;any&nbsp;chars&gt;:&nbsp;(</code>&quot; is syntactically 
+equivalent to a comma!</td></tr>
+<tr><td valign="top">Lines&nbsp;21&nbsp;and&nbsp;57:</td>
+<td>All labels have to be declared on a <code>SWITCH</code> statement.</td></tr>
+<tr><td valign="top">Lines&nbsp;28&nbsp;and&nbsp;29:</td>
+<td>ALGOL 60 does not have a &quot;while&quot; loop as such, only a <code>WHILE</code>
+clause on the <code>FOR</code> loop.
+These two lines really only want the <code>WHILE</code> part but have to include 
+a redundant <code>FOR I:=0</code> control variable part of the statement.</td></tr>
+<tr><td valign="top">Line&nbsp;51:</td>
+<td>A rather pointless function procedure definition, but it does demonstrate 
+some aspects of the language, such as assigning the function result to the 
+procedure name.</td></tr>
+<tr><td valign="top">Line&nbsp;53:</td>
+<td>This statement reads two integer values from the tape reader.
+The actual values to be read are appended to the source code tape after
+the final <code>END</code>.
+It is assumed the tape will be left in the reader after the source code 
+has been compiled.
+When reading integer values the compiler will simply skip any non digit 
+characters it encounters, so you can add comments to indicate what the 
+numbers mean, as has been done here.</td></tr>
+<tr><td valign="top">Line&nbsp;60:</td>
+<td>The <code>PUNCH(3)</code> statement directs all output to the teletype.</td></tr>
+<tr><td valign="top">Lines&nbsp;63&nbsp;to&nbsp;67:</td>
+<td>These lines use the simulator's <a href="extras.html#random">random number 
+device</a> to generate some random numbers (between 0 and 511).
+The <code>ELLIOTT(...)</code> statement inserts a single line of machine
+code, in this case it reads the random number generator to the accumulator 
+and ANDs the value with 511 (i.e. 9 bits) to create the result.
+The real Elliott 803 did not have a random number generator.</td></tr>
+<tr><td valign="top">Lines&nbsp;80&nbsp;and&nbsp;81:</td>
+<td>These are the data values for the program that are read by the 
+<code>READ</code> statement on line 53.
+There are two sets of values, so the program can be run again to see 
+some slightly different output.</td></tr>
+<tr><td valign="top">Various places:</td>
+<td>There are a number of semicolons before after some of the <code>END</code>
+statements that are strictly speaking unnecessary, but I prefer to always
+put them in as they are harmless and result in less errors when the program
+is later changed!</td></tr>
+</table>
+<p>The QuickSort program is a particularly nice example, since the Quicksort 
+algorithm was invented by
+<a href="http://en.wikipedia.org/wiki/C._A._R._Hoare">Tony Hoare</a>
+and it was the same Tony Hoare who was responsible for the implementation
+of the Elliott 803 ALGOL compiler.</p>
+<h3 id="plot">Sine Wave Plot</h3>
+<table frame="box" rules="all" border="1" cellpadding="4">
+<tr><td><b>Source Code</b></td>
+<td><a href="../samples/algol/plot.algol"><samp>samples/algol/plot.algol</samp></a></td></tr>
+</table>
+<p>This program demonstrates a simple use of the graph plotter to draw
+an approximate sine-wave.
+The mechanism used to draw lines on the plotter is deliberately done in
+a very simple manner, but it seems perfectly adequate for this application.</p>
+<p>Note that <code>ELLIOTT()</code> statements are used to insert specific
+machine code instructions to drive the plotter.
+The plotter had paper that was 11 inches wide and a pen that could be 
+moved in steps of 1/100 inch in any of 8 directions using special machine
+instructions:</p>
+<blockquote><table frame="void" rules="none" cellpadding="1">
+<tr><td><code>72 7184</code></td><td width="15"/><td>Raise the pen</td></tr>
+<tr><td><code>72 7200</code></td><td/><td>Lower the pen</td></tr>
+<tr><td><code>72 7169</code></td><td/><td>Move one step EAST</td></tr>
+<tr><td><code>72 7170</code></td><td/><td>Move one step WEST</td></tr>
+<tr><td><code>72 7172</code></td><td/><td>Move one step NORTH</td></tr>
+<tr><td><code>72 7176</code></td><td/><td>Move one step SOUTH</td></tr>
+<tr><td><code>72 7173</code></td><td/><td>Move one step NORTH-EAST</td></tr>
+<tr><td><code>72 7174</code></td><td/><td>Move one step NORTH-WEST</td></tr>
+<tr><td><code>72 7177</code></td><td/><td>Move one step SOUTH-EAST</td></tr>
+<tr><td><code>72 7178</code></td><td/><td>Move one step SOUTH-WEST</td></tr>
+</table></blockquote> 
+<p>The Elliott ALGOL compiler included a pre-compiled <i>Plotter Package</i> 
+that would normally be used to drive the plotter.
+This provided a set of procedures that could be used to set the origin, scale
+output, draw lines and various other options - including directing the output
+of PRINT statements to the plotter to add text and labels to graphs.
+The sample program however does not use the plotter Ppckage, mostly because I
+simply can't remember exactly how it all worked!</p>
+<hr>
+<h2 id="contrib">Contributed Programs</h2>
+<p>These are some rather more complex example ALGOL programs that have been 
+kindly contributed by <a href="mailto:general_factotum@hotmail.co.uk">Bob Firth</a>.
+Both these programs do a lot of intensive calculation and both will run very
+much faster if the CPU and Core Store windows are minimized and the <i>Real time</i>
+option is deselected.</p>
+<h3 id="factorial">Large Factorials</h3>
+<table frame="box" rules="all" border="1" cellpadding="4">
+<tr><td><b>Source Code</b></td>
+<td><a href="../samples/extra/factorial4.algol"><samp>samples/extra/factorial4.algol</samp></a></td></tr>
+</table>
+<p>This will calculate factorials of large integers (e.g. 1000!).
+The value to be calculated should be provided on a tape placed into reader 2.</p>
+<h3 id="pi">Calculation of PI</h3>
+<table frame="box" rules="all" border="1" cellpadding="4">
+<tr><td><b>Source Code</b></td>
+<td><a href="../samples/extra/pi4.algol"><samp>samples/extra/pi4.algol</samp></a></td></tr>
+</table>
+<p>This will calculate the value of PI to many decimal places (e.g. 1000).
+The number of places required should be provided on a tape placed into reader 2.</p>
+<br><table border="1" frame="above" rules="none" width="100%">
+<tr><td align="left">Tim Baldwin<br>June 2012
+<br><a href="mailto:tjb803@tinymail.co.uk">tjb803@tinymail.co.uk</a></td>
+<td align="right">Return to <a href="index.html">index</a>
+<br><br>&copy; Tim Baldwin 2009,2012</td></tr>
+</table>
+</body>
+</html>

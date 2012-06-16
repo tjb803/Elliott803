@@ -1,0 +1,52 @@
+Trigonometric Table;
+
+BEGIN
+ COMMENT **                      **;
+ COMMENT * Elliott 803B simulator *;
+ COMMENT *                        *;
+ COMMENT * (C) Tim Baldwin 2009   *;
+ COMMENT **                      **;
+
+ COMMENT **                                                        **;
+ COMMENT * Print out a table of some x and sin(x) and cos(x) values *;
+ COMMENT **                                                        **;
+
+    COMMENT Program constants;
+    INTEGER size;  REAL pi;
+
+    COMMENT Create tables of angles in degrees and radians;
+    PROCEDURE createAngles(s, d, r);
+    VALUE s; INTEGER s; INTEGER ARRAY d; REAL ARRAY r;
+    BEGIN
+        INTEGER i, a;
+        a := 360/(s-1);
+
+        FOR i := 1 STEP 1 UNTIL s DO BEGIN
+            d[i] := (i-1) * a;
+            r[i] := (d[i]/180) * pi;
+        END loop;
+    END createAngles;
+
+    size := 25;
+    pi := 3.141592;
+
+    COMMENT Print sine and cosine tables;
+    BEGIN
+        INTEGER i;
+        INTEGER ARRAY deg[1:size];
+        REAL ARRAY rad[1:size];
+        REAL sv, cv;
+
+        createAngles(size, deg, rad);
+
+        punch(3);    COMMENT Send all output to the teletype;
+        PRINT #      x deg?,#       x rad?,#      sin(x)?,#      cos(x)#L??;
+        PRINT #    -------?,#    --------?,#   ---------?,#   ---------#L??;
+
+        FOR i := 1 STEP 1 UNTIL size DO BEGIN
+            sv := sin(rad[i]);  cv := cos(rad[i]);
+            PRINT prefix(#  ?), deg[i], aligned(2,6), rad[i];
+            PRINT prefix(#  ?), aligned(2,6), sv, cv, ##L??;
+        END print loop;
+    END;
+END program;

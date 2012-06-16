@@ -1,0 +1,30 @@
+**                              **
+* Elliott Model 803B Simulator   *
+*                                *
+* (C) Copyright Tim Baldwin 2009 *
+**                              **
+
+**
+* Simple Hello World Example
+*
+* Prints "HELLO WORLD?" to the teletype.
+*
+* This program will be loaded into into store starting at address 7.  The
+* initial instructions will read past the end of the input tape and the
+* system will become 'busy' waiting for more input from the tape reader.
+* At this point the operator needs to press the 'Reset' button and perform
+* a manual jump to the entry point address (40 7).
+**
+        =7                      * Load address
+
+loop:   22 index / 30 hello     * Get next character
+        42 end   : 20 char      * Check for zero at end of text, otherwise save character
+        00 char  / 74 4096      * Write character to teletype
+        40 loop                 * Loop
+end:    74 4125  : 74 4126      * Write [CR][LF] to terminate line
+done:   40 done                 * Finished, so spin until reset
+
+char:   0                       * Character workspace
+index: -1                       * Index into text
+hello: 'Hello World!'           * Text: will be telecode [LS]HELLO WORLD[FS]?
+        0                       * Zero marks end of text
