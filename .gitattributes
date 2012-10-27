@@ -87,6 +87,7 @@ src/elliott803/utils/PrintTelecode.java -text svneol=unset#text/plain
 src/elliott803/utils/PrintTrace.java -text
 src/elliott803/utils/TapeCopy.java -text
 src/elliott803/utils/TapePrint.java -text
+src/elliott803/utils/TapeReverse.java -text
 src/elliott803/utils/TapeWrite.java -text
 src/elliott803/view/ComputerView.java -text
 src/elliott803/view/ConsoleView.java -text

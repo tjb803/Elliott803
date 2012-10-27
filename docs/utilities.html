@@ -16,6 +16,7 @@ various off-line tasks.</p>
 <li><a href="#tprint">Telecode Tape Printer</a></li>
 <li><a href="#twrite">Telecode Tape Writer</a></li>
 <li><a href="#tcopy">Tape Copier</a></li>
+<li><a href="#trev">Tape Reverser</a></li>
 <li><a href="#pcore">Core File Formatter</a></li>
 <li><a href="#ptrace">Trace File Formatter</a></li>
 <li><a href="#pt1">Binary Tape Formatter</a></li>
@@ -144,6 +145,21 @@ conversion</a> methods.</p>
 output tape.
 If more than one input tape is specified the output tape will include a 
 small amount of runout between each tape as it is copied.</p>
+<hr><h2 id="trev">Tape Reverser</h2>
+<h3>Command</h3>
+<blockquote><pre>
+<code>java <b>elliott803.utils.TapeReverse</b> inputtape outputtape</code>
+</pre></blockquote>
+<h4>Parameters</h4>
+<blockquote><dl>
+<dt><code>inputtape</code></dt><dd>The input tape name.</dd>
+<dt><code>outputtape</code></dt><dd>The output tape name.</dd>
+</dl></blockquote>
+<p>This will make a copy the input tapes in reverse, producing a new
+output tape.
+This function is intended for use with ALGOL <i>Owncode</i> tapes which are
+produced by the compiler in reverse and were intended to be wound up 
+backwards before being read back into the system.</p>
 <hr><h2 id="pcore">Core File Formatter</h2>
 <h3>Command</h3>
 <blockquote><pre>
