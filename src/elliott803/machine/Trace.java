@@ -119,6 +119,12 @@ public class Trace implements Serializable {
                 entry = (Entry)in.readObject();
             } catch (EOFException e) {
                 // Assume end of file reached
+                try {
+                    in.close();
+                    in = null;
+                } catch (IOException e1) {
+                    System.err.println(e1);
+                }
             } catch (Exception e) {
                 System.err.println(e);
             }

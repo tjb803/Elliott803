@@ -48,6 +48,7 @@ public class TestTelecodeInputStream extends BaseTelecodeTest {
             
             byte[] big = new byte[100];
             int size = tin.read(big);
+            tin.close();
             assertEquals("Test "+i, expected.length, size);
             
             byte[] tc = new byte[size];

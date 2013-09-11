@@ -71,6 +71,7 @@ public class DisplayWord extends JPanel {
     public void setValue(long value) {
         String txt = null;
         switch (type) {
+            default:  break;
             case BIN39:       txt = Word.toBinaryString(value);   break;
             case BIN38:       txt = Word.toBin38String(value);    break;
             case OCTAL:       txt = Word.toOctalString(value);    break;
