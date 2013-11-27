@@ -25,8 +25,10 @@ public class TestConsoleView extends BaseViewTest {
 
     public void testRandom() throws Exception {
         Random rand = new Random();
-        while (true) {
+        int count = 0;
+        while (++count > 0) {
             consoleView.updateLights(rand.nextBoolean(), rand.nextBoolean(), rand.nextBoolean(), rand.nextBoolean());
+            consoleView.soundVolume(count%50>25, (count/5)%100);
             Thread.sleep(100);
         }
     }    

@@ -35,6 +35,7 @@ public class ConsoleButtons extends JPanel implements ActionListener {
         this.console = console;
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setAlignmentX(LEFT_ALIGNMENT);
+        setAlignmentY(CENTER_ALIGNMENT);
         setBorder(BorderFactory.createTitledBorder(title));
         
         release = new ConsoleButton("R", ConsoleButton.RED, true);

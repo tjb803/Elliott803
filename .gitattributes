@@ -93,6 +93,7 @@ src/elliott803/view/ComputerView.java -text
 src/elliott803/view/ConsoleView.java -text
 src/elliott803/view/ControlView.java -text
 src/elliott803/view/CpuView.java -text
+src/elliott803/view/Loudspeaker.java -text
 src/elliott803/view/MachineImage.java -text
 src/elliott803/view/PlotterView.java -text
 src/elliott803/view/PtsView.java -text
@@ -106,6 +107,7 @@ src/elliott803/view/component/ConsoleButton.java -text
 src/elliott803/view/component/ConsoleButtons.java -text
 src/elliott803/view/component/ConsoleLight.java -text
 src/elliott803/view/component/ConsoleOperation.java -text
+src/elliott803/view/component/ConsoleVolume.java -text
 src/elliott803/view/component/DeviceLight.java -text
 src/elliott803/view/component/DeviceMode.java -text
 src/elliott803/view/component/DeviceModeSelect.java -text
@@ -132,6 +134,7 @@ test/src/elliott803/view/TestConsoleView.java -text svneol=unset#text/plain
 test/src/elliott803/view/TestControlView.java -text
 test/src/elliott803/view/TestCpuView.java -text svneol=unset#text/plain
 test/src/elliott803/view/TestDeviceView.java -text svneol=unset#text/plain
+test/src/elliott803/view/TestLoudspeaker.java -text
 test/src/elliott803/view/TestPlotterView.java -text
 test/src/elliott803/view/TestPtsView.java -text svneol=unset#text/plain
 test/src/elliott803/view/TestStoreView.java -text svneol=unset#text/plain

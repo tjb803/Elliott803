@@ -1,7 +1,7 @@
 /**
  * Elliott Model 803B Simulator
  *
- * (C) Copyright Tim Baldwin 2009, 2012
+ * (C) Copyright Tim Baldwin 2009, 2013
  */
 package elliott803.view;
 
@@ -24,6 +24,7 @@ import elliott803.view.component.ConsoleButton;
 import elliott803.view.component.ConsoleButtons;
 import elliott803.view.component.ConsoleLight;
 import elliott803.view.component.ConsoleOperation;
+import elliott803.view.component.ConsoleVolume;
 import elliott803.view.component.DisplayWord;
 import elliott803.view.component.DisplayWord.Type;
 
@@ -33,6 +34,9 @@ import elliott803.view.component.DisplayWord.Type;
  * This has all the buttons for the word generator and various other buttons for
  * operating the computer.  It is intended to look and work roughly like the real
  * console, but it is not meant to be a completely accurate simulation.
+ * 
+ * It also contains the loudspeaker that produces sounds by firing a pulse when
+ * certain instructions are executed.
  */
 public class ConsoleView extends JInternalFrame implements ActionListener, FocusListener {
     private static final long serialVersionUID = 1L;
@@ -46,10 +50,12 @@ public class ConsoleView extends JInternalFrame implements ActionListener, Focus
     static final String[] ADDR_NAMES = { "4096", "2048", "1024", "512", "256", "128", "64", "32", "16", "8", "4", "2", "1", "B" };
 
     Console console;
-
+    Loudspeaker speaker;
+    
     ConsoleOperation function;
     ConsoleLight step, busy, overflow, fpOverflow;
     ConsoleButton manualData;
+    ConsoleVolume volume;
     JButton operate;
     DisplayWord wordgen;
 
@@ -59,9 +65,21 @@ public class ConsoleView extends JInternalFrame implements ActionListener, Focus
         setFocusable(true);
         addFocusListener(this);
 
+        speaker = new Loudspeaker();
+        volume = new ConsoleVolume(console);
+
+        JPanel f1v = new JPanel();
+        f1v.setLayout(new BoxLayout(f1v, BoxLayout.X_AXIS));
+        f1v.setAlignmentX(LEFT_ALIGNMENT);
+        ConsoleButtons f1 = new ConsoleButtons("Function 1", FN_NAMES, 6, 39, console);
+        volume.setMaximumSize(f1.getPreferredSize());
+        f1v.add(f1); 
+        f1v.add(Box.createHorizontalGlue());
+        f1v.add(volume);
+        
         JPanel wg = new JPanel();
         wg.setLayout(new BoxLayout(wg, BoxLayout.Y_AXIS));
-        wg.add(new ConsoleButtons("Function 1", FN_NAMES, 6, 39, console));
+        wg.add(f1v);
         wg.add(Box.createVerticalStrut(5));
         wg.add(new ConsoleButtons("Address 1", ADDR_NAMES, 14, 33, console));
         wg.add(Box.createVerticalStrut(5));
@@ -129,6 +147,8 @@ public class ConsoleView extends JInternalFrame implements ActionListener, Focus
         controls.add(operate);
         controls.add(Box.createVerticalStrut(5));
         
+        volume.setPreferredSize(cb.getPreferredSize());
+
         console.setView(this);
 
         Container content = getContentPane();
@@ -163,7 +183,7 @@ public class ConsoleView extends JInternalFrame implements ActionListener, Focus
     }
 
     /*
-     * GUI visualisation
+     * GUI visualisation (and auralisation!)
      */
 
     public void updateWordGen(long value) {
@@ -175,5 +195,15 @@ public class ConsoleView extends JInternalFrame implements ActionListener, Focus
         busy.setValue(isBusy);
         overflow.setValue(isOverflow);
         fpOverflow.setValue(isFpOver);
+    }
+    
+    public void soundVolume(boolean on, int vol) {
+        speaker.setVolume(on ? ((vol*255)/100) : 0);
+        volume.slider.setValue(vol);
+        volume.slider.setEnabled(on);
+    }
+    
+    public void soundSpeaker(boolean click, int count) {
+        speaker.sound(click, count);
     }
 }

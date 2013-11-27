@@ -1,7 +1,7 @@
 /**
  * Elliott Model 803B Simulator
  *
- * (C) Copyright Tim Baldwin 2009, 2012
+ * (C) Copyright Tim Baldwin 2009, 2013
  */
 package elliott803.hardware;
 
@@ -40,7 +40,7 @@ public class CPU {
     
     // Variables used to control instruction timing
     boolean realTime, useSpin, busyWait;
-    int cycles, cpuCycles;
+    int cycles, delayCycles, cpuCycles;
     long cpuStart, cpuBusy, busyStart; 
     long spinPause, sleepPause;
 
@@ -106,7 +106,9 @@ public class CPU {
         running = true;
         while (running) {
             busyWait = false;
-            obey();            
+            delayCycles = 0;
+            obey();   
+            cycles += delayCycles;
             cpuCycles += cycles;
 
             // It is hard to get timings exact in Java.  This logic assumes we 
@@ -197,6 +199,9 @@ public class CPU {
         int op = Instruction.getOp(irx);
         int addr = Instruction.getAddr(irx);
 
+        // Start the initial sound sample
+        computer.console.soundSpeaker(op > 037, 1);
+        
         // Perform the operation.  Default cycle time is 576us (2 cycles)
         jump = false;
         cycles = 2;
@@ -208,6 +213,11 @@ public class CPU {
             case 6: group6(op, addr);  break;
             case 7: group7(op, addr);  break;
         }
+        
+        // Complete the sound sample unless we had a busy wait
+        if (!busyWait) {
+            computer.console.soundSpeaker(false, cycles-1);
+        }    
 
         // Update console lights to track overflow states
         computer.console.setOverflow(overflow, fpOverflow);
@@ -403,7 +413,7 @@ public class CPU {
 
     // Add additional 'cycles' for real-time device control
     public void addDelay(int us) {
-        cycles += (us*1000)/CYCLE_NANO;
+        delayCycles = (us*1000)/CYCLE_NANO;
     }
     
     // Attempt to calibrate the CPU timings used for real-time operation

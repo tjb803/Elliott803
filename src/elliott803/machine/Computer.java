@@ -1,7 +1,7 @@
 /**
  * Elliott Model 803B Simulator
  *
- * (C) Copyright Tim Baldwin 2009, 2012
+ * (C) Copyright Tim Baldwin 2009, 2013
  */
 package elliott803.machine;
 
@@ -87,6 +87,7 @@ public class Computer extends Thread {
         // And the control console - start in step-by-step mode
         console = new Console(this);
         console.setStep(true);
+        console.setVolume(50);
         
         // Default to real time mode
         setRealTime(true);
@@ -105,8 +106,7 @@ public class Computer extends Thread {
             while (busyWait) {
                 try {
                     wait();
-                } catch (InterruptedException e) {
-                }
+                } catch (InterruptedException e) { }
             }
         }
     }
@@ -131,6 +131,7 @@ public class Computer extends Thread {
         cpu.setRealTime(rt);
         pts.setRealTime(rt);
         plotter.setRealTime(rt);
+        console.setSpeaker(rt);
     }
 
     /*
@@ -155,7 +156,7 @@ public class Computer extends Thread {
      * Swing event dispatch thread does not perform any long running tasks. 
      */
 
-    Boolean threadRun = Boolean.FALSE;
+    Object threadRun = new Object();
     int action = ACT_WAIT;
 
     public void run(int act) {
@@ -166,9 +167,6 @@ public class Computer extends Thread {
     }
 
     public void run() {
-        // Flag to show we are running on a thread and to synchronise thread operations
-        threadRun = new Boolean(true);
-        
         while (true) {
             int act = ACT_WAIT;
             synchronized (threadRun) {
@@ -176,8 +174,7 @@ public class Computer extends Thread {
                     threadRun.wait();
                     act = action;
                     action = ACT_WAIT;
-                } catch (InterruptedException e) {
-                }
+                } catch (InterruptedException e) { }
             }
             switch (act) {
                 case ACT_STEP:

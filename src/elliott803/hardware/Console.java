@@ -1,7 +1,7 @@
 /**
  * Elliott Model 803B Simulator
  *
- * (C) Copyright Tim Baldwin 2009
+ * (C) Copyright Tim Baldwin 2009,2013
  */
 package elliott803.hardware;
 
@@ -11,8 +11,8 @@ import elliott803.machine.Word;
 import elliott803.view.ConsoleView;
 
 /**
- * The operator console, including the word generator and various operating
- * functions.
+ * The operator console, including the word generator, various operating
+ * functions and the loudspeaker.
  *
  * @author Baldwin
  */
@@ -31,7 +31,10 @@ public class Console extends Device {
     boolean busy;               // Status lights
     boolean step;
     boolean overflow, fpOverflow;
-
+    
+    boolean speakerOn;          // Speaker on/off
+    int speakerVol;             // Speaker volume (0 to 100)
+    
     public Console(Computer computer) {
         this.computer = computer;
         action = CONSOLE_READ;
@@ -151,7 +154,24 @@ public class Console extends Device {
             }
         }    
     }
-
+    
+    // Set speaker on/off
+    public void setSpeaker(boolean on) {
+        speakerOn = on;
+        viewVolume();
+    }
+    
+    // Set the speaker volume (0 to 100)
+    public void setVolume(int volume) {
+        speakerVol = Math.max(0, Math.min(100, volume));
+        viewVolume();
+    }
+    
+    // Get speaker volume
+    public int getVolumne() {
+        return speakerVol;
+    }
+    
     // Mainly for debugging
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -181,4 +201,15 @@ public class Console extends Device {
         if (view != null)
             view.updateLights(step, busy, overflow, fpOverflow);
     }
-}
+    
+    void viewVolume() {
+        if (view != null)
+            view.soundVolume(speakerOn, speakerVol);
+    }
+    
+    // Sound the speaker
+    public void soundSpeaker(boolean click, int cycles) {
+        if (view != null)
+            view.soundSpeaker(click, cycles);
+    }
+ }
