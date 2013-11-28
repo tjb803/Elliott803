@@ -25,7 +25,8 @@ public class TestLoudspeaker extends TestCase {
         speaker.setVolume(255);
         long end = System.currentTimeMillis() + 5000;
         while (System.currentTimeMillis() < end) {
-            speaker.sound(true, 1);
+            if (!speaker.sound(true, 1)) 
+                Thread.sleep(100);
         }
         speaker.setVolume(0);
     }
@@ -34,19 +35,23 @@ public class TestLoudspeaker extends TestCase {
         speaker.setVolume(255);
         long end = System.currentTimeMillis() + 5000;
         while (System.currentTimeMillis() < end) {
-            speaker.sound(true, 1);
-            speaker.sound(false, 1);
+            if (speaker.sound(true, 1))
+                speaker.sound(false, 1);
+            else
+                Thread.sleep(100);
         }
         speaker.setVolume(0);
     }
     
     public void testVolume() throws InterruptedException {
-        for (int vol = 255; vol > 0; vol--) {
+        for (int vol = 100; vol > 0; vol--) {
             speaker.setVolume(vol);
             long end = System.currentTimeMillis() + 20;
             while (System.currentTimeMillis() < end) {
-                speaker.sound(true, 1);  
-                speaker.sound(false, 2);
+                if (speaker.sound(true, 1))  
+                    speaker.sound(false, 2);
+                else
+                    Thread.sleep(100);
             }    
         }
     }

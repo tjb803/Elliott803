@@ -40,7 +40,7 @@ public class CPU {
     
     // Variables used to control instruction timing
     boolean realTime, useSpin, busyWait;
-    int cycles, delayCycles, cpuCycles;
+    int cycles, cpuCycles;
     long cpuStart, cpuBusy, busyStart; 
     long spinPause, sleepPause;
 
@@ -106,9 +106,7 @@ public class CPU {
         running = true;
         while (running) {
             busyWait = false;
-            delayCycles = 0;
             obey();   
-            cycles += delayCycles;
             cpuCycles += cycles;
 
             // It is hard to get timings exact in Java.  This logic assumes we 
@@ -413,7 +411,7 @@ public class CPU {
 
     // Add additional 'cycles' for real-time device control
     public void addDelay(int us) {
-        delayCycles = (us*1000)/CYCLE_NANO;
+        cycles += (us*1000)/CYCLE_NANO;
     }
     
     // Attempt to calibrate the CPU timings used for real-time operation

@@ -64,7 +64,7 @@ public class ConsoleView extends JInternalFrame implements ActionListener, Focus
         this.console = console;
         setFocusable(true);
         addFocusListener(this);
-
+        
         // Create the loudspeaker
         speaker = new Loudspeaker();
         speaker.setVolume(console.getVolume());
@@ -200,8 +200,8 @@ public class ConsoleView extends JInternalFrame implements ActionListener, Focus
         fpOverflow.setValue(isFpOver);
     }
     
-    public void soundVolume(boolean on, int vol) {
-        speaker.setVolume(on ? ((vol*255)/100) : 0);
+    public void updateVolume(boolean on, int vol) {
+        speaker.setVolume(on ? vol : 0);
         volume.slider.setValue(vol);
         volume.slider.setEnabled(on);
     }

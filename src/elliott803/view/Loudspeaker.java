@@ -21,16 +21,16 @@ import javax.sound.sampled.SourceDataLine;
  */
 public class Loudspeaker extends Thread {
     /*
-     * We create a SouceDataLine that runs at 44.1kHz as this should be supported
-     * by pretty well all sound cards.  The fastest frequency pulse should be 288uS 
-     * which corresponds to 12.7 samples at 44.1kHz, so we'll use sample lengths of
-     * 12 bytes to try to ensure we don't overrun.
+     * We use a SouceDataLine with a sample frequency of 48kHz and use a sample
+     * size of 14 bytes.  This gives a 'cycle time' of 291.6us which is as close as
+     * we can get to the required 288us.  Having the sound sample slightly too long
+     * seems to sound better than slightly too short.
      * 
      * We write samples that either contain a 'pulse' (first half of the sample 
      * is non-zero) or 'quiet' (sample is all zeros).  Therefore a constant stream
      * of 'pulses' should make a tone of about 3.5kHz.
      */
-    static final int SAMPLE_SIZE = 12;
+    static final int SAMPLE_SIZE = 14;
     
     byte[] pulse, quiet;
     Queue<byte[]> samples;
@@ -39,19 +39,19 @@ public class Loudspeaker extends Thread {
     SourceDataLine line;
     
     public Loudspeaker()  {
-        pulse = new byte[SAMPLE_SIZE];
-        quiet = new byte[SAMPLE_SIZE];  
-        
-        samples = new ArrayBlockingQueue<byte[]>(1470); // (=8820/12 - see below)
+        pulse = new byte[SAMPLE_SIZE]; 
+        quiet = new byte[SAMPLE_SIZE];
+
         on = new AtomicBoolean(false);
+        samples = new ArrayBlockingQueue<byte[]>(1029);
         
         try {
             // Create the line with a buffer for about 1/5s of sound so it starts 
             // and stops near enough when requested, but not so small it runs out
             // of buffered samples too often.
-            AudioFormat af = new AudioFormat(44100, 8, 1, false, false);
+            AudioFormat af = new AudioFormat(48000, 8, 1, false, false);
             line = AudioSystem.getSourceDataLine(af);
-            line.open(af, 8820);    // Multiple of 12 that is about 1/5s at 44.1kHz
+            line.open(af, 9604);    // Multiple of 14 that is about 1/5s at 48kHz
             start();                // Start the audio thread
         } catch (LineUnavailableException e) {
             System.err.println(e);
@@ -59,26 +59,26 @@ public class Loudspeaker extends Thread {
         }
     }
 
-    // Send pulse/quiet samples to the spekaer
-    public void sound(boolean click, int count) {
-        if (on.get()) {
-            byte[] sample = click ? pulse : quiet;
+    // Send pulse/quiet samples to the speaker
+    public boolean sound(boolean click, int count) {
+        boolean sound = on.get();
+        if (sound) {
+            byte[] sample = click ? quiet : pulse;
             while (count-- > 0)
-                samples.offer(sample);
+                sound &= samples.offer(sample);
         }
+        return sound;
     }
-    
-    // Return true if sound queued
-    
-    
-    // Set the volume from 0 to 255.  Volume of 0 means switch off the speaker.
+ 
+    // Set the volume from 0 to 100.  Volume of 0 means switch off the speaker.
     public void setVolume(int volume) {
         if (volume == 0) {
             on.set(false);
         } else if (line != null) {
-            pulse[0] = pulse[5] = (byte)(volume/4);
-            pulse[1] = pulse[4] = (byte)(volume/2);
-            pulse[2] = pulse[3] = (byte)(volume);
+            volume = (255*volume*volume)/(100*100); // Scale in non-linear curve
+            quiet[0] = quiet[5] = (byte)(volume/4);
+            quiet[1] = quiet[4] = (byte)(volume/2);
+            quiet[2] = quiet[3] = (byte)(volume);
             synchronized (this) {
                 if (!on.get()) {
                     on.set(true);
@@ -90,9 +90,7 @@ public class Loudspeaker extends Thread {
 
     /*
      * The sound thread just pulls samples from the queue and writes them
-     * to the output line.  If no samples are available it writes a short
-     * piece of silence while waiting for the next sample, just to ensure
-     * the output does not go idle.
+     * to the output line. 
      * 
      * If the speaker is switched off the thread goes idle and waits for
      * it to be switched back on again.
@@ -113,8 +111,6 @@ public class Loudspeaker extends Thread {
                 byte[] s = samples.poll();
                 if (s != null)
                     line.write(s, 0, SAMPLE_SIZE);
-                else        // TODO: is this really necessary??
-                    line.write(quiet, 0, SAMPLE_SIZE/2);
             }
             line.flush();
             line.stop();

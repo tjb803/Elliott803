@@ -155,19 +155,18 @@ public class Console extends Device {
         }    
     }
     
-    // Set speaker on/off
+    // Set speaker on/off 
     public void setSpeaker(boolean on) {
         speakerOn = on;
         viewVolume();
     }
     
-    // Set the speaker volume (0 to 100)
+    // Set the speaker volume (from 0 to 100)
     public void setVolume(int volume) {
         speakerVol = Math.max(0, Math.min(100, volume));
         viewVolume();
     }
     
-    // Get speaker volume
     public int getVolume() {
         return speakerVol;
     }
@@ -204,7 +203,7 @@ public class Console extends Device {
     
     void viewVolume() {
         if (view != null)
-            view.soundVolume(speakerOn, speakerVol);
+            view.updateVolume(speakerOn, speakerVol);
     }
     
     // Sound the speaker

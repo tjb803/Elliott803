@@ -28,7 +28,7 @@ public class TestConsoleView extends BaseViewTest {
         int count = 0;
         while (++count > 0) {
             consoleView.updateLights(rand.nextBoolean(), rand.nextBoolean(), rand.nextBoolean(), rand.nextBoolean());
-            consoleView.soundVolume(count%50>25, (count/5)%100);
+            consoleView.updateVolume(count%50>25, (count/5)%100);
             Thread.sleep(100);
         }
     }    
