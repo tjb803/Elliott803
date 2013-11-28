@@ -22,22 +22,23 @@ public class TestLoudspeaker extends TestCase {
     Loudspeaker speaker;
     
     public void testMaxTone() throws InterruptedException {
-        speaker.setVolume(255);
+        speaker.setVolume(50);
         long end = System.currentTimeMillis() + 5000;
         while (System.currentTimeMillis() < end) {
-            if (!speaker.sound(true, 1)) 
+            speaker.sound(true, 1);
+            if (speaker.isFull())
                 Thread.sleep(100);
         }
         speaker.setVolume(0);
     }
     
     public void testHalfTone() throws InterruptedException {
-        speaker.setVolume(255);
+        speaker.setVolume(50);
         long end = System.currentTimeMillis() + 5000;
         while (System.currentTimeMillis() < end) {
-            if (speaker.sound(true, 1))
-                speaker.sound(false, 1);
-            else
+            speaker.sound(true, 1);
+            speaker.sound(false, 1);
+            if (speaker.isFull())
                 Thread.sleep(100);
         }
         speaker.setVolume(0);
@@ -48,9 +49,9 @@ public class TestLoudspeaker extends TestCase {
             speaker.setVolume(vol);
             long end = System.currentTimeMillis() + 20;
             while (System.currentTimeMillis() < end) {
-                if (speaker.sound(true, 1))  
-                    speaker.sound(false, 2);
-                else
+                speaker.sound(true, 1);  
+                speaker.sound(false, 2);
+                if (speaker.isFull())
                     Thread.sleep(100);
             }    
         }

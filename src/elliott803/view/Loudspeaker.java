@@ -5,8 +5,8 @@
  */
 package elliott803.view;
 
-import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.sound.sampled.AudioFormat;
@@ -33,7 +33,7 @@ public class Loudspeaker extends Thread {
     static final int SAMPLE_SIZE = 14;
     
     byte[] pulse, quiet;
-    Queue<byte[]> samples;
+    BlockingQueue<byte[]> samples;
     
     AtomicBoolean on;
     SourceDataLine line;
@@ -60,14 +60,17 @@ public class Loudspeaker extends Thread {
     }
 
     // Send pulse/quiet samples to the speaker
-    public boolean sound(boolean click, int count) {
-        boolean sound = on.get();
-        if (sound) {
+    public void sound(boolean click, int count) {
+        if (on.get()) {
             byte[] sample = click ? quiet : pulse;
             while (count-- > 0)
-                sound &= samples.offer(sample);
+                samples.offer(sample);
         }
-        return sound;
+    }
+    
+    // Is queue full
+    public boolean isFull() {
+        return (samples.remainingCapacity() == 0);
     }
  
     // Set the volume from 0 to 100.  Volume of 0 means switch off the speaker.
