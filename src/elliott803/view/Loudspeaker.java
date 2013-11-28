@@ -68,17 +68,17 @@ public class Loudspeaker extends Thread {
         }
     }
     
-    // Is queue full
+    // Is queue full - mostly used by tests
     public boolean isFull() {
         return (samples.remainingCapacity() == 0);
     }
  
-    // Set the volume from 0 to 100.  Volume of 0 means switch off the speaker.
+    // Set the volume from 0 to 100.  Volume 0 means switch off the speaker.
     public void setVolume(int volume) {
         if (volume == 0) {
             on.set(false);
         } else if (line != null) {
-            volume = (255*volume*volume)/(100*100); // Scale in non-linear curve
+            volume = (255*volume*volume)/(100*100); // Scale in a non-linear curve
             quiet[0] = quiet[5] = (byte)(volume/4);
             quiet[1] = quiet[4] = (byte)(volume/2);
             quiet[2] = quiet[3] = (byte)(volume);
@@ -99,7 +99,7 @@ public class Loudspeaker extends Thread {
      * it to be switched back on again.
      */
     public void run() {
-        setName("ConsoleSpeaker");
+        setName("Loudspeaker");
         setPriority(Thread.MAX_PRIORITY);
         while (true) {
             synchronized (this) {
