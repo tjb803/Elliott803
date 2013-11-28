@@ -65,17 +65,20 @@ public class ConsoleView extends JInternalFrame implements ActionListener, Focus
         setFocusable(true);
         addFocusListener(this);
 
+        // Create the loudspeaker
         speaker = new Loudspeaker();
-        volume = new ConsoleVolume(console);
+        speaker.setVolume(console.getVolume());
 
         JPanel f1v = new JPanel();
         f1v.setLayout(new BoxLayout(f1v, BoxLayout.X_AXIS));
         f1v.setAlignmentX(LEFT_ALIGNMENT);
         ConsoleButtons f1 = new ConsoleButtons("Function 1", FN_NAMES, 6, 39, console);
-        volume.setMaximumSize(f1.getPreferredSize());
+        volume = new ConsoleVolume(console);
+        volume.setMaximumSize(f1.getMinimumSize());
         f1v.add(f1); 
         f1v.add(Box.createHorizontalGlue());
         f1v.add(volume);
+        f1v.add(Box.createHorizontalStrut(20));
         
         JPanel wg = new JPanel();
         wg.setLayout(new BoxLayout(wg, BoxLayout.Y_AXIS));

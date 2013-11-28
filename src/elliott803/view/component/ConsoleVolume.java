@@ -34,7 +34,7 @@ public class ConsoleVolume extends JPanel implements ChangeListener {
         setAlignmentY(CENTER_ALIGNMENT);
         JLabel title = new JLabel("Volume");
         title.setAlignmentX(CENTER_ALIGNMENT);
-        slider = new JSlider(0, 100, console.getVolumne());
+        slider = new JSlider(0, 100, console.getVolume());
         slider.setAlignmentX(CENTER_ALIGNMENT);
         slider.setMajorTickSpacing(10);
         slider.setPaintTicks(true);

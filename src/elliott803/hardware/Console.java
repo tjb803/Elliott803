@@ -168,7 +168,7 @@ public class Console extends Device {
     }
     
     // Get speaker volume
-    public int getVolumne() {
+    public int getVolume() {
         return speakerVol;
     }
     
