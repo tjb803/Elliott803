@@ -56,6 +56,9 @@ public class Loudspeaker extends Thread {
         } catch (LineUnavailableException e) {
             System.err.println(e);
             line = null;            // No sound available;
+        } catch (IllegalArgumentException e) {
+            System.err.println(e);
+            line = null;            // No sound available;
         }
     }
 
@@ -67,7 +70,7 @@ public class Loudspeaker extends Thread {
                 samples.offer(sample);
         }
     }
-    
+
     // Is queue full - mostly used by tests
     public boolean isFull() {
         return (samples.remainingCapacity() == 0);
@@ -111,9 +114,9 @@ public class Loudspeaker extends Thread {
                 line.start();
             }
             while (on.get()) {
-                byte[] s = samples.poll();
-                if (s != null)
-                    line.write(s, 0, SAMPLE_SIZE);
+                try {
+                    line.write(samples.take(), 0, SAMPLE_SIZE);
+                } catch (InterruptedException e) { }    
             }
             line.flush();
             line.stop();
