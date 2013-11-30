@@ -19,6 +19,11 @@ import elliott803.view.CpuView;
  */
 public class CPU {
 
+    // Cycle time should really be 288us, but I'm using 291us as this works
+    // better with the sound samples, and is only a tiny bit out.
+    static final int CYCLE_TIME = 291;              // Basic cycle time in us
+    static final int CYCLE_NANO = CYCLE_TIME*1000;  // Basic cycle time in ns
+
     public Computer computer;   // The owning computer
 
     // CPU registers and flags
@@ -43,9 +48,6 @@ public class CPU {
     int cycles, cpuCycles;
     long cpuStart, cpuBusy, busyStart; 
     long spinPause, sleepPause;
-
-    static final int CYCLE_TIME = 288;              // Basic cycle time in us
-    static final int CYCLE_NANO = CYCLE_TIME*1000;  // Basic cycle time in ns
 
     public CPU(Computer computer) {
         this.computer = computer;

@@ -21,10 +21,11 @@ import javax.sound.sampled.SourceDataLine;
  */
 public class Loudspeaker extends Thread {
     /*
-     * We use a SouceDataLine with a sample frequency of 48kHz and use a sample
-     * size of 14 bytes.  This gives a 'cycle time' of 291.6us which is as close as
-     * we can get to the required 288us.  Having the sound sample slightly too long
-     * seems to sound better than slightly too short.
+     * We use a SouceDataLine with a sample frequency of 48kHz as this is very likely
+     * to be a supported rate for all soundcards and use a sample size of 14 bytes.  
+     * This gives a 'cycle time' of 291.7us which is as close as we can get (at 48kHz)
+     * to the required 288us.  Having the sound sample slightly too long seems to sound 
+     * better than having it slightly too short.
      * 
      * We write samples that either contain a 'pulse' (first half of the sample 
      * is non-zero) or 'quiet' (sample is all zeros).  Therefore a constant stream
@@ -44,7 +45,7 @@ public class Loudspeaker extends Thread {
 
         on = new AtomicBoolean(false);
         samples = new ArrayBlockingQueue<byte[]>(1029);
-        
+
         try {
             // Create the line with a buffer for about 1/5s of sound so it starts 
             // and stops near enough when requested, but not so small it runs out
@@ -65,7 +66,7 @@ public class Loudspeaker extends Thread {
     // Send pulse/quiet samples to the speaker
     public void sound(boolean click, int count) {
         if (on.get()) {
-            byte[] sample = click ? quiet : pulse;
+            byte[] sample = click ? pulse : quiet;
             while (count-- > 0)
                 samples.offer(sample);
         }
@@ -82,9 +83,9 @@ public class Loudspeaker extends Thread {
             on.set(false);
         } else if (line != null) {
             volume = (255*volume*volume)/(100*100); // Scale in a non-linear curve
-            quiet[0] = quiet[5] = (byte)(volume/4);
-            quiet[1] = quiet[4] = (byte)(volume/2);
-            quiet[2] = quiet[3] = (byte)(volume);
+            pulse[0] = pulse[5] = (byte)(volume/4);
+            pulse[1] = pulse[4] = (byte)(volume/2);
+            pulse[2] = pulse[3] = (byte)(volume);
             synchronized (this) {
                 if (!on.get()) {
                     on.set(true);
@@ -96,7 +97,9 @@ public class Loudspeaker extends Thread {
 
     /*
      * The sound thread just pulls samples from the queue and writes them
-     * to the output line. 
+     * to the output line. It seems best to continue to write silence if the
+     * queue becomes empty, otherwise you get strange clicks, pops and bits 
+     * of sound - I don't really know why, I'm sure it shouldn't do that!
      * 
      * If the speaker is switched off the thread goes idle and waits for
      * it to be switched back on again.
@@ -114,9 +117,11 @@ public class Loudspeaker extends Thread {
                 line.start();
             }
             while (on.get()) {
-                try {
-                    line.write(samples.take(), 0, SAMPLE_SIZE);
-                } catch (InterruptedException e) { }    
+                byte[] b = samples.poll();
+                if (b != null)
+                    line.write(b, 0, SAMPLE_SIZE);
+                else 
+                    line.write(quiet, 0, SAMPLE_SIZE/2);
             }
             line.flush();
             line.stop();
