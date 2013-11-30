@@ -1,0 +1,121 @@
+**                              **
+* Elliott Model 803B Simulator   *
+*                                *
+* (C) Copyright Tim Baldwin 2013 *
+**                              **
+
+**
+* This is a rather poor attempt to produce some music.  Some of the 
+* notes are rather out of tune, but it shows the sort of thing that 
+* could be done.  
+**
+
+            @entry            
+*
+* Wait for the user to change the sign bit
+*          
+entry:  
+            70  0 : 45  s2
+s1:         70  0 : 41 play   
+s2:         40 s1 : 70  0
+            45 s2 : 40 play
+     
+* 
+* Attempt to play the tune!
+*
+play:
+next:       22 index / 30 tune
+            42 end   : 20 note
+            22 index / 30 tune
+            20 time  / 30    0
+            20 time   
+            00 note  / 40    0        
+                        
+end:        72 8191
+            
+index:      -1
+
+*
+* These blocks of instructions should produce notes that approximate
+* to a C major scale: C3 D3 E3 F3 G3
+*
+* The note will sound for 'time', where time is set to a negative number
+* of 288us cycles (so for example 1s is roughly -3500).
+*
+t4:        -900         * Quarter note
+t2:        -1800        * Half note
+t1:        -3600        * Whole note 
+
+note:      +0
+time:      +0
+       
+c3t:       +25
+c3:         30   c3t : 34  time
+            00     0 : 00     0
+            00     0 : 00     0
+            00     0 : 00     0
+            00     0 : 00     0
+            00     0 : 00     0
+            41    c3 : 40  next
+            
+d3t:       +23    
+d3:         30   d3t : 34  time
+            00     0 : 00     0
+            00     0 : 00     0
+            00     0 : 00     0
+            00     0 : 00     0
+            00     0 : 41    d3 
+            40  next   
+            
+e3t:       +21
+e3:         30   e3t : 34  time
+            00     0 : 00     0
+            00     0 : 00     0
+            00     0 : 00     0
+            00     0 : 00     0
+            41    e3 : 40  next
+               
+f3t:       +19     
+f3:         30   f3t : 34  time
+            00     0 : 00     0
+            00     0 : 00     0
+            00     0 : 00     0 
+            00     0 : 41    f3 
+            40  next             
+                                
+g3t:       +17  
+g3:         30   g3t : 34  time
+            00     0 : 00     0
+            00     0 : 00     0
+            00     0 : 00     0
+            41    g3 : 40  next
+
+*
+* The 'tune' is defined here, as a series of notes and time values pairs.  Zero
+* marks the end.
+*
+tune:      c3
+           t4
+           c3
+           t4
+           d3
+           t2
+           c3
+           t2
+           f3
+           t2
+           e3
+           t1
+           c3
+           t4
+           c3
+           t4
+           d3
+           t2
+           c3
+           t2
+           g3
+           t2
+           f3
+           t1
+            0

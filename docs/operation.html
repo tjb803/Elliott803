@@ -11,7 +11,7 @@
 <h1>Operation Guide</h1>
 <p>There are two ways to run the Elliott 803 simulator:</p>
 <ul>
-<li><a href="#gui">Interactive GUI Interface</a>
+<li><a href="#gui">Interactive Graphical Interface</a>
 <ul>
 <li><a href="#start">Start Up and Shut Down</a></li>
 <li><a href="#opsim">The Simulation Control Window</a>
@@ -30,10 +30,14 @@
 <ul>
 <li><a href="#tmode">Tape Formats</a></li>
 </ul></li>
+<li><a href="#sound">Sound Output</a>
+<ul>
+<li><a href="#perfs">Performance Note</a></li>
+</ul></li>
 </ul><br></li>
 <li><a href="#cmd">Command Line Interface</a></li>
 </ul>
-<p>Most people will want to use the <a href="#gui">GUI interface</a>.</p>
+<p>Most people will want to use the <a href="#gui">Graphical interface</a>.</p>
 <p>Some further details of how programs are loaded and run are given here:</p>
 <ul>
 <li><a href="#pload">Loading Programs</a></li>
@@ -57,8 +61,9 @@ or <code>java <b>elliott803.Main</b> [options] [machine]</code>
 look-and-feel to use.
 By default the standard platform look-and-feel will be used.
 Other look-and-feels that may be available (depending on operating system
-and Java version) include: <code>metal</code>, <code>windows</code>, 
-<code>classic</code>, <code>motif</code>, <code>gtk</code> and <code>nimbus</code>.
+and Java version) include: <code>metal</code>, <code>ocean</code>, <code>steel</code>,
+<code>windows</code>, <code>classic</code>, <code>motif</code>, <code>gtk</code> and 
+<code>nimbus</code>.
 </dd>
 </dl></blockquote>
 <p>The GUI interface displays a main window containing several smaller internal
@@ -81,7 +86,7 @@ If no image is provided a default window layout will be used.
 <img src="image/opsim.jpg" alt="Simulator Control" align="left"/>
 <p>The simulation control window provides functions not present on a real 
 803 that are used to perform additional control of the simulation.
-The two additional functions provided are controlling the simulation speed
+The two additional functions provided are for controlling the simulation speed
 and loading and saving machine images.
 <br clear="left">
 <h4 id="speed">Controlling the Simulation Speed</h4>
@@ -145,10 +150,10 @@ running normally.</li>
 bar is pressed) whenever an instruction to read the word generator is executed.
 If this button is not pressed the word generator value will be read without
 any pause.</p>
+<img src="image/wordgen1.jpg" alt="Word Generator" align="right"/>
 <p>The indicator lights show the following conditions:</p>
 <ul compact>
 <li><b>Busy</b>
-<img src="image/wordgen1.jpg" alt="Word Generator" align="right"/>
 <br>the system is waiting for input or output - typically waiting
 for a tape to loaded in a tape reader or punch.</li>
 <li><b>Floating Point Overflow</b> 
@@ -163,6 +168,9 @@ if the <i>Read</i> or <i>Obey</i> buttons are selected.</li>
 <br>the overflow condition is set.  
 This will usually flicker on and off as programs are loaded or run.</li>
 </ul>
+<p>The <i>Volume</i> slider controls the level of the <a href="#sound">sounds</a>
+produced by the console speaker.
+Setting the volume to 0 will switch off all sounds.</p>
 <p>This window is supposed to look and operate somewhat like the real Elliott
 803 operator console.</p>
 <h3 id="opcpu">The CPU and Core Store</h3>
@@ -290,6 +298,28 @@ when converting from telecode to system characters, in particular the
 GB pound sign character (<code>&pound;</code>) will be written as the number 
 sign (<code>#</code>).</dd>
 </dl>
+<h3 id="sound">Sound Output</h3>
+<p>On a real 803 machine whenever the CPU executed certain instructions (any
+instruction from groups 4, 5, 6 or 7) a pulse would be sent to the loudspeaker
+in the operator console.
+In general this results in fairly random noise being generated as programs
+execute, although repeating sequences of instuctions or carefully chosen 
+sets could create recognizable sounds.
+For example a jump instruction (a group 4 opcode) would produce a pulse, a
+jump to the location with the jump instruction would result in a tight spin
+loop with one pulse every 288us - which gives a steady tone of about 3.5kHz.</p>
+<img src="image/volume.jpg" alt="Volume" align="left">
+<p>The simulation attempts to replicate these sounds using the PC sound
+card.
+The volume of sound produced can be controlled using the <i>Volume</i>
+slider on the Operator Console.
+Note that for sound to be produced the simulation must be set to be 
+running in <a href="#speed"><i>real time</i></a> mode.</p>
+<br clear="left">
+<h4 id="perfs">Important Performance Note</h4>
+<p>To generate accurate sounds a reasonably fast PC is needed.
+On a slower machine, if sound performance seems break up or stutter, it
+is probably best to turn the sound off by setting the volume slider to 0.</p> 
 <hr>
 <h2 id="pload">Loading Programs</h2>
 <p>If you are patient, careful and very meticulous it is possible to enter
@@ -406,10 +436,10 @@ command line session.</p>
 <code>java elliott803.Run -ascii tapes/samples/charset.tape</code>
 </pre></blockquote>
 <br/><table border="1" frame="above" rules="none" width="100%">
-<tr><td align="left">Tim Baldwin<br>June 2012
+<tr><td align="left">Tim Baldwin<br>December 2013
 <br><a href="mailto:tjb803@tinymail.co.uk">tjb803@tinymail.co.uk</a></td>
 <td align="right">Return to <a href="index.html">index</a>
-<br><br>&copy; Tim Baldwin 2009,2012</td></tr>
+<br><br>&copy; Tim Baldwin 2009,2013</td></tr>
 </table>
 </body>
 </html>

@@ -107,7 +107,9 @@ be compiled and run without the need to reload the compiler tapes.</p>
 <a href="operation.html#boot">initial instructions</a> to load the tape.</li>
 <li>Wait for the tape to finish loading.
 You should see it being written to the <a href="operation.html#opcore">core store</a>
-window and, when complete, the <i>busy</i> light will go out on the reader.
+window and you will hear a fairly constant rumbling noise as the tape loads.   
+When complete, the <i>busy</i> light will go out on the reader and a high
+pitch tone (of around 1kHz) known as a <i>System Wait</i> will be heard.
 <br><i>Note: </i>When running in <a href="operation.html#speed"><i>real time</i></a>
 it will take around 2 minutes 25 seconds to load this tape - it may be sensible to 
 switch out of real time mode while loading the compiler tapes.</li>
@@ -121,12 +123,13 @@ second tape should load.
 will be - release it by pressing the red release key at the far left; if it is 
 already released press it down.)</li>
 <li>Wait for the tape to finish loading.
+Again a fairly steady rumbling noise will be heard as the tape loads.
 <br><i>Note: </i>When running in <i>real time</i> it will take about 1 minute 
 10 seconds to load this tape.</li>
 </ol>
-<p>At this point the system is ready to compile a program.
-A real 803 would now be producing a particular warbling noise from its
-loudspeaker!</p>
+<p>At this point the system is ready to compile a program.  
+It will be in the <i>System Wait</i> state with a high pitch tone 
+coming from the speaker.</p>
 <h3>Using a Preloaded Machine Image</h3>
 <p>As an alternative to loading the two compiler tapes each time they are 
 required it is possible to either start the simulator using a <i>machine image</i>
@@ -144,18 +147,23 @@ to begin compiling a new program.
 one of your own.</li>
 <li>Again change the state of the top left-most button (the &quot;Function 1&quot;
 40 button) on the word generator.
-<br>The program source should be read and compiled, when compilation is complete 
-the program title and message about the amount of <code>FREE STORE</code> will be
- printed on the teletype.
-<p>The program is now waiting to run, again a real 803 would be making a 
-recognisable chirping sound!</p></li>
+<br>The program source will be read and compiled and a set of fairly random
+noises will be generated as the tape is processed and compilation takes place. 
+When the first phase of compilation is complete the program title will be printed
+on the teletype and a short time later, when the second phase is complete a 
+message about the amount of <code>FREE STORE</code> will be printed.<p>
+<p>The program is now in what is known as a <i>Data Wait</i> indicated by
+a two-tone siren sound coming from the speaker.
+If the program requires additional data tapes they should be loaded into
+the readers at this point.</p></li>
 <li>This time change the state of the &quot;Function 2&quot; left-most 40 
 button and the program should run.
 <br>The sample programs will all produce some output on the teletype.</li>
-<li>When finished an <code>END OF PROGRAM</code> message will be produced.</li>
+<li>When finished an <code>END OF PROGRAM</code> message will be produced
+on the teletype.</li>
 </ol>
-<p>If all went well the system is now back waiting to compile and run another 
-program.
+<p>If all went well the system is now back in a <i>System Wait</i> (high 
+pitch tone) ready to compile and run another program.
 You can repeat from step (1) above.</p>
 <p>If things didn't quite go to plan you may need to press the <i>Reset</i> key
 on the operator console to get control back.
@@ -325,10 +333,10 @@ The value to be calculated should be provided on a tape placed into reader 2.</p
 <p>This will calculate the value of PI to many decimal places (e.g. 1000).
 The number of places required should be provided on a tape placed into reader 2.</p>
 <br><table border="1" frame="above" rules="none" width="100%">
-<tr><td align="left">Tim Baldwin<br>June 2012
+<tr><td align="left">Tim Baldwin<br>December 2013
 <br><a href="mailto:tjb803@tinymail.co.uk">tjb803@tinymail.co.uk</a></td>
 <td align="right">Return to <a href="index.html">index</a>
-<br><br>&copy; Tim Baldwin 2009,2012</td></tr>
+<br><br>&copy; Tim Baldwin 2009,2013</td></tr>
 </table>
 </body>
 </html>

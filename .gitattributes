@@ -27,9 +27,11 @@ docs/image/optele.jpg -text
 docs/image/qs1.jpg -text
 docs/image/qs2.jpg -text
 docs/image/tmode.jpg -text
+docs/image/volume.jpg -text
 docs/image/wordgen1.jpg -text
 docs/index.html -text
 docs/operation.html -text
+docs/pdf/803facts.pdf -text
 docs/prognotes.html -text svneol=unset#text/plain
 docs/quickstart.html -text
 docs/samples.html -text
@@ -42,6 +44,7 @@ samples/algol/trig.algol -text
 samples/assembler/charset.a1 -text
 samples/assembler/hello1.a1 -text
 samples/assembler/hello2.a1 -text
+samples/assembler/music.a1 -text
 samples/assembler/print.a1 -text
 samples/assembler/random.a1 -text
 samples/extra/factorial4.algol -text

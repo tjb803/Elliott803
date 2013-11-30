@@ -16,6 +16,7 @@
 <li><a href="#charset">Character Set</a></li>
 <li><a href="#printer">Tape Printer</a></li>
 <li><a href="#random">Random Storage</a></li>
+<li><a href="#music">Play Music</a></li>
 </ul>
 <p>Note: the sample assembler programs have been written and assembled using a
 simple <a href="utilities.html#assembler">assembler utility</a> provided with 
@@ -110,11 +111,27 @@ by the initial instructions.</p>
 <a href="extras.html#random">random number</a> simulator device
 and also shows the <a href="operation.html#opcore">core store window</a>
 updating.</p>
+<hr>
+<h2 id="music">Play Music</h2>
+<table frame="box" rules="all" border="1" cellpadding="4">
+<tr><td><b>Source Code</b></td>
+<td><a href="../samples/assembler/music.a1"><samp>samples/assembler/music.a1</samp></a></td></tr>
+<tr><td><b>Program Tape</b></td>
+<td><samp>tapes/samples/music.tape</samp></td></tr>
+</table>
+<p>This program attempts to play some music on the console speaker.
+It is written in a very simple way and is a little out of tune, but
+shows the speaker producing something other than random noise.</p>
+<p>The program is compiled to a self-triggering tape that can be loaded and run
+by the initial instructions.
+After the tape loads it will enter a &quot;sign wait&quot; with a high pitch tone.
+Change the value of the top-most sign bit on the console to play the
+music!</p>
 <br><table border="1" frame="above" rules="none" width="100%">
-<tr><td align="left">Tim Baldwin<br>December 2009
+<tr><td align="left">Tim Baldwin<br>December 2013
 <br><a href="mailto:tjb803@tinymail.co.uk">tjb803@tinymail.co.uk</a></td>
 <td align="right">Return to <a href="index.html">index</a>
-<br><br>&copy; Tim Baldwin 2009</td></tr>
+<br><br>&copy; Tim Baldwin 2009,2013</td></tr>
 </table>
 </body>
 </html>
