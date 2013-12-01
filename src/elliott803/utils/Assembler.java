@@ -1,7 +1,7 @@
 /**
  * Elliott Model 803B Simulator
  *
- * (C) Copyright Tim Baldwin 2009
+ * (C) Copyright Tim Baldwin 2009,2013
  */
 package elliott803.utils;
 
@@ -36,7 +36,7 @@ import elliott803.telecode.Telecode;
  * Assembler syntax is a sequence of lines.  Each line can have a label which corresponds to
  * the address of that line and then one of:
  *  - a directive
- *  - a constant
+ *  - a constant or sequence of constants
  *  - a string
  *  - an instruction
  *  Anything after a * is a comment and is ignored.  Whitespace is also largely ignored.
@@ -49,6 +49,8 @@ import elliott803.telecode.Telecode;
  *                means add trigger to entry point addr
  *
  * Constant:   [+/-]nnnn or label
+ * 
+ * ConstantSequence:  Constant [,ConstantSequence]
  *
  * String:  'xxxxxxx'
  *             becomes a sequnece of characters (including any necessary shifts)
@@ -80,9 +82,9 @@ import elliott803.telecode.Telecode;
  *        CR = 29         * Define symbol
  *        74 4096+CR      * Print CR
  *
- * Note: the syntax of this assembler is loosely based on my faded memory of the real 803
- *        assembler, but it is definitely not correct!  It does enough however to allow some
- *        binary test tapes to be created.
+ * Note: the syntax of this assembler is loosely based on my faded memory of a real 803
+ *        assembler, but has various changes and additions to make it easier to use.  Its
+ *        main purpose is to allow simple binary tapes of test programs to be produced.
  *
  * @author Baldwin
  */
@@ -137,6 +139,7 @@ public class Assembler {
     private static final String LABEL_LINE = LABEL_PATTERN + "\\s*" + LABEL_CHAR + ".*";
     private static final String DIRECTIVE_LINE = "((" + LOAD_PATTERN + ")|(" + TRIGGER_PATTERN + "))";
     private static final String CONSTANT_LINE = "((" + CONSTANT_PATTERN + ")|(" + LABEL_PATTERN + "))";
+    private static final String CONSTANT_SEQ_LINE = "(" + CONSTANT_LINE + ")?(\\s*,\\s*" + CONSTANT_LINE + ")*";
     private static final String STRING_LINE = STRING_CHAR + ".*" + STRING_CHAR;
     private static final String CODE_LINE = INSTR_PATTERN + "(\\s*" + B_PATTERN + "(\\s*" + INSTR_PATTERN + ")?)?";
 
@@ -188,7 +191,11 @@ public class Assembler {
                     // Have a label, add the current address offset to the symbol table
                     i = line.indexOf(LABEL_CHAR);
                     String label = line.substring(0, i).trim();
-                    symbols.put(label, sourceCode.size());
+                    if (!symbols.containsKey(label)) {
+                        symbols.put(label, sourceCode.size());
+                    } else {    
+                        error(0, "Symbol defined more than once: " + label);
+                    }
 
                     // Re-process the line, without the label
                     line = line.substring(i+1);
@@ -212,9 +219,12 @@ public class Assembler {
                     } else {
                         error(0, "Incorrect directive: " + line);
                     }
-                } else if (line.matches(CONSTANT_LINE)) {
-                    // Have a constant
-                    sourceCode.add(new SourceLine(line));
+                } else if (line.matches(CONSTANT_SEQ_LINE)) {
+                    // Have a sequence of one or more constants
+                    StringTokenizer t = new StringTokenizer(line, ",");
+                    while (t.hasMoreTokens()) {
+                        sourceCode.add(new SourceLine(t.nextToken().trim()));
+                    }
                 } else if (line.matches(CODE_LINE)) {
                     // Have code
                     sourceCode.add(new SourceLine(line));
@@ -378,4 +388,3 @@ public class Assembler {
         }
     }
 }
-
