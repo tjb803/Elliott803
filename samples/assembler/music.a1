@@ -5,117 +5,81 @@
 **                              **
 
 **
-* This is a rather poor attempt to produce some music.  Some of the 
-* notes are rather out of tune, but it shows the sort of thing that 
-* could be done.  
-**
-
-            @entry            
+* Play some simple music.
 *
-* Wait for the user to change the sign bit
-*          
-entry:  
-            70  0 : 45  s2
-s1:         70  0 : 41 play   
+* This forces the console speaker to produce something that 
+* approximates to a simple tune!
+**
+            @entry
+            
+* Wait for the user to change the sign bit before playing the tune
+
+entry:      70  0 : 45 s2            
+s1:         70  0 : 41 play
 s2:         40 s1 : 70  0
             45 s2 : 40 play
-     
-* 
-* Attempt to play the tune!
-*
-play:
-next:       22 index / 30 tune
-            42 end   : 20 note
-            22 index / 30 tune
-            20 time  / 30    0
-            20 time   
-            00 note  / 40    0        
-                        
-end:        72 8191
             
-index:      -1
+* Attempt to play the tune
 
-*
-* These blocks of instructions should produce notes that approximate
-* to a C major scale: C3 D3 E3 F3 G3
-*
-* The note will sound for 'time', where time is set to a negative number
-* of 288us cycles (so for example 1s is roughly -3500).
-*
-t4:        -900         * Quarter note
-t2:        -1800        * Half note
-t1:        -3600        * Whole note 
+play:       22 index / 30 tune          * Get next note duration
+            42 exit                     * Zero marks the end
+            20 temp  / 30 0             * Map duration to value and
+            21 time                     *       store as negative
+            22 index / 30 tune          * Get next note
+            20 temp  / 30 0             * Map note to frequency count
+            20 freq  : 05 six           *       store and adjust for shift
+            04 note0 : 20 note          * Recreate 'note' instruction
+            44 note                     * And play the tone!
+         
+exit:       26 index : 02 index         * Get ready to play again!
+            21 index : 40 entry       
 
-note:      +0
-time:      +0
-       
-c3t:       +25
-c3:         30   c3t : 34  time
-            00     0 : 00     0
-            00     0 : 00     0
-            00     0 : 00     0
-            00     0 : 00     0
-            00     0 : 00     0
-            41    c3 : 40  next
-            
-d3t:       +23    
-d3:         30   d3t : 34  time
-            00     0 : 00     0
-            00     0 : 00     0
-            00     0 : 00     0
-            00     0 : 00     0
-            00     0 : 41    d3 
-            40  next   
-            
-e3t:       +21
-e3:         30   e3t : 34  time
-            00     0 : 00     0
-            00     0 : 00     0
-            00     0 : 00     0
-            00     0 : 00     0
-            41    e3 : 40  next
+* Sound something like the required note for the required duration.
+* Note that the first instruction here gets patched so the value 
+* for the 55 opcode is 6 less than the note freq value - to account for
+* the time spent outside the 55 instruction.
+
+note0:      00  0   : 55  0
+note:       00  0   : 55  0
+            30 freq : 34 time
+            45 note : 40 play  
+
+time:        0                          * Current note duration
+freq:        0                          * Current note sound
                
-f3t:       +19     
-f3:         30   f3t : 34  time
-            00     0 : 00     0
-            00     0 : 00     0
-            00     0 : 00     0 
-            00     0 : 41    f3 
-            40  next             
-                                
-g3t:       +17  
-g3:         30   g3t : 34  time
-            00     0 : 00     0
-            00     0 : 00     0
-            00     0 : 00     0
-            41    g3 : 40  next
+temp:        0                          * Work space               
+six:         6                          * Adjustment factor for shifts               
+index:      -1                          * Index into tune description
 
-*
-* The 'tune' is defined here, as a series of notes and time values pairs.  Zero
-* marks the end.
-*
-tune:      c3
-           t4
-           c3
-           t4
-           d3
-           t2
-           c3
-           t2
-           f3
-           t2
-           e3
-           t1
-           c3
-           t4
-           c3
-           t4
-           d3
-           t2
-           c3
-           t2
-           g3
-           t2
-           f3
-           t1
-            0
+* These are note definitions to produce approximate tones from the C major 
+* scale (plus a B-flat).  Value is the number of 288us cycles for frequency.  
+* This is rather approximate!           * Note Freq  Cycles
+                                        * ---- ----  ------
+c3:         27                          * C3   131Hz   26
+d3:         24                          * D3   147Hz   24  
+e3:         21                          * E3   165Hz   21 
+f3:         20                          * F3   175Hz   20
+g3:         18                          * G3   196Hz   18
+a3:         16                          * A3   220Hz   16
+bb3:        15                          * Bb3  233Hz   15
+b3:         14                          * B3   247Hz   14
+c4:         13                          * C4   262Hz   13
+
+* These are the timings for whole notes, half notes and quarter notes in
+* number of 288us cycles.  So 3500 is approximately 1 second.
+
+t4:         4000                        * Minim
+t2:         2000                        * Crotchet
+t15:        1500                        * Dotted quaver
+t1:         1000                        * Quaver
+t05:         500                        * Semi-quaver
+       
+* Define the tune as pairs of values: first the duration then the note
+* value.  A zero marks the end.
+
+tune:    
+            t15,c3,  t05,c3,  t2,d3,  t2,c3,  t2,f3,  t4,e3
+            t15,c3,  t05,c3,  t2,d3,  t2,c3,  t2,g3,  t4,f3
+            t15,c3,  t05,c3,  t2,c4,  t2,a3,  t2,f3,  t2,e3,  t4,d3
+            t15,bb3, t05,bb3, t2,a3,  t2,f3,  t2,g3,  t4,f3              
+            0 
