@@ -53,13 +53,13 @@ import elliott803.telecode.Telecode;
  * ConstantSequence:  Constant [,ConstantSequence]
  *
  * String:  'xxxxxxx'
- *             becomes a sequnece of characters (including any necessary shifts)
+ *             becomes a sequence of characters (including any necessary shifts)
  *
  * Instruction:  op1 addr1 b op2 addr2
  *
  *             op is a octal opcode, addr is a decimal address or label, b is : or /
  *
- * eg
+ * e.g.
  *       *
  *       * Simple Hello World program
  *       *
@@ -78,7 +78,7 @@ import elliott803.telecode.Telecode;
  *                0                    * zero marks end of string
  *
  * TODO:
- *   Add constant symbols and simple arithmetic expressions to support eg
+ *   Add constant symbols and simple arithmetic expressions to support e.g.
  *        CR = 29         * Define symbol
  *        74 4096+CR      * Print CR
  *
