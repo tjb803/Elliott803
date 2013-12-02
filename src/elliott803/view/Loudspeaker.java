@@ -21,17 +21,19 @@ import javax.sound.sampled.SourceDataLine;
  */
 public class Loudspeaker extends Thread {
     /*
-     * We use a SouceDataLine with a sample frequency of 48kHz as this is very likely
-     * to be a supported rate for all soundcards and use a sample size of 14 bytes.  
-     * This gives a 'cycle time' of 291.7us which is as close as we can get (at 48kHz)
-     * to the required 288us.  Having the sound sample slightly too long seems to sound 
-     * better than having it slightly too short.
+     * We use a SouceDataLine with a sample frequency of 44.1kHz as this is very 
+     * likely to be a supported rate for all soundcards and we use a sample size 
+     * of 12 bytes.  This gives a 'cycle time' of 272.1us which is close enough (at 
+     * 44.1kHz) to the required 288us.  Note the the CPU cycle speed is also set 
+     * to 272us to match as this makes the sound work better!  (I could get a 
+     * closer match at a 48kHz sample rate, but maybe some systems don't support
+     * that rate?)
      * 
      * We write samples that either contain a 'pulse' (first half of the sample 
      * is non-zero) or 'quiet' (sample is all zeros).  Therefore a constant stream
      * of 'pulses' should make a tone of about 3.5kHz.
      */
-    static final int SAMPLE_SIZE = 14;
+    static final int SAMPLE_SIZE = 12;
     
     byte[] pulse, quiet;
     BlockingQueue<byte[]> samples;
@@ -44,15 +46,15 @@ public class Loudspeaker extends Thread {
         quiet = new byte[SAMPLE_SIZE];
 
         on = new AtomicBoolean(false);
-        samples = new ArrayBlockingQueue<byte[]>(1029);
+        samples = new ArrayBlockingQueue<byte[]>(1000);
 
         try {
             // Create the line with a buffer for about 1/5s of sound so it starts 
             // and stops near enough when requested, but not so small it runs out
             // of buffered samples too often.
-            AudioFormat af = new AudioFormat(48000, 8, 1, false, false);
+            AudioFormat af = new AudioFormat(44100, 8, 1, false, false);
             line = AudioSystem.getSourceDataLine(af);
-            line.open(af, 9604);    // Multiple of 14 that is about 1/5s at 48kHz
+            line.open(af, 8820);    // Multiple of 12 that is about 1/5s at 44.1kHz
             start();                // Start the audio thread
         } catch (LineUnavailableException e) {
             System.err.println(e);

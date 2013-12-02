@@ -19,9 +19,9 @@ import elliott803.view.CpuView;
  */
 public class CPU {
 
-    // Cycle time should really be 288us, but I'm using 291us as this works
-    // better with the sound samples, and is only a tiny bit out.
-    static final int CYCLE_TIME = 291;              // Basic cycle time in us
+    // Cycle time should really be 288us, but I'm using 272us as this works
+    // better with the sound samples, and is only a little bit fast :-).
+    static final int CYCLE_TIME = 272;              // Basic cycle time in us
     static final int CYCLE_NANO = CYCLE_TIME*1000;  // Basic cycle time in ns
 
     public Computer computer;   // The owning computer
