@@ -21,19 +21,26 @@ import javax.sound.sampled.SourceDataLine;
  */
 public class Loudspeaker extends Thread {
     /*
-     * We use a SouceDataLine with a sample frequency of 44.1kHz as this is very 
-     * likely to be a supported rate for all soundcards and we use a sample size 
-     * of 12 bytes.  This gives a 'cycle time' of 272.1us which is close enough (at 
-     * 44.1kHz) to the required 288us.  Note the the CPU cycle speed is also set 
-     * to 272us to match as this makes the sound work better!  (I could get a 
-     * closer match at a 48kHz sample rate, but maybe some systems don't support
-     * that rate?)
+     * Use an audio SourceDataLine with a sample frequency of 44.1kHz as this is a
+     * standard that should be supported directly by just about all sound hardware.
+     * Sound is written in 'frames' of 12 samples, so at 44.1kHz this represents a
+     * time of 272.1us.  For the best sound emulation we really need this frame time 
+     * to match the CPU cycle time of 288us - it is close but not quite right, so I 
+     * have cheated a bit and set the CPU cycle time down to 272us (see CPU.java).
      * 
-     * We write samples that either contain a 'pulse' (first half of the sample 
-     * is non-zero) or 'quiet' (sample is all zeros).  Therefore a constant stream
-     * of 'pulses' should make a tone of about 3.5kHz.
+     * If we really want the CPU to run at 288us and we want the best possible sound
+     * there are a couple of other options:
+     *  - pick a different sample frequency - 48kHz is probably standard on all 
+     *    hardware and would get closer (14 samples at 48kHz = 291.7us). 
+     *  - or vary the frame size - at 44.1kHz a sequence of frames sized 12,13,13,13
+     *    would average 289.1us.    
+     * 
+     * Frames either contain a 'pulse' (first half of the frame is non-zero) 
+     * or 'quiet' (frame is all zeros).  Therefore a constant stream of 'pulses' 
+     * should make a tone of about 3.5kHz.
      */
-    static final int SAMPLE_SIZE = 12;
+    static final int SAMPLE_RATE = 44100;
+    static final int FRAME_SIZE = 12;
     
     byte[] pulse, quiet;
     BlockingQueue<byte[]> samples;
@@ -42,8 +49,8 @@ public class Loudspeaker extends Thread {
     SourceDataLine line;
     
     public Loudspeaker()  {
-        pulse = new byte[SAMPLE_SIZE]; 
-        quiet = new byte[SAMPLE_SIZE];
+        pulse = new byte[FRAME_SIZE]; 
+        quiet = new byte[FRAME_SIZE];
 
         on = new AtomicBoolean(false);
         samples = new ArrayBlockingQueue<byte[]>(1000);
@@ -52,7 +59,7 @@ public class Loudspeaker extends Thread {
             // Create the line with a buffer for about 1/5s of sound so it starts 
             // and stops near enough when requested, but not so small it runs out
             // of buffered samples too often.
-            AudioFormat af = new AudioFormat(44100, 8, 1, false, false);
+            AudioFormat af = new AudioFormat(SAMPLE_RATE, 8, 1, false, false);
             line = AudioSystem.getSourceDataLine(af);
             line.open(af, 8820);    // Multiple of 12 that is about 1/5s at 44.1kHz
             start();                // Start the audio thread
@@ -121,9 +128,9 @@ public class Loudspeaker extends Thread {
             while (on.get()) {
                 byte[] b = samples.poll();
                 if (b != null)
-                    line.write(b, 0, SAMPLE_SIZE);
+                    line.write(b, 0, FRAME_SIZE);
                 else 
-                    line.write(quiet, 0, SAMPLE_SIZE/2);
+                    line.write(quiet, 0, FRAME_SIZE);
             }
             line.flush();
             line.stop();
