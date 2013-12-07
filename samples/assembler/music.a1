@@ -55,7 +55,7 @@ index:      -1                          * Index into tune description
 * scale (plus a B-flat).  Value is the number of 288us cycles for frequency.  
 * This is rather approximate!           * Note Freq  Cycles
                                         * ---- ----  ------
-c3:         27                          * C3   131Hz   26
+c3:         27                          * C3   131Hz   27
 d3:         24                          * D3   147Hz   24  
 e3:         21                          * E3   165Hz   21 
 f3:         20                          * F3   175Hz   20

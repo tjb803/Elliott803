@@ -30,7 +30,6 @@ public class ConsoleLight extends JPanel {
         light = new DisplayLight(SIZE, DisplayLight.CYAN);
         light.setAlignmentX(CENTER_ALIGNMENT);
         add(light);
-
         JLabel t = new JLabel(name);
         t.setAlignmentX(CENTER_ALIGNMENT);
         add(t);

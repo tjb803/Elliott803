@@ -122,9 +122,9 @@ the word generator is shown at the bottom of the window.</p>
 You can release the button, and all other buttons in the same group, by pressing 
 the red release button (marked with an <i>R</i>) at the far left of the row.</p>
 <p>On the right hand side are the various operation buttons and indicator lights.
-The <i>Clear Store</i> button sets all storage locations to zero.  The <i>Reset</i>
-button stops any current execution, clears any &quot;busy&quot; condition and
-returns control to the console.</p>
+The <i>Clear Store</i> button sets all storage locations to zero.  
+The <i>Reset</i> button stops any current execution, clears any &quot;busy&quot; 
+condition and returns control to the console.</p>
 <p>The three buttons marked <i>Read</i>, <i>Normal</i> and <i>Obey</i> are used
 in conjunction with the <i>Operate</i> bar to operate the computer.
 To use them you first select the function required by pressing one of the three
@@ -153,6 +153,12 @@ any pause.</p>
 <img src="image/wordgen1.jpg" alt="Word Generator" align="right"/>
 <p>The indicator lights show the following conditions:</p>
 <ul compact>
+<li><b>Parity</b>
+<br>a parity error has been detected in the core store - this cannot 
+happen in the simulator.</li>
+<li><b>Block Transfer</b>
+<br>a transfer is happening to or from a block device - currently no
+block devices are implemented.</li>
 <li><b>Busy</b>
 <br>the system is waiting for input or output - typically waiting
 for a tape to loaded in a tape reader or punch.</li>

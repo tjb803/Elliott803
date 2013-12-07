@@ -11,6 +11,7 @@ build/readme.txt -text svneol=unset#text/plain
 docs/algol.html -text svneol=unset#text/plain
 docs/extras.html -text
 docs/history.html -text
+docs/image/Thumbs.db -text
 docs/image/cpuspd.jpg -text
 docs/image/creed.jpg -text
 docs/image/e803.gif -text
@@ -107,9 +108,12 @@ src/elliott803/view/StoreView.java -text
 src/elliott803/view/TapeDeviceView.java -text
 src/elliott803/view/TeletypeView.java -text
 src/elliott803/view/ViewImage.java -text
-src/elliott803/view/component/ConsoleButton.java -text
+src/elliott803/view/component/ConsoleBitButton.java -text
 src/elliott803/view/component/ConsoleButtons.java -text
+src/elliott803/view/component/ConsoleControl.java -text
 src/elliott803/view/component/ConsoleLight.java -text
+src/elliott803/view/component/ConsoleLights.java -text
+src/elliott803/view/component/ConsoleOpButton.java -text
 src/elliott803/view/component/ConsoleOperation.java -text
 src/elliott803/view/component/ConsoleVolume.java -text
 src/elliott803/view/component/DeviceLight.java -text
@@ -120,8 +124,10 @@ src/elliott803/view/component/DisplayCore.java -text
 src/elliott803/view/component/DisplayInstruction.java -text
 src/elliott803/view/component/DisplayLight.java -text
 src/elliott803/view/component/DisplayPlot.java -text
+src/elliott803/view/component/DisplaySpeaker.java -text
 src/elliott803/view/component/DisplaySpeed.java -text
 src/elliott803/view/component/DisplayWord.java -text
+src/elliott803/view/component/PushButton.java -text
 tapes/algol/a104-1.tape -text
 tapes/algol/a104-2.tape -text
 test/Elliott803[!!-~]Main.launch -text

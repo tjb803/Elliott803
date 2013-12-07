@@ -25,6 +25,7 @@ public class Console extends Device {
 
     long wordGen;               // Word generator
     int action;                 // Next action (Read/Obey/Normal)
+    boolean clearStore;         // In clear store mode
     boolean manualData;         // In manual data mode
     boolean manualDataDelay;    // Delay setting manual data
 
@@ -97,6 +98,11 @@ public class Console extends Device {
         manualData = false;
         manualDataDelay = true;
     }
+    
+    // Set clear store status
+    public void setClearStore(boolean isClearStore) {
+        clearStore = isClearStore;
+    }
 
     // Set status lights
     public void setBusy(boolean isBusy) {
@@ -131,11 +137,6 @@ public class Console extends Device {
         computer.cpu.reset();
     }
     
-    // Perform a clear store
-    public void clear() {
-        computer.run(Computer.ACT_CLEAR);
-    }
-
     // Set the next action to be performed
     public void setAction(int value) {
         computer.cpu.stop();
@@ -146,6 +147,10 @@ public class Console extends Device {
     public void operate() {
         if (deviceBusy()) {
             deviceReady();
+        } else if (clearStore) {
+            switch (action) {
+                case CONSOLE_NORMAL: computer.run(Computer.ACT_CLEAR); break;
+            }
         } else {
             switch (action) {
                 case CONSOLE_READ:   computer.cpu.setInstruction(Word.getInstr1(wordGen));  break;

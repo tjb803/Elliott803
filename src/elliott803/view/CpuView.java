@@ -1,7 +1,7 @@
 /**
  * Elliott Model 803B Simulator
  *
- * (C) Copyright Tim Baldwin 2009,2010
+ * (C) Copyright Tim Baldwin 2009,2013
  */
 package elliott803.view;
 
@@ -15,8 +15,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.Timer;
 
 import elliott803.hardware.CPU;
 import elliott803.view.component.DeviceLight;
@@ -24,6 +22,7 @@ import elliott803.view.component.DisplayAddress;
 import elliott803.view.component.DisplayInstruction;
 import elliott803.view.component.DisplayLight;
 import elliott803.view.component.DisplayWord;
+import elliott803.view.component.PushButton;
 
 /**
  * A visual representation of the CPU state.
@@ -42,10 +41,9 @@ public class CpuView extends JInternalFrame implements ActionListener {
     DisplayWord iw;
     DeviceLight overflow;
     DeviceLight fpOverflow;
-    JRadioButton dump;
+    PushButton dump;
     JCheckBox trace;
-    Timer dumpTimer;
-
+    
     public CpuView(CPU cpu) {
         super("CPU", false, false, false, true);
         this.cpu = cpu;
@@ -95,17 +93,13 @@ public class CpuView extends JInternalFrame implements ActionListener {
         p4.setLayout(new BoxLayout(p4, BoxLayout.X_AXIS));
         p4.setBorder(BorderFactory.createTitledBorder("Debug"));
         p4.setAlignmentX(LEFT_ALIGNMENT);
-        dump = new JRadioButton("Dump");
+        dump = new PushButton("Dump", true);
         dump.addActionListener(this);
         p4.add(dump);
         p4.add(Box.createHorizontalGlue());
         trace = new JCheckBox("Trace");
         trace.addActionListener(this);
         p4.add(trace);
-        
-        // dumpTimer handles 'unclicking' the dump button
-        dumpTimer = new Timer(250, this);
-        dumpTimer.setRepeats(false);
 
         cpu.setView(this);
 
@@ -125,13 +119,8 @@ public class CpuView extends JInternalFrame implements ActionListener {
      */
 
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == dumpTimer) {
-            dump.setSelected(false);
-        } else if (e.getSource() == dump) {
-            if (dump.isSelected()) { 
-                cpu.computer.dump();
-                dumpTimer.start();
-            }    
+        if (e.getSource() == dump) {
+            cpu.computer.dump();
         } else if (e.getSource() == trace) {
             if (trace.isSelected())
                 cpu.computer.traceStart();

@@ -5,6 +5,8 @@
  */
 package elliott803.view.component;
 
+import java.awt.Dimension;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -24,27 +26,33 @@ public class ConsoleVolume extends JPanel implements ChangeListener {
     private static final long serialVersionUID = 1L;
     
     Console console;
-    
-    public JSlider slider;
-    
+    JPanel grill;
+    JSlider slider;
+        
     public ConsoleVolume(Console console) {
-        this.console = console;
+        this.console = console;        
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setAlignmentX(RIGHT_ALIGNMENT);
-        setAlignmentY(CENTER_ALIGNMENT);
-        JLabel title = new JLabel("Volume");
-        title.setAlignmentX(CENTER_ALIGNMENT);
-        slider = new JSlider(0, 100, console.getVolume());
+        setAlignmentX(CENTER_ALIGNMENT);
+        
+        DisplaySpeaker grill = new DisplaySpeaker();
+        add(grill);
+        add(Box.createVerticalStrut(5));
+        
+        slider = new JSlider(0 , 100, console.getVolume());
+        slider.addChangeListener(this);
         slider.setAlignmentX(CENTER_ALIGNMENT);
-        slider.setMajorTickSpacing(10);
+        slider.setMajorTickSpacing(20);
         slider.setPaintTicks(true);
         slider.setFocusable(false);
-        slider.addChangeListener(this);
-        add(Box.createVerticalGlue());
-        add(title);
+        Dimension size = new Dimension(grill.getPreferredSize().width, slider.getPreferredSize().height);
+        slider.setMaximumSize(size);
+        slider.setPreferredSize(size);
         add(slider);
+        JLabel t = new JLabel("Volume");
+        t.setAlignmentX(CENTER_ALIGNMENT);
+        add(t);
     }
-
+    
     /*
      * Slider state changed
      */

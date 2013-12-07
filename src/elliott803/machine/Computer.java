@@ -223,5 +223,7 @@ public class Computer extends Thread {
     public Computer(boolean test) {
         // Dummy for unit tests only
         cpu = new CPU(this);
+        core = new Store(this);
+        console = new Console(this);
     }
 }

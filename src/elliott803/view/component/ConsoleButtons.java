@@ -1,7 +1,7 @@
 /**
  * Elliott Model 803B Simulator
  *
- * (C) Copyright Tim Baldwin 2009
+ * (C) Copyright Tim Baldwin 2009,2013
  */
 package elliott803.view.component;
 
@@ -28,25 +28,24 @@ public class ConsoleButtons extends JPanel implements ActionListener {
     
     Console console;
     
-    ConsoleButton release;
-    ConsoleButton[] buttons;
+    ConsoleBitButton release;
+    ConsoleBitButton[] buttons;
     
     public ConsoleButtons(String title, String[] names, int len, int bit, Console console) {
         this.console = console;
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setAlignmentX(LEFT_ALIGNMENT);
-        setAlignmentY(CENTER_ALIGNMENT);
         setBorder(BorderFactory.createTitledBorder(title));
         
-        release = new ConsoleButton("R", ConsoleButton.RED, true);
+        release = new ConsoleBitButton("R", ConsoleBitButton.RED, 0);
         release.addActionListener(this);
         add(release);
         add(Box.createHorizontalStrut(5));
         
-        buttons = new ConsoleButton[len];
+        buttons = new ConsoleBitButton[len];
         for (int i = 0; i < len; i++) {
-            Color colour = names[i].equals("B") ? ConsoleButton.RED : ConsoleButton.BLACK;
-            buttons[i] = new ConsoleButton(names[i], colour, bit--);
+            Color colour = names[i].equals("B") ? ConsoleBitButton.RED : ConsoleBitButton.BLACK;
+            buttons[i] = new ConsoleBitButton(names[i], colour, bit--);
             buttons[i].addActionListener(this);
             add(buttons[i]);
         }
@@ -57,19 +56,15 @@ public class ConsoleButtons extends JPanel implements ActionListener {
      */
 
     public void actionPerformed(ActionEvent e) {
-        ConsoleButton b = (ConsoleButton)e.getSource();
-        if (!b.isSelected()) {
-            b.setSelected(true);
-        } else {
-            if (b == release) {
-                for (ConsoleButton c : buttons) {
-                    console.clearWordGenBit(c.getBit());
-                    c.setSelected(false);
-                }
-            } else {
-                console.setWordGenBit(b.getBit());
-                release.setSelected(false);
+        ConsoleBitButton b = (ConsoleBitButton)e.getSource();
+        if (b == release) {
+            for (ConsoleBitButton c : buttons) {
+                console.clearWordGenBit(c.getBit());
+                c.setSelected(false);
             }
+        } else {
+            console.setWordGenBit(b.getBit());
+            release.setSelected(false);
         }
     }
 }
