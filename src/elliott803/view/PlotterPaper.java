@@ -3,7 +3,7 @@
  *
  * (C) Copyright Tim Baldwin 2010
  */
-package elliott803.view.component;
+package elliott803.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -43,7 +43,7 @@ import javax.swing.Scrollable;
 // and then just scale and blit this onto the screen during paintComponent. The 
 // off screen image will need to be resized as the y-extents change though.
 
-public class DisplayPlot extends JPanel implements Scrollable, ComponentListener {
+public class PlotterPaper extends JPanel implements Scrollable, ComponentListener {
     private static final long serialVersionUID = 1L;
 
     // Minimum and maximum plotter y coordinate seen so far.
@@ -60,7 +60,7 @@ public class DisplayPlot extends JPanel implements Scrollable, ComponentListener
     Point p1, p2;
     Rectangle r1;
     
-    public DisplayPlot() {
+    public PlotterPaper() {
         setBackground(Color.WHITE);
         addComponentListener(this);
 

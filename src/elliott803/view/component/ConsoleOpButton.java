@@ -38,8 +38,8 @@ public class ConsoleOpButton extends JPanel {
         button = new PushButton(push);
         button.setAlignmentX(CENTER_ALIGNMENT);
         button.setFocusable(false);
-        Border b = (shroud) ? BorderFactory.createLineBorder(Color.BLACK, 2) : BorderFactory.createEmptyBorder(2, 2, 2, 2);
-        button.setBorder(BorderFactory.createCompoundBorder(b, BorderFactory.createEmptyBorder(2, 2, 2, 2)));
+        Border b = (shroud) ? new CircleBorder(Color.BLACK, 2) : BorderFactory.createEmptyBorder(2, 2, 2, 2);
+        button.setBorder(BorderFactory.createCompoundBorder(b, BorderFactory.createEmptyBorder(3, 3, 3, 3)));
         button.setBorderPainted(true);
         button.setActionCommand(name);
         button.addActionListener(listener);

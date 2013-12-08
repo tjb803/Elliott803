@@ -8,6 +8,7 @@ package elliott803.view.component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
@@ -33,7 +34,9 @@ public class ConsoleControl extends JPanel implements ActionListener {
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setAlignmentX(CENTER_ALIGNMENT);
         add(new ConsoleOpButton(OPERATION_CLEAR, true, false, this));
+        add(Box.createHorizontalGlue());
         add(new ConsoleOpButton(OPERATION_MANUAL, false, false, this));
+        add(Box.createHorizontalGlue());
         add(new ConsoleOpButton(OPERATION_RESET, true, true, this));
     }
 
@@ -43,11 +46,11 @@ public class ConsoleControl extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
         PushButton button = (PushButton)e.getSource(); 
-        if (action.equals(OPERATION_CLEAR))
+        if (action.equals(OPERATION_CLEAR)) {
             console.setClearStore(button.isSelected());
-        else if (action.equals(OPERATION_MANUAL))
+        } else if (action.equals(OPERATION_MANUAL)) {
             console.setManualData(button.isSelected());
-        else if (action.equals(OPERATION_RESET)) {
+        } else if (action.equals(OPERATION_RESET)) { 
             console.reset();
         }    
     }

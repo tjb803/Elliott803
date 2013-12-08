@@ -7,6 +7,8 @@ package elliott803.view.component;
 
 import java.awt.Dimension;
 
+import elliott803.view.PlotterPaper;
+
 
 /**
  * Unit test for the DisplayPlot component
@@ -16,12 +18,12 @@ import java.awt.Dimension;
 public class TestDisplayPlot extends BaseComponentTest {
     
     protected void setupTest() {
-        displayPlot = new DisplayPlot();
+        displayPlot = new PlotterPaper();
         testView.add(displayPlot);
         testView.setPreferredSize(new Dimension(400, 400));
     }
     
-    private DisplayPlot displayPlot;
+    private PlotterPaper displayPlot;
     
     public void testSquare() throws Exception {
         displayPlot.plotMove(250, -300);

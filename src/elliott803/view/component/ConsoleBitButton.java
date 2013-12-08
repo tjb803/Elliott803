@@ -20,7 +20,7 @@ public class ConsoleBitButton extends JRadioButton {
     private static final long serialVersionUID = 1L;
     
     public static final Color RED = Color.RED.darker();
-    public static final Color BLACK = Color.black;
+    public static final Color BLACK = Color.BLACK;
     
     int bit;
 

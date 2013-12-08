@@ -18,7 +18,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import elliott803.hardware.Plotter;
-import elliott803.view.component.DisplayPlot;
 
 /**
  * A visual representation of the plotter.
@@ -33,13 +32,13 @@ public class PlotterView extends JInternalFrame implements ActionListener {
 
     Plotter plotter;
     
-    DisplayPlot paper;
+    PlotterPaper paper;
 
     public PlotterView(Plotter plotter) {
         super("Plotter", true, false, true, true);
         this.plotter = plotter;
         
-        paper = new DisplayPlot();
+        paper = new PlotterPaper();
 
         JScrollPane scroll = new JScrollPane(paper);
         scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
