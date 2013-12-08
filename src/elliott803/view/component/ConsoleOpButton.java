@@ -44,7 +44,7 @@ public class ConsoleOpButton extends JPanel {
         button.setActionCommand(name);
         button.addActionListener(listener);
         add(button);
-        StringTokenizer t = new StringTokenizer(name, " ");
+        StringTokenizer t = new StringTokenizer(name, "/");
         while (t.hasMoreTokens()) {
             JLabel label = new JLabel(t.nextToken());
             label.setAlignmentX(CENTER_ALIGNMENT);

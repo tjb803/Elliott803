@@ -11,7 +11,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
 /**
@@ -63,11 +62,8 @@ public class Loudspeaker extends Thread {
             line = AudioSystem.getSourceDataLine(af);
             line.open(af, 8820);    // Multiple of 12 that is about 1/5s at 44.1kHz
             start();                // Start the audio thread
-        } catch (LineUnavailableException e) {
-            System.err.println(e);
-            line = null;            // No sound available;
-        } catch (IllegalArgumentException e) {
-            System.err.println(e);
+        } catch (Throwable e) {
+            System.err.println(e);  // Ignore all errors trying to get sound
             line = null;            // No sound available;
         }
     }

@@ -22,8 +22,8 @@ import elliott803.hardware.Console;
 public class ConsoleControl extends JPanel implements ActionListener {
     private static final long serialVersionUID = 1L;
 
-    static final String OPERATION_CLEAR = "Clear Store";
-    static final String OPERATION_MANUAL = "Manual Data";
+    static final String OPERATION_CLEAR = "Clear/Store";
+    static final String OPERATION_MANUAL = "Manual/Data";
     static final String OPERATION_RESET = "Reset";
 
     Console console;

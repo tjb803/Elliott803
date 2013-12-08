@@ -23,15 +23,15 @@ public class ConsoleLights extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setAlignmentY(CENTER_ALIGNMENT);
         
-        step = new ConsoleLight("Step by Step", null);
-        busy = new ConsoleLight("Busy", null);
-        overflow = new ConsoleLight("Overflow", null);
-        fpOverflow = new ConsoleLight("Floating Point", "Overflow");
+        step = new ConsoleLight("Step by Step");
+        busy = new ConsoleLight("Busy");
+        overflow = new ConsoleLight("Overflow");
+        fpOverflow = new ConsoleLight("Floating Point/Overflow");
         
         add(Box.createVerticalGlue());
-        add(new ConsoleLight("Parity", null));          // Currently unused
+        add(new ConsoleLight("Parity"));            // Currently unused
         add(Box.createVerticalStrut(10));
-        add(new ConsoleLight("Block Transfer", null));  // Currently unused
+        add(new ConsoleLight("Block Transfer"));    // Currently unused
         add(Box.createVerticalStrut(10));
         add(busy);
         add(Box.createVerticalStrut(10));
