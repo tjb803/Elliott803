@@ -11,7 +11,6 @@ build/readme.txt -text svneol=unset#text/plain
 docs/algol.html -text svneol=unset#text/plain
 docs/extras.html -text
 docs/history.html -text
-docs/image/Thumbs.db -text
 docs/image/cpuspd.jpg -text
 docs/image/creed.jpg -text
 docs/image/e803.gif -text
