@@ -1,7 +1,7 @@
 /**
  * Elliott Model 803B Simulator
  *
- * (C) Copyright Tim Baldwin 2009,2010
+ * (C) Copyright Tim Baldwin 2009,2013
  */
 package elliott803;
 
@@ -35,6 +35,8 @@ import elliott803.view.MachineImage;
  *
  * options:
  *   -look lookAndFeel: the Java UI look-and-feel (defaults to system look and feel)
+ *   -volume volume: the initial volume (0 to 100, 0 means no sound)
+ *   -debug: print diagnostic information 
  *
  * @author Baldwin
  */
@@ -44,8 +46,13 @@ public class Main implements Runnable {
         // Handle parameters
         Args.Map options = Args.optionMap();
         options.put("look", "lookAndFeel");
+        options.put("volume", "volume");
+        options.put("debug", null);
         Args parms = new Args("elliott803.Main", "[machine]", args, options);
-
+        
+        // Global debug flag
+        Computer.debug = parms.getFlag("debug");
+        
         // Set the Swing look and feel
         setLookAndFeel(parms.getOption("look"));
 
@@ -54,9 +61,14 @@ public class Main implements Runnable {
         MachineImage image = null; 
         if (imageFile != null)
             image = MachineImage.readImage(imageFile);
+        
+        // Get initial volume
+        int volume = parms.getInteger("volume");
+        volume = Math.max(-1, Math.min(10, volume));
+        volume = (volume < 0) ? 50 : volume*10;
 
         // Create a new 803 simulation and view and start the simulator thread
-        Computer computer = new Computer();
+        Computer computer = new Computer(volume);
         ComputerView view = new ComputerView(computer);
         computer.start();
         
@@ -68,17 +80,18 @@ public class Main implements Runnable {
     // Try to set the Swing look and feel
     private static void setLookAndFeel(String look) throws Exception {
         String lafClass = null, lafTheme = null;
+        
+        if (Computer.debug) {
+            System.out.println("Look:");
+            for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                String name = info.getName();
+                if (name.equals("Metal"))
+                    name += "/Steel/Ocean";
+                System.out.println("  " + name);
+            }    
+        }
 
         if (look != null) {
-            if (look.equals("LIST")) {
-                for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                    String name = info.getName();
-                    if (name.equals("Metal"))
-                        name += "/Steel/Ocean";
-                    System.out.println("  " + name);
-                }    
-            }
-            
             // "Steel" and "Ocean" are themes for "Metal"
             if (look.equalsIgnoreCase("Steel") || look.equalsIgnoreCase("Ocean")) {
                 lafTheme = look;

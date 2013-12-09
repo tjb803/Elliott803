@@ -21,6 +21,9 @@ import elliott803.machine.extension.SimulatorControlDevice;
  * @author Baldwin
  */
 public class Computer extends Thread {
+    
+    // Global debug option
+    public static boolean debug = false;
 
     public static final int ACT_WAIT = 0;
     public static final int ACT_CLEAR = 1;
@@ -50,6 +53,10 @@ public class Computer extends Thread {
      * Construct a computer
      */
     public Computer() {
+        this(0);
+    }
+    
+    public Computer(int volume) {
         // Get name and version information from manifest, or set default
         name = getClass().getPackage().getImplementationTitle();
         version = getClass().getPackage().getImplementationVersion();
@@ -86,8 +93,8 @@ public class Computer extends Thread {
 
         // And the control console - start in step-by-step mode
         console = new Console(this);
+        console.setVolume(volume);
         console.setStep(true);
-        console.setVolume(50);
         
         // Default to real time mode
         setRealTime(true);

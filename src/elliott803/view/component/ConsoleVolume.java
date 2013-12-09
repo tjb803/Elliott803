@@ -26,17 +26,18 @@ public class ConsoleVolume extends JPanel implements ChangeListener {
     private static final long serialVersionUID = 1L;
     
     Console console;
-        
+    JSlider slider;
+            
     public ConsoleVolume(Console console) {
         this.console = console;        
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setAlignmentX(CENTER_ALIGNMENT);
-        
+                
         DisplaySpeaker grill = new DisplaySpeaker();
         add(grill);
         add(Box.createVerticalStrut(5));
         
-        JSlider slider = new JSlider(0, 100, console.getVolume());
+        slider = new JSlider(0, 100, console.getVolume());
         slider.addChangeListener(this);
         slider.setAlignmentX(CENTER_ALIGNMENT);
         slider.setMajorTickSpacing(20);
@@ -49,6 +50,10 @@ public class ConsoleVolume extends JPanel implements ChangeListener {
         JLabel t = new JLabel("Volume");
         t.setAlignmentX(CENTER_ALIGNMENT);
         add(t);
+    }
+    
+    public void setEnabled(boolean enabled) {
+        slider.setEnabled(enabled);
     }
     
     /*

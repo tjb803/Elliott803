@@ -52,6 +52,13 @@ public class CPU {
     public CPU(Computer computer) {
         this.computer = computer;
         calibrate();
+        
+        if (Computer.debug) {
+            System.out.println("CPU:");
+            System.out.println("  sleep time:   " + sleepPause);
+            System.out.println("  spin time:    " + spinPause);
+            System.out.println("  pause method: " + (useSpin ? "spin" : "sleep"));
+        }
     }
     
     // Set the next instruction to be executed

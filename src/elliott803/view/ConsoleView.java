@@ -62,16 +62,16 @@ public class ConsoleView extends JInternalFrame implements ActionListener, Focus
         speaker = new Loudspeaker();
         speaker.setVolume(console.getVolume());
         volume = new ConsoleVolume(console);
-    
+
         // Word generator 
         JPanel wg = new JPanel();
         wg.setLayout(new BoxLayout(wg, BoxLayout.Y_AXIS));
         wg.add(new ConsoleButtons("Function 1", FN_NAMES, 6, 39, console));
-        wg.add(Box.createVerticalStrut(5));
+        wg.add(Box.createVerticalStrut(10));
         wg.add(new ConsoleButtons("Address 1", ADDR_NAMES, 14, 33, console));
-        wg.add(Box.createVerticalStrut(5));
+        wg.add(Box.createVerticalStrut(10));
         wg.add(new ConsoleButtons("Function 2", FN_NAMES, 6, 19, console));
-        wg.add(Box.createVerticalStrut(5));
+        wg.add(Box.createVerticalStrut(10));
         wg.add(new ConsoleButtons("Address 2", ADDR_NAMES, 13, 13, console));
         wg.add(Box.createVerticalStrut(20));
         wordgen = new DisplayWord("Word", Type.INSTRUCTION);

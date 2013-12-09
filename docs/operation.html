@@ -57,8 +57,13 @@ or <code>java <b>elliott803.Main</b> [options] [machine]</code>
 </dl></blockquote>
 <h4>Options</h4>
 <blockquote><dl>
-<dt><code>-look <i>lookandfeel</i></code></dt><dd>The name of the Java GUI 
-look-and-feel to use.
+<dt><code>-volume <i>volume</i></code></dt>
+<dd>The initial loudspeaker volume.
+This should be a number from 0 to 10, a value of 0 will switch the 
+sound emulation off (which can be useful on slower machines).
+If not specified the default value is 5.</dd>
+<dt><code>-look <i>lookandfeel</i></code></dt>
+<dd>The name of the Java GUI look-and-feel to use.
 By default the standard platform look-and-feel will be used.
 Other look-and-feels that may be available (depending on operating system
 and Java version) include: <code>metal</code>, <code>ocean</code>, <code>steel</code>,
