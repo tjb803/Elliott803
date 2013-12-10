@@ -47,7 +47,7 @@ public class Main implements Runnable {
         Args.Map options = Args.optionMap();
         options.put("look", "lookAndFeel");
         options.put("volume", "volume");
-        options.put("debug", null);
+        options.put("debug");
         Args parms = new Args("elliott803.Main", "[machine]", args, options);
         
         // Global debug flag

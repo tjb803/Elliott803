@@ -59,9 +59,9 @@ public class Run {
         options.put("teletype", "outputfile");
         options.put("wordgen", "+\"instruction\"");
         options.put("press", "button");
-        options.put("ascii", null);
-        options.put("dump", null);
-        options.put("trace", null);
+        options.put("ascii");
+        options.put("dump");
+        options.put("trace");
         Args parms = new Args("elliott803.Run", "programtape [entryaddress]", args, options);
 
         File inputFile1 = parms.getInputFile("reader1");

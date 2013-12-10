@@ -51,7 +51,7 @@ public class ConsoleOperation extends JPanel implements ActionListener {
         } else if (action.equals(OPERATION_NORMAL)) {
             console.setAction(Console.CONSOLE_NORMAL);
         } else if (action.equals(OPERATION_OBEY)) {
-            console.setAction(Console.CONSOLE_READ);
+            console.setAction(Console.CONSOLE_OBEY);
         }    
     }
 }

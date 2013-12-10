@@ -32,6 +32,9 @@ public class Args {
     
     public static class Map extends LinkedHashMap<String,String> {
         private static final long serialVersionUID = 1L;
+        public void put(String key) {
+            put(key, null);
+        }
     }
 
     String name, parms;

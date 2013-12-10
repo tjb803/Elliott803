@@ -43,7 +43,7 @@ public class PrintTelecode {
     public static void main(String[] args) throws Exception {
         // Handle parameters
         Args.Map options = Args.optionMap();
-        options.put("ascii", null);
+        options.put("ascii");
         options.put("inputenc", "inputencoding");
         options.put("outputenc", "outputencoding");
         Args parms = new Args("PrintTelecode", "inputfile [outputfile]", args, options);

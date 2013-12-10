@@ -37,7 +37,7 @@ public class TapePrint {
     public static void main(String[] args) throws Exception {
         // Handle parameters
         Args.Map options = Args.optionMap();
-        options.put("ascii", null);
+        options.put("ascii");
         options.put("encoding", "outputencoding");
         Args parms = new Args("TapePrint", "inputtape [outputfile]", args, options);
 

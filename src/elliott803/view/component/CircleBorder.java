@@ -19,8 +19,8 @@ import javax.swing.border.LineBorder;
 public class CircleBorder extends LineBorder {
     private static final long serialVersionUID = 1L;
 
-    public CircleBorder(Color colour, int thinkness) {
-        super(colour, thinkness);
+    public CircleBorder(Color colour, int thickness) {
+        super(colour, thickness);
     }
     
     public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
