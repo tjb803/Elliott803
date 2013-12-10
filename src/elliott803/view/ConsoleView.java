@@ -91,7 +91,7 @@ public class ConsoleView extends JInternalFrame implements ActionListener, Focus
         controls.add(new ConsoleControl(console));
         controls.add(Box.createVerticalStrut(10));
         controls.add(new ConsoleOperation(console));
-        controls.add(Box.createVerticalStrut(5));
+        controls.add(Box.createVerticalStrut(10));
 
         // Operate bar
         operate = new JButton(CONSOLE_OPERATE);

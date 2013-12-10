@@ -57,14 +57,18 @@ public class ConsoleButtons extends JPanel implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         ConsoleBitButton b = (ConsoleBitButton)e.getSource();
-        if (b == release) {
-            for (ConsoleBitButton c : buttons) {
-                console.clearWordGenBit(c.getBit());
-                c.setSelected(false);
-            }
+        if (!b.isSelected()) {
+            b.setSelected(true);
         } else {
-            console.setWordGenBit(b.getBit());
-            release.setSelected(false);
+            if (b == release) {
+                for (ConsoleBitButton c : buttons) {
+                    console.clearWordGenBit(c.getBit());
+                    c.setSelected(false);
+                }
+            } else {
+                console.setWordGenBit(b.getBit());
+                release.setSelected(false);
+            }
         }
     }
 }
