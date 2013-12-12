@@ -49,14 +49,13 @@ public class CPU {
     // Variables used during execution
     AtomicBoolean running;
     boolean jump;
-    boolean fetch;
     Trace trace;
     
     // Variables used to control instruction timing
     boolean useSpin;
     int cycles;
-    long busyStart; 
     long spinPause, sleepPause;
+    long busyStart; 
     
     // Variables used to calculate relative speed
     AtomicBoolean realTime;
@@ -83,7 +82,6 @@ public class CPU {
     public void setInstruction(int instruction) {
         synchronized(this) {
             irx = Instruction.asInstr(instruction);
-            fetch = false;
             viewState();
         }    
     }
@@ -102,7 +100,6 @@ public class CPU {
             acc = ar = 0;
             scr2 = scr = 0;
             ir = irx = 0;
-            fetch = true;
             overflow = fpOverflow = false;
         }    
         computer.busyClear();
@@ -116,7 +113,6 @@ public class CPU {
         stop();
         synchronized (this) {
             jump = true;
-            fetch = false;
         }    
     }
 
@@ -134,7 +130,6 @@ public class CPU {
         running.set(true);
         while (running.get()) {
             synchronized (this) {
-                busyStart = 0;
                 obey();
                 cpuCycles.addAndGet(cycles);
 
@@ -176,40 +171,8 @@ public class CPU {
     // Obey the next instruction. 
     public void obey() {
         synchronized (this) {
-            // Fetch the next instruction from storage and apply any B-line
-            // modification if needed.
-            if (fetch) {
-                if (scr2 == 0) {
-                    // Processing first instruction, so just fetch from store
-                    ir = computer.core.fetch(scr);
-                    irx = Word.getInstr1(ir);
-                } else {
-                    // Processing of second instruction depends on B digit setting,
-                    // unless we got here via a jump.
-                    if (jump || Word.getB(ir) == 0) {
-                        // No modification needed but we must re-fetch the instruction
-                        // word in case the previous instruction modified it.
-                        ir = computer.core.fetch(scr);
-                        irx = Word.getInstr2(ir);
-                    } else {
-                        // B-line modification is applied to the original value of the 
-                        // second instruction (even if it has been modified in store).
-                        long b = computer.core.read(Instruction.getAddr(irx));
-                        irx = Word.getInstr2(ir) + Word.getInstr2(b);
-                    }
-                }
-
-                // Trace each new instruction pair or following a jump
-                if (trace != null) {
-                    if (jump || scr2 == 0)
-                        trace.trace(scr, scr2, ir, acc, overflow);
-                } 
-            }    
-            fetch = true;
-
             // Execute the instruction
             execute();
-            viewState();
 
             // Step to the next instruction, unless we had jump in which case the 
             // new address will already be set in scr/scr2.
@@ -221,7 +184,40 @@ public class CPU {
                     scr = Instruction.getAddr(scr + 1);
                 }
             }
+            
+            // Fetch next instruction and display state
+            fetch();
+            viewState();
         }
+    }
+    
+    // Fetch the next instruction
+    void fetch() {
+        if (scr2 == 0) {
+            // Processing first instruction, so just fetch from store
+            ir = computer.core.fetch(scr);
+            irx = Word.getInstr1(ir);
+        } else {
+            // Processing of second instruction depends on B digit setting,
+            // unless we got here via a jump.
+            if (jump || Word.getB(ir) == 0) {
+                // No modification needed but we must re-fetch the instruction
+                // word in case the previous instruction modified it.
+                ir = computer.core.fetch(scr);
+                irx = Word.getInstr2(ir);
+            } else {
+                // B-line modification is applied to the original value of the 
+                // second instruction (even if it has been modified in store).
+                long b = computer.core.read(Instruction.getAddr(irx));
+                irx = Word.getInstr2(ir) + Word.getInstr2(b);
+            }
+        }
+
+        // Trace each new instruction pair or following a jump
+        if (trace != null) {
+            if (jump || scr2 == 0)
+                trace.trace(scr, scr2, ir, acc, overflow);
+        }  
     }
 
     // Execute a single instruction
@@ -233,6 +229,7 @@ public class CPU {
         computer.console.soundSpeaker(op > 037, 1);
         
         // Perform the operation.  Default cycle time is 576us (2 cycles)
+        busyStart = 0;
         jump = false;
         cycles = 2;
         switch (op >> 3) {

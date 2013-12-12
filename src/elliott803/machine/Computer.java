@@ -109,19 +109,19 @@ public class Computer extends Thread {
             cpu.exit();
         } else {
             busyWait = true;
-            cpu.busy(busyWait);
+            cpu.busy(true);
             while (busyWait) {
                 try {
                     wait();
                 } catch (InterruptedException e) { }
             }
+            cpu.busy(false);
         }
     }
 
     public synchronized void busyClear() {
         if (busyWait) {
             busyWait = false;
-            cpu.busy(busyWait);
             notify();
         }
         console.setBusy(false);

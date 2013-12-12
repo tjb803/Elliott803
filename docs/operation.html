@@ -448,6 +448,25 @@ command line session.</p>
 <blockquote><pre>
 <code>java elliott803.Run -ascii tapes/samples/charset.tape</code>
 </pre></blockquote>
+<h4>Running ALGOL Programs from the Command Line</h4>
+<p>An ALGOL source program cannot be directly compiled and run using the command
+line interface, however it is possible use the graphical interface to compile an
+ALGOL program and produce a <i>dump tape</i> of the compiled program.
+This dump tape can then be run from the command line.</p>
+<p>To produce a <i>dump tape</i> start by loading the ALGOL compiler and 
+compiling your program as described in <a href="algol.html#using">Running
+ALGOL Programs</a>.
+Proceed up to step <i>3</i> of the <a href="algol.html#comprun">Compiling
+and Running a Program</a> section.
+At this point, instead of running the program, press the <i>Reset</i> button
+and execute a <b>40 12</b> instruction from the console.
+The system will then write the dump tape of the compiled program to 
+Punch 1.</p>
+<p>The resulting tape is in a form that can loaded and run directly without 
+needing the ALGOL compiler, so it can be run using the command line interface.
+After loading the tape the system will enter a <i>Data Wait</i>, so a 
+command line option of &quot;<code>-press 21</code>&quot; is needed to cause
+it to execute.</p> 
 <br/><table border="1" frame="above" rules="none" width="100%">
 <tr><td align="left">Tim Baldwin<br>December 2013
 <br><a href="mailto:tjb803@tinymail.co.uk">tjb803@tinymail.co.uk</a></td>

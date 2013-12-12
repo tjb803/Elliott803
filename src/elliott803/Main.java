@@ -11,6 +11,7 @@ import java.awt.Toolkit;
 import java.io.File;
 
 import javax.swing.JFrame;
+import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -116,7 +117,9 @@ public class Main implements Runnable {
             }
         } else {
             // No look parameter, so use the system default
-            lafClass = UIManager.getSystemLookAndFeelClassName();
+            LookAndFeel laf = UIManager.getLookAndFeel();
+            if (laf == null || laf.getID().equals("Metal"))
+                lafClass = UIManager.getSystemLookAndFeelClassName();
         }
         
         // Set look and feel if found, otherwise leave as default
