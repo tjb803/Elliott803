@@ -52,10 +52,12 @@ will assign the address of the next instruction to that label.</li>
 <br>where <b>op1</b> and <b>op2</b> are two digit octal instruction op-codes and 
 <b>addr1</b> and <b>addr2</b> are either integer storage addresses or labels.
 <b>b</b> is either the character &quot;:&quot; or &quot;/&quot;.</li>
-<li>A line may be a constant which is a positive or negative integer.</li>
+<li>A line may contain one or more constants which are a positive or negative
+integers separated by commas.
+Each constant is placed in subsequent words of store.</li>
 <li>A line may contain a string in 'single quote' characters which will be
 turned into a sequence of telecode characters (including any necessary 
-shift characters) one character per subsequent words.</li>
+shift characters) one character per subsequent words or store.</li>
 <li>A directive <b>=nnnn</b> (where <i>nnnn</i> is a storage address) can be used to 
 define the load address of the program.
 If this is omitted the program will be loaded into the high end of store.</li>

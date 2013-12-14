@@ -14,17 +14,17 @@
 <li><a href="#hello1">Hello World 1</a></li>
 <li><a href="#hello2">Hello World 2</a></li>
 <li><a href="#charset">Character Set</a></li>
-<li><a href="#printer">Tape Printer</a></li>
+<li><a href="#tprint">Tape Printer</a></li>
 <li><a href="#random">Random Storage</a></li>
 <li><a href="#music">Play Music</a></li>
 </ul>
 <p>Note: the sample assembler programs have been written and assembled using a
-simple <a href="utilities.html#assembler">assembler utility</a> provided with 
+simple <a href="utilities.html#asm">assembler utility</a> provided with 
 the simulator.
 This is similar though not identical to the original 803 assembler.  
-In addition they often use one of the special <a href="extras.htlm#control">simulator
+In addition they often use one of the special <a href="extras.html#control">simulator
 control</a> instructions to exit in a clean way.</p>
-<p>Some sample programs that can be used with the <a href="algol.html">ALGOL</a>
+<p>Some sample programs that can be used with the <a href="algol.html#samples">ALGOL</a>
 compiler are also provided and documented separately.</p>
 <hr>
 <h2 id="hello1">Hello World 1</h2>
@@ -54,16 +54,16 @@ This program is loaded to a fixed address starting at location 7.
 As the tape does not &quot;trigger&quot; the initial instructions will try to 
 continue to read past the end and the tape will fall out of the reader - this was
 fairly normal 803 behaviour!  
-When there is no more tape to read the system will show a <b>busy</b> light when
+When there is no more tape to read the system will show a <b>busy</b> light as
 it gets stuck in a read instruction.  
 At this point you need to press the <i>Reset</i> key on the console, to clear the
 busy condition, and perform a manual jump to the entry point at location 7 - so
 set up the instruction <b>40 7 : 00 0</b> on the word generator and then do the 
 standard sequence <i>Read</i>, <i>Operate</i>, <i>Normal</i>, <i>Operate</i>.
 After this the message should appear in the output teletype.</p>
-<p>This program also enters a spin-loop when it finishes, which was fairly standard
-803 behaviour, again the <i>Reset</i> key needs to be used to regain operator
-control.</p>
+<p>This program also enters a spin-loop when it finishes (identified by the high
+pitch speaker tone), which was fairly standard 803 behaviour, again the 
+<i>Reset</i> key needs to be used to regain operator control.</p>
 <hr>
 <h2 id="charset">Character Set</h2>
 <table frame="box" rules="all" border="1" cellpadding="4">
@@ -72,14 +72,14 @@ control.</p>
 <tr><td><b>Program Tape</b></td>
 <td><samp>tapes/samples/charset.tape</samp></td></tr>
 </table>
-<p>This program prints the all 64 telecode characters - the 32 letter-shift versions  
-and the 32 figure-shift versions - to the output teletype then exits.
+<p>This program prints the all 62 telecode characters - the 31 letter-shift versions  
+and the 31 figure-shift versions - to the output teletype then exits.
 This shows all the characters available and also illustrates the use of a 
 <b>73</b> instruction to do a procedure call and return.
 The program is compiled to a self-triggering tape that can be loaded and run
 by the initial instructions.</p>
 <hr>
-<h2 id="charset">Tape Printer</h2>
+<h2 id="tprint">Tape Printer</h2>
 <table frame="box" rules="all" border="1" cellpadding="4">
 <tr><td><b>Source Code</b></td>
 <td><a href="../samples/assembler/print.a1"><samp>samples/assembler/print.a1</samp></a></td></tr>
@@ -93,7 +93,7 @@ by the initial instructions.
 The CPU will enter a &quot;busy&quot; wait if there is no tape in Reader 2, as soon 
 as a tape is loaded it should continue and print out the tape contents.</p>
 <p>The behaviour is similar to an online version of 
-the <a href="utilities.html#tapeprint">TapePrint</a> utility program.</p>
+the <a href="utilities.html#tprint">TapePrint</a> utility program.</p>
 <hr>
 <h2 id="random">Random Storage</h2>
 <table frame="box" rules="all" border="1" cellpadding="4">
@@ -109,7 +109,7 @@ The program is compiled to a self-triggering tape that can be loaded and run
 by the initial instructions.</p>
 <p>The program is intended to illustrate the use of the 
 <a href="extras.html#random">random number</a> simulator device
-and also shows the <a href="operation.html#opcore">core store window</a>
+and also shows the <a href="operation.html#opcpu">core store window</a>
 updating.</p>
 <hr>
 <h2 id="music">Play Music</h2>

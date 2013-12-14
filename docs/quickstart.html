@@ -46,17 +46,17 @@ on the JAR file to to launch the application.</p>
 windows something like this:</p>
 <table frame="void" rules="none">
 <tr>
-<td valign="middle" width="100"><b>Top left is the operator's console</b></td>
+<td valign="middle" width="100">Top left is the operator's console</td>
 <td rowspan="3"><img src="image/qs1.jpg" alt="Main Frame"/></td>
-<td align="right" valign="middle" width="100"><b>Top right is the simulation 
-control window and a view of the workings of the CPU and storage</b></td>
+<td align="right" valign="middle" width="100">Top right is the simulation 
+control window and a view of the workings of the CPU and storage</td>
 </tr>
 <tr><td><br><br><br></td></tr>
 <tr>
-<td valign="middle" width="100"><b>Bottom left is the teletype output and 
-graph plotter output</b></td>
-<td align="right" valign="middle" width="100"><b>Bottom right are the paper tape 
-readers and punches</b></td>
+<td valign="middle" width="100">Bottom left are the teletype and graph plotter
+output displays</td>
+<td align="right" valign="middle" width="100">Bottom right are the paper tape 
+readers and punches</td>
 </tr> 
 </table>
 <hr>
@@ -77,7 +77,7 @@ If the binary tape is suitably encoded the initial instructions can also cause
 a jump to the program entry point when the end of the tape is reached.</p>
 <p>The operator console is used to make the computer run the initial instructions
 by forcing a jump to location 0 where the initial instruction program starts.
-To make a jump the large number of buttons on the left of the console are used 
+To make a jump the large selection of buttons on the left of the console are used 
 to create a machine instruction, the computer is them told to read and execute that
 instruction.</p>
 <p>The 39 buttons on the left of the console are called the <i>Word Generator</i>, there
@@ -88,7 +88,8 @@ Two instructions therefore need 38 bits and that leaves one special bit (known a
 the <i>B digit</i>) that sits between the two.</p>
 <p>Pressing just the single top left most &quot;4&quot; button (shown in the 
 red circle below) creates a pair of instructions that would be written as 
-<b>40&nbsp;0&nbsp;:&nbsp;00&nbsp;0</b>.
+<b>40&nbsp;0&nbsp;:&nbsp;00&nbsp;0</b> (you can see this displayed at the 
+bottom of the console).
 The first instruction has a <b>40</b> op-code which is a jump and the target address 
 is <b>0</b>.
 The second instruction has a <b>00</b> op-code which is a no-op, but it doesn't really
@@ -100,7 +101,7 @@ then load the program in the tape reader, we use the operation buttons at the bo
 <p>First ensure the <i>Read</i> button is selected and then press the <i>Operate</i>
 key.
 This reads the instruction on the word generator into the CPU ready to be run.</p>
-<p>Next select the <i>Normal</i> button and again press the <i>Operate</i> key.
+<p>Next select the <i>Normal</i> button and press the <i>Operate</i> key again.
 This sets the CPU running normally and it executes instructions starting with
 the one we just loaded.
 We therefore do a jump to location zero and the hard-wired initial instructions 
@@ -108,7 +109,7 @@ take over.
 These read the tape, load the program into store and jump to its entry point.</p>
 <p>If all is correct you should see a message printed to the output teletype.
 While the program loads and runs you should also hear some fairly random sounding
-noises coming from the speakers.</p>
+noises coming from the speaker.</p>
 <center><img src="image/optele.jpg" alt="Teletype"/></center>
 <p>If you want to run the program again, you should first press the <i>Reset</i>
 key on the console, reload the program tape in the reader and re-execute the 

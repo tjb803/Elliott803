@@ -43,8 +43,8 @@
 <li><a href="#pload">Loading Programs</a></li>
 </ul>
 <hr>
-<h2 id="gui">Interactive GUI</h2>
-<p>The GUI interface can be started by running the simulator JAR file or by
+<h2 id="gui">Interactive Graphical Interface</h2>
+<p>The graphical interface can be started by running the simulator JAR file or by
 running the <code>elliott803.Main</code> program within the JAR.</p>
 <h3>Command</h3>
 <blockquote><pre>
@@ -63,7 +63,7 @@ This should be a number from 0 to 10, a value of 0 will switch the
 sound emulation off (which can be useful on slower machines).
 If not specified the default value is 5.</dd>
 <dt><code>-look <i>lookandfeel</i></code></dt>
-<dd>The name of the Java GUI look-and-feel to use.
+<dd>The name of the Java look-and-feel to use.
 By default the standard platform look-and-feel will be used.
 Other look-and-feels that may be available (depending on operating system
 and Java version) include: <code>metal</code>, <code>ocean</code>, <code>steel</code>,
@@ -71,9 +71,9 @@ and Java version) include: <code>metal</code>, <code>ocean</code>, <code>steel</
 <code>mac</code> and <code>nimbus</code>.
 </dd>
 </dl></blockquote>
-<p>The GUI interface displays a main window containing several smaller internal
-windows representing the various hardware and devices that form the Elliott
-803 simulation.
+<p>The graphical interface displays a main window containing several smaller 
+internal windows representing the various hardware and devices that form the 
+Elliott 803 simulation.
 These windows can be moved around and resized (or minimized) as required.
 The current layout can be saved as part of a machine image and restored 
 in a later run.</p>
@@ -92,7 +92,7 @@ If no image is provided a default window layout will be used.
 <p>The simulation control window provides functions not present on a real 
 803 that are used to perform additional control of the simulation.
 The two additional functions provided are for controlling the simulation speed
-and loading and saving machine images.
+and for loading and saving machine images.
 <br clear="left">
 <h4 id="speed">Controlling the Simulation Speed</h4>
 <img src="image/cpuspd.jpg" alt="RealTime" align="left">
@@ -100,7 +100,8 @@ and loading and saving machine images.
 CPU speed.
 The speed can be set to <i>Real time</i> which should run at a very close 
 approximation to the speed of a real 803B or, if the checkbox is cleared, it
-can be set to run as fast as the implementation will allow.</p>
+can be set to run as fast as the implementation will allow.
+Note that sound can only be produced when the speed is set to real time.</p>
 <p>The CPU speed number displays the current simulation speed in relation 
 to  real machine - so <b>1.0</b> means it is running at the same speed 
 as a real machine (which should be the case when the <i>Real time</i> option 
@@ -141,7 +142,7 @@ mode.
 The <i>Normal</i> function obeys the next instruction and continues executing
 instructions normally.</p>
 <p id="boot">So a typical sequence of operations to cause a jump to the 
-<a href="#initns">initial instructions</a> at location zero (to load a program 
+<a href="#initins">initial instructions</a> at location zero (to load a program 
 from the tape reader) would be:</p>
 <ul compact>
 <li>Set the instruction <b>40 0 : 00 0</b> on the word generator (this just needs
@@ -162,22 +163,21 @@ any pause.</p>
 <br>a parity error has been detected in the core store - this cannot 
 happen in the simulator.</li>
 <li><b>Block Transfer</b>
-<br>a transfer is happening to or from a block device - currently no
-block devices are implemented.</li>
+<br>a data transfer is happening to or from a device - this will flicker
+on and off when reading or writing tapes for example.</li>
 <li><b>Busy</b>
 <br>the system is waiting for input or output - typically waiting
 for a tape to loaded in a tape reader or punch.</li>
 <li><b>Floating Point Overflow</b> 
-<br>a floating point operation has overflowed.
-Execution stops if this occurs and will only continue when the <i>Operate</i>
-bar is pressed.</li>
+<br>a floating point operation has overflowed - execution stops if this occurs 
+and will only continue when the <i>Operate</i> bar is pressed.</li>
 <li><b>Step by Step</b> 
-<br>the system is stopped waiting for operator action.
-This is the condition on start up, after the <i>Reset</i> key is pressed or 
-if the <i>Read</i> or <i>Obey</i> buttons are selected.</li>
+<br>the system is stopped waiting for operator action - this is the condition 
+on start up, after the <i>Reset</i> key is pressed or if the <i>Read</i> or 
+<i>Obey</i> buttons are selected.</li>
 <li><b>Overflow</b> 
-<br>the overflow condition is set.  
-This will usually flicker on and off as programs are loaded or run.</li>
+<br>the overflow condition is set - this will usually flicker on and off 
+as programs are loaded or run.</li>
 </ul>
 <p>The <i>Volume</i> slider controls the level of the <a href="#sound">sounds</a>
 produced by the console speaker.
@@ -190,15 +190,16 @@ Setting the volume to 0 will switch off all sounds.</p>
 <p>The CPU window shows the values of some of the important internal registers as
 execution proceeds.
 This includes the currently executing instruction and the contents of the
-accumulator and auxiliary registers.</p>
-<p>At the bottom of the window are two debug options:</p>
+accumulator and auxiliary registers.
+When running in step-by-step mode the CPU window will display the next 
+instruction that is about to be executed.</p>
 <table frame="void" rules="none">
-<tr><td>
+<tr><td>At the bottom of the window are two debug options:
 <ul>
 <li>Pressing the <i>Dump</i> button will produce a
 <a href="extras.html#dump">system core dump</a>.
 This can be formatted and displayed using the
-<a href="utilities.html#pdump">Core File Formatter</a> utility.
+<a href="utilities.html#pcore">Core File Formatter</a> utility.
 <br><br></li>
 <li>Selecting the <i>Trace</i> option will turn on and off the
 <a href="extras.html#trace">system instruction trace</a>.
@@ -296,7 +297,7 @@ This is the default format for the tape punches, as it is assumed they may
 be writing binary data (such as compiler output tapes).
 If the output is text it will be encoded in telecode and can be converted
 to the system character set using the
-<a href="utilites.html#tprint">TapePrint</a> utility.</dd>
+<a href="utilities.html#tprint">TapePrint</a> utility.</dd>
 <dt><b>System</b></dt><dd>The tape is in standard system format.
 This is the default format for teleprinter output.
 This is only suitable for text input or output - the characters read or
@@ -332,14 +333,15 @@ running in <a href="#speed"><i>real time</i></a> mode.</p>
 <h4 id="perfs">Important Performance Note</h4>
 <p>To generate accurate sounds a reasonably fast PC is needed.
 On a slower machine, if sound performance seems break up or stutter, it
-is probably best to turn the sound off by setting the volume slider to 0.</p> 
+is probably best to turn the sound off by setting the volume slider to 0 or
+starting the program with the<code> -volume 0 </code>parameter.</p> 
 <hr>
 <h2 id="pload">Loading Programs</h2>
 <p>If you are patient, careful and very meticulous it is possible to enter
 a complete program and run it using only the operator's console.
 If you want to try, here's a very simple two line program that will print
 a series of 'A's to the teletype:</p>
-<blockquote><pre><code>128:  74 4127 : 74 4097          * Print a letter shift and an 'A'    
+<blockquote><pre><code>128:  74 4127 : 74 4097          * Print a letter shift and a letter 'A'    
 129:  40  128 : 00    0          * Jump to location 128 to repeat</code></pre></blockquote>
 <p>This could be entered and run using the following sequence of operations:</p>
 <table frame="box" rules="all" cellpadding="3">
@@ -347,32 +349,32 @@ a series of 'A's to the teletype:</p>
 <tr><td colspan="3">Reset the computer ready for use</td></tr>
 <tr><td></td><td><i>Reset</i></td><td>The &quot;Step by step&quot; light should now be on.</td></tr>
 <tr><td colspan="3">Load the short program into store</td></tr>
-<tr><td><b><code>70&nbsp;0&nbsp;:&nbsp;00&nbsp;0</code></b></td>
+<tr><td><b><code>&nbsp;70&nbsp;0&nbsp;:&nbsp;00&nbsp;0&nbsp;</code></b></td>
 <td><i>Read</i>,&nbsp;<i>Operate</i></td>
 <td>Put the instruction 70&nbsp;0 (read the word generator to the accumulator) into the
 instruction register ready to be obeyed (but not run yet)</td></tr>
-<tr><td><b><code>74&nbsp;4127&nbsp;:&nbsp;74&nbsp;4097</code></b></td>
+<tr><td><b><code>&nbsp;74&nbsp;4127&nbsp;:&nbsp;74&nbsp;4097&nbsp;</code></b></td>
 <td><i>Obey</i>,&nbsp;<i>Operate</i></td>
 <td>Obey the previous 70&nbsp;0 instruction so the accumulator now contains the
 instruction 74&nbsp;4127&nbsp;:&nbsp;74&nbsp;4097
 <br>(Hint: 4127 = 4096 + 31, 4097 = 4096 + 1)</td></tr>
-<tr><td><b><code>20&nbsp;128&nbsp;:&nbsp;00&nbsp;0</code></b></td>
+<tr><td><b><code>&nbsp;20&nbsp;128&nbsp;:&nbsp;00&nbsp;0&nbsp;</code></b></td>
 <td><i>Read</i>, <i>Operate</i>, <i>Obey</i>, <i>Operate</i></td>
 <td>Put the instruction 20&nbsp;128 (store accumulator to location 128) into the instruction
 register and obey it.</td></tr>
-<tr><td><b><code>70&nbsp;0&nbsp;:&nbsp;00&nbsp;0</code></b></td>
+<tr><td><b><code>&nbsp;70&nbsp;0&nbsp;:&nbsp;00&nbsp;0&nbsp;</code></b></td>
 <td><i>Read</i>, <i>Operate</i></td>
 <td>Get the 70&nbsp;0 instruction ready to be obeyed again</td></tr>
-<tr><td><b><code>40&nbsp;128&nbsp;:&nbsp;00&nbsp;0</code></b></td>
+<tr><td><b><code>&nbsp;40&nbsp;128&nbsp;:&nbsp;00&nbsp;0&nbsp;</code></b></td>
 <td><i>Obey</i>, <i>Operate</i></td>
 <td>Obey the previous instruction so the accumulator now contains 
 40&nbsp;128&nbsp;:&nbsp;00&nbsp;0</td></tr>
-<tr><td><b><code>20&nbsp;129&nbsp;:&nbsp;00&nbsp;0</code></b></td>
+<tr><td><b><code>&nbsp;20&nbsp;129&nbsp;:&nbsp;00&nbsp;0&nbsp;</code></b></td>
 <td><i>Read</i>, <i>Operate</i>, <i>Obey</i>, <i>Operate</i></td>
 <td>Put the instruction 20&nbsp;129 (store accumulator to location 129) into the instruction
 register and obey it.</td></tr>
 <tr><td colspan="3">Run the program</td></tr>
-<tr><td><b><code>40&nbsp;128&nbsp;:&nbsp;00&nbsp;0</code></b></td>
+<tr><td><b><code>&nbsp;40&nbsp;128&nbsp;:&nbsp;00&nbsp;0&nbsp;</code></b></td>
 <td><i>Read</i>, <i>Operate</i>, <i>Normal</i>, <i>Operate</i></td>
 <td>Reads and executes a 40&nbsp;128 (jump to location 128) instruction and continues
 running normally, i.e. fetching and executing instructions from store.
@@ -450,8 +452,8 @@ command line session.</p>
 </pre></blockquote>
 <h4>Running ALGOL Programs from the Command Line</h4>
 <p>An ALGOL source program cannot be directly compiled and run using the command
-line interface, however it is possible use the graphical interface to compile an
-ALGOL program and produce a <i>dump tape</i> of the compiled program.
+line interface, however it is possible use the graphical interface to compile a
+program and produce a <i>dump tape</i> of the compiled source and runtime.
 This dump tape can then be run from the command line.</p>
 <p>To produce a <i>dump tape</i> start by loading the ALGOL compiler and 
 compiling your program as described in <a href="algol.html#using">Running
@@ -465,8 +467,13 @@ Punch 1.</p>
 <p>The resulting tape is in a form that can loaded and run directly without 
 needing the ALGOL compiler, so it can be run using the command line interface.
 After loading the tape the system will enter a <i>Data Wait</i>, so a 
-command line option of &quot;<code>-press 21</code>&quot; is needed to cause
+command line option of<code> -press 21 </code>is needed to cause
 it to execute.</p> 
+<p>As an example the <a href="algol.html#trig">Trigonometric Table</a> ALGOL
+program has been compiled to a sample dump tape and can be run with this command.
+<blockquote><pre>
+<code>java elliott803.Run -press 21 tapes/samples/trig.dump.tape</code>
+</pre></blockquote> 
 <br/><table border="1" frame="above" rules="none" width="100%">
 <tr><td align="left">Tim Baldwin<br>December 2013
 <br><a href="mailto:tjb803@tinymail.co.uk">tjb803@tinymail.co.uk</a></td>

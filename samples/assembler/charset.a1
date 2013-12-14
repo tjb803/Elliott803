@@ -13,17 +13,18 @@
         @entry                  * Entry point
 
 entry:  00   LS / 74  4096      * Print letter shift
-        73    4 : 40 chars      * Procedure call to write characters
+        73 link : 40 chars      * Procedure call to write characters
         00   FS / 74  4096      * Print figure shift
-        73    4 : 40 chars      * Procedure call
+        73 link : 40 chars      * Procedure call
         72 8191                 * Exit
 
+link:   0                       * Stores return address
 chars:  26   ch : 32    ch      * Clear ch, increment ch
         05  max : 42   rtn      * Check for end
         00   ch / 74  4096      * Write character
         74 4124 : 44 chars      * Write space and loop
 rtn:    74 4125 : 74  4126      * Write final CR LF
-        00    4 / 40     1      * Return to address in 4 plus 1
+        00 link / 40     1      * Return to address in link plus 1
 
 ch:     0                       * Workspace
 max:    26                      * Last character value

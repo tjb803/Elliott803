@@ -130,6 +130,7 @@ src/elliott803/view/component/DisplayWord.java -text
 src/elliott803/view/component/PushButton.java -text
 tapes/algol/a104-1.tape -text
 tapes/algol/a104-2.tape -text
+tapes/samples/trig.dump.tape -text
 test/Elliott803[!!-~]Main.launch -text
 test/Elliott803[!!-~]Run.launch -text
 test/src/elliott803/hardware/TestStore.java -text svneol=unset#text/plain
