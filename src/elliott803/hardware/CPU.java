@@ -89,22 +89,22 @@ public class CPU {
     // Stop execution after the current instruction
     public void stop() {
         running.set(false);
-        cpuCycles.set(0);
         computer.console.setStep(true);
+        cpuCycles.set(0);
     }
 
     // Reset the CPU - clears overflow and busy states and stops execution
     public void reset() {
         stop();
+        computer.busyClear();
+        computer.console.setOverflow(false, false);
+        computer.console.setBusy(false);
         synchronized (this) {
             acc = ar = 0;
             scr2 = scr = 0;
             ir = irx = 0;
             overflow = fpOverflow = false;
-        }    
-        computer.busyClear();
-        computer.console.setOverflow(false, false);
-        computer.console.setBusy(false);
+        }
     }
     
     // Exit execution.  Does not advance the instruction counter, so
@@ -142,7 +142,7 @@ public class CPU {
                     // If the last instruction caused a 'busy' wait, timings will
                     // be messed up, so simply reset them.  There's no need to pause
                     // as the busy wait will have more than covered the time. 
-                    if (busyStart > 0) {
+                    if (busyStart != 0) {
                         now = end = System.nanoTime();
                     } else {
                         end += cycles*CYCLE_NANO;
@@ -160,9 +160,11 @@ public class CPU {
                     }    
                 }
 
-                // Ensure the busy light is off when an instruction finally completes.  We have
-                // to do this here because we want the light to remain on while an I/O operation
-                // occurs, including any delay added to simulate real-time speed. 
+                // Ensure the block transfer and busy lights are off when an instruction 
+                // finally completes.  We have to do this here because we want the lights
+                // to remain on while an I/O operation/ occurs, including any delay added
+                // to simulate real-time speed.  This is a little bit of a hack.
+                computer.console.setBlockTr(false);
                 computer.console.setBusy(false);
             }
         }
@@ -436,7 +438,7 @@ public class CPU {
         if (start) {
             busyStart = System.currentTimeMillis();
         } else {
-            if (busyStart > 0) {
+            if (busyStart != 0) {
                 cpuBusy.addAndGet(System.currentTimeMillis() - busyStart);
             }    
         }

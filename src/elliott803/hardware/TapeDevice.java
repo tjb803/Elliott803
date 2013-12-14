@@ -1,7 +1,7 @@
 /**
  * Elliott Model 803B Simulator
  *
- * (C) Copyright Tim Baldwin 2009
+ * (C) Copyright Tim Baldwin 2009, 2013
  */
 package elliott803.hardware;
 
@@ -23,6 +23,13 @@ public abstract class TapeDevice extends Device {
         this.id = id;
     }
 
+    // Transfer a character to or from the device
+    protected void transfer(int ch) {
+        computer.console.setBlockTr(true);
+        devicePause();
+        viewChar(ch);
+    }
+    
     // Need to override the deviceWait to enable GUI updates
     protected void deviceWait() {
         viewBusy(true);

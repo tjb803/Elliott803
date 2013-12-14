@@ -17,21 +17,22 @@ import javax.swing.JPanel;
 public class ConsoleLights extends JPanel {
     private static final long serialVersionUID = 1L;
     
-    ConsoleLight step, busy, overflow, fpOverflow;
+    ConsoleLight step, blockTr, busy, overflow, fpOverflow;
     
     public ConsoleLights() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setAlignmentY(CENTER_ALIGNMENT);
         
+        blockTr = new ConsoleLight("Block Transfer");
         step = new ConsoleLight("Step by Step");
         busy = new ConsoleLight("Busy");
         overflow = new ConsoleLight("Overflow");
         fpOverflow = new ConsoleLight("Floating Point/Overflow");
         
         add(Box.createVerticalGlue());
-        add(new ConsoleLight("Parity"));            // Currently unused
+        add(new ConsoleLight("Parity"));            // Never used
         add(Box.createVerticalStrut(10));
-        add(new ConsoleLight("Block Transfer"));    // Currently unused
+        add(blockTr);
         add(Box.createVerticalStrut(10));
         add(busy);
         add(Box.createVerticalStrut(10));
@@ -48,6 +49,10 @@ public class ConsoleLights extends JPanel {
      */
     public void setStep(boolean on) {
         step.setValue(on);
+    }
+    
+    public void setBlockTr(boolean on) {
+        blockTr.setValue(on);
     }
     
     public void setBusy(boolean on) {

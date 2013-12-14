@@ -1,7 +1,7 @@
 /**
  * Elliott Model 803B Simulator
  *
- * (C) Copyright Tim Baldwin 2009, 2012
+ * (C) Copyright Tim Baldwin 2009, 2013
  */
 package elliott803.hardware;
 
@@ -51,8 +51,7 @@ public class Reader extends TapeDevice {
             ch = readCh();
         }
         if (inputTape != null) {
-            devicePause();
-            viewChar(ch);
+            transfer(ch);
         }
 
         return (ch & Telecode.CHAR_MASK);

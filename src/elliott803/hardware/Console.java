@@ -1,7 +1,7 @@
 /**
  * Elliott Model 803B Simulator
  *
- * (C) Copyright Tim Baldwin 2009,2013
+ * (C) Copyright Tim Baldwin 2009, 2013
  */
 package elliott803.hardware;
 
@@ -29,7 +29,8 @@ public class Console extends Device {
     boolean manualData;         // In manual data mode
     boolean manualDataDelay;    // Delay setting manual data
 
-    boolean busy;               // Status lights
+    boolean blockTr;            // Status lights
+    boolean busy;
     boolean step;
     boolean overflow, fpOverflow;
     
@@ -105,6 +106,13 @@ public class Console extends Device {
     }
 
     // Set status lights
+    public void setBlockTr(boolean isBlockTr) {
+        if (blockTr != isBlockTr) {
+            blockTr = isBlockTr;
+            viewLights();
+        }    
+    }
+    
     public void setBusy(boolean isBusy) {
         if (busy != isBusy) {
             busy = isBusy;
@@ -203,7 +211,7 @@ public class Console extends Device {
 
     void viewLights() {
         if (view != null)
-            view.updateLights(step, busy, overflow, fpOverflow);
+            view.updateLights(step, blockTr, busy, overflow, fpOverflow);
     }
     
     void viewVolume() {

@@ -139,8 +139,9 @@ public class ConsoleView extends JInternalFrame implements ActionListener, Focus
         wordgen.setValue(value);
     }
 
-    public void updateLights(boolean isStep, boolean isBusy, boolean isOverflow, boolean isFpOver) {
+    public void updateLights(boolean isStep, boolean blockTr, boolean isBusy, boolean isOverflow, boolean isFpOver) {
         lights.setStep(isStep);
+        lights.setBlockTr(blockTr);
         lights.setBusy(isBusy);
         lights.setOverflow(isOverflow);
         lights.setFpOverflow(isFpOver);

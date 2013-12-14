@@ -1,7 +1,7 @@
 /**
  * Elliott Model 803B Simulator
  *
- * (C) Copyright Tim Baldwin 2009, 2012
+ * (C) Copyright Tim Baldwin 2009, 2013
  */
 package elliott803.hardware;
 
@@ -92,7 +92,6 @@ public class PaperTapeStation {
      * Read and write characters
      */
     public int read(int addr) {
-        computer.console.setBusy(true);
         int ch = 0;
         if (addr >= 2048 && readers[READER2] != null) {
             ch = readers[READER2].read();
@@ -103,7 +102,6 @@ public class PaperTapeStation {
     }
 
     public void write(int addr) {
-        computer.console.setBusy(true);
         if (addr >= 4096 && punches[TELETYPE] != null) {
             punches[TELETYPE].write(addr);
         } else if (addr >= 2048 && punches[PUNCH2] != null) {
