@@ -58,10 +58,12 @@ public class ConsoleView extends JInternalFrame implements ActionListener, Focus
         setFocusable(true);
         addFocusListener(this);
         
-        // Create the loudspeaker
+        // Create the loudspeaker and tweak the CPU cycle speed to match 
+        // the sound sample length to ensure the smoothest sound emulation.
         speaker = new Loudspeaker();
         speaker.setVolume(console.getVolume());
         volume = new ConsoleVolume(console);
+        console.computer.cpu.setCycleTime(speaker.getCycleTime());
 
         // Word generator 
         JPanel wg = new JPanel();

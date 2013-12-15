@@ -28,11 +28,6 @@ import elliott803.view.CpuView;
  */
 public class CPU {
 
-    // Cycle time should really be 288us, but I'm using 272us as this works
-    // better with the sound samples, and is only a little bit fast :-).
-    static final int CYCLE_TIME = 272;              // Basic cycle time in us
-    static final int CYCLE_NANO = CYCLE_TIME*1000;  // Basic cycle time in ns
-
     public Computer computer;   // The owning computer
 
     // CPU registers and flags
@@ -53,7 +48,7 @@ public class CPU {
     
     // Variables used to control instruction timing
     boolean useSpin;
-    int cycles;
+    int cycleNano, cycles;
     long spinPause, sleepPause;
     long busyStart; 
     
@@ -68,6 +63,7 @@ public class CPU {
         cpuStart = new AtomicLong();
         cpuBusy = new AtomicLong();
         cpuCycles = new AtomicLong();
+        setCycleTime(288);              // Default cycle time is 288us
         calibrate();
         
         if (Computer.debug) {
@@ -76,6 +72,11 @@ public class CPU {
             System.out.println("  spin time:    " + spinPause);
             System.out.println("  pause method: " + (useSpin ? "spin" : "sleep"));
         }
+    }
+    
+    // Set the basic cycle time in micro-seconds
+    public void setCycleTime(int us) {
+        cycleNano = us*1000;
     }
     
     // Set the next instruction to be executed
@@ -145,7 +146,7 @@ public class CPU {
                     if (busyStart != 0) {
                         now = end = System.nanoTime();
                     } else {
-                        end += cycles*CYCLE_NANO;
+                        end += cycles*cycleNano;
                         long pause = end-now;
                         if (pause > sleepPause) {
                             try { 
@@ -422,7 +423,7 @@ public class CPU {
         float factor = 0;
         if (cpuCycles.get() > 0) {
             float cpuTime = System.currentTimeMillis() - cpuStart.get() - cpuBusy.get();
-            factor = (float)(cpuCycles.get()*CYCLE_TIME)/(cpuTime*1000);
+            factor = (float)(cpuCycles.get()*(cycleNano/1000))/(cpuTime*1000);
 
             // Reset counters ready for next call
             cpuStart.set(System.currentTimeMillis());
@@ -446,7 +447,7 @@ public class CPU {
 
     // Add additional 'cycles' for real-time device control
     public synchronized void addDelay(int us) {
-        cycles += (us*1000)/CYCLE_NANO;
+        cycles += (us*1000)/cycleNano;
     }
     
     // Attempt to calibrate the CPU timings used for real-time operation
@@ -468,7 +469,7 @@ public class CPU {
         // If the minimum thread sleep time is short enough to cover a few 
         // typical instructions (say 20 576us instructions) we can use sleeps
         // to control timing, otherwise we need to use spin loops.
-        useSpin = (sleepPause > 20*2*CYCLE_NANO);
+        useSpin = (sleepPause > 20*2*cycleNano);
     }
 
     // Dump

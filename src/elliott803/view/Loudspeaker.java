@@ -5,6 +5,7 @@
  */
 package elliott803.view;
 
+import java.util.Arrays;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -25,7 +26,7 @@ public class Loudspeaker extends Thread {
      * Sound is written in 'frames' of 12 samples, so at 44.1kHz this represents a
      * time of 272.1us.  For the best sound emulation we really need this frame time 
      * to match the CPU cycle time of 288us - it is close but not quite right, so I 
-     * have cheated a bit and set the CPU cycle time down to 272us (see CPU.java).
+     * cheat a bit and set the CPU cycle time down to 272us.
      * 
      * If we really want the CPU to run at 288us and we want the best possible sound
      * there are a couple of other options:
@@ -38,18 +39,24 @@ public class Loudspeaker extends Thread {
      * or 'quiet' (frame is all zeros).  Therefore a constant stream of 'pulses' 
      * should make a tone of about 3.5kHz.
      */
-    static final int SAMPLE_RATE = 44100;
-    static final int FRAME_SIZE = 12;
-    
+    public static int sampleRate = 44100;
+   
+    int frame, cycle;
     byte[] pulse, quiet;
     BlockingQueue<byte[]> samples;
     
     AtomicBoolean on;
     SourceDataLine line;
-    
+
     public Loudspeaker()  {
-        pulse = new byte[FRAME_SIZE]; 
-        quiet = new byte[FRAME_SIZE];
+        // Calculate frame size closest to 288us for the sample rate and then 
+        // the actual cycle time that results.  This allows 'sampleRate' to be
+        // changed for experimentation.
+        frame = (sampleRate*288)/1000000;
+        cycle = (frame*1000000)/sampleRate;
+
+        pulse = new byte[frame]; 
+        quiet = new byte[frame];
 
         on = new AtomicBoolean(false);
         samples = new ArrayBlockingQueue<byte[]>(1000);
@@ -58,9 +65,10 @@ public class Loudspeaker extends Thread {
             // Create the line with a buffer for about 1/5s of sound so it starts 
             // and stops near enough when requested, but not so small it runs out
             // of buffered samples too often.
-            AudioFormat af = new AudioFormat(SAMPLE_RATE, 8, 1, false, false);
+            int bufSize = ((sampleRate/5)/frame)*frame;
+            AudioFormat af = new AudioFormat(sampleRate, 8, 1, false, false);
             line = AudioSystem.getSourceDataLine(af);
-            line.open(af, 8820);    // Multiple of 12 that is about 1/5s at 44.1kHz
+            line.open(af, bufSize); 
             start();                // Start the audio thread
         } catch (Throwable e) {
             System.err.println(e);  // Ignore all errors trying to get sound
@@ -68,6 +76,11 @@ public class Loudspeaker extends Thread {
         }
     }
 
+    // Return cycle time required by the speaker
+    public int getCycleTime() {
+        return cycle;
+    }
+    
     // Send pulse/quiet samples to the speaker
     public void sound(boolean click, int count) {
         if (on.get()) {
@@ -76,7 +89,7 @@ public class Loudspeaker extends Thread {
                 samples.offer(sample);
         }
     }
-
+ 
     // Is queue full - mostly used by tests
     public boolean isFull() {
         return (samples.remainingCapacity() == 0);
@@ -88,9 +101,7 @@ public class Loudspeaker extends Thread {
             on.set(false);
         } else if (line != null) {
             volume = (255*volume*volume)/(100*100); // Scale in a non-linear curve
-            pulse[0] = pulse[5] = (byte)(volume/4);
-            pulse[1] = pulse[4] = (byte)(volume/2);
-            pulse[2] = pulse[3] = (byte)(volume);
+            Arrays.fill(pulse, 0, frame/2, (byte)volume);
             synchronized (this) {
                 if (!on.get()) {
                     on.set(true);
@@ -114,19 +125,19 @@ public class Loudspeaker extends Thread {
         setPriority(Thread.MAX_PRIORITY);
         while (true) {
             synchronized (this) {
-                if (!on.get()) {
+                while (!on.get()) {
                     try {
                         wait();
                     } catch (InterruptedException e) { }    
                 }
-                line.start();
             }
+            line.start();
             while (on.get()) {
                 byte[] b = samples.poll();
                 if (b != null)
-                    line.write(b, 0, FRAME_SIZE);
+                    line.write(b, 0, frame);
                 else 
-                    line.write(quiet, 0, FRAME_SIZE);
+                    line.write(quiet, 0, frame/2);
             }
             line.flush();
             line.stop();

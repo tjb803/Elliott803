@@ -22,6 +22,7 @@ import javax.swing.plaf.metal.OceanTheme;
 import elliott803.machine.Computer;
 import elliott803.utils.Args;
 import elliott803.view.ComputerView;
+import elliott803.view.Loudspeaker;
 import elliott803.view.MachineImage;
 
 /**
@@ -48,11 +49,17 @@ public class Main implements Runnable {
         Args.Map options = Args.optionMap();
         options.put("look", "lookAndFeel");
         options.put("volume", "volume");
+        options.put("sound", "sampleRate");
         options.put("debug");
         Args parms = new Args("elliott803.Main", "[machine]", args, options);
         
         // Global debug flag
         Computer.debug = parms.getFlag("debug");
+        
+        // Sound sample rate, for experimentation
+        int sampleRate = parms.getInteger("sound");
+        if (sampleRate > 0)
+            Loudspeaker.sampleRate = Math.max(8000, sampleRate);
         
         // Set the Swing look and feel
         setLookAndFeel(parms.getOption("look"));
