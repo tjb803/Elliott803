@@ -1,7 +1,7 @@
 /**
  * Elliott Model 803B Simulator
  *
- * (C) Copyright Tim Baldwin 2009, 2012
+ * (C) Copyright Tim Baldwin 2009, 2013
  */
 package elliott803.hardware;
 
@@ -27,8 +27,7 @@ public class Teletype extends Punch {
     public void write(int ch) {
         ch &= Telecode.CHAR_MASK;
         writeCh(ch);
-        devicePause();
-        viewChar(ch);
+        transfer(ch);
     }
 
     // Mainly for debugging

@@ -191,10 +191,11 @@ ALGOL Library Program A104</a> reference manual.</p>
 It just prints a short message to the output teletype.</p>
 <p>The source code for this program uses only characters from the
 standard Elliott telecode character set, so it looks exactly like a
-genuine 803 ALGOL program. 
+genuine 803 ALGOL program, with the slight exception that it uses the 
+# (number sign) in place of the &pound; (GB pound sign) as this can cause 
+problems with PC character encodings. 
 Note that it is all in uppercase and has apostrophes (rather than semicolons) 
-as statement separators. 
-It also uses the GB pound sign and the question mark as string delimiters.
+as statement separators and uses the # and ? characters as string quotes.
 The <code>PUNCH(3)</code> command on the <code>PRINT</code> statement directs
 the output to the teletype (rather than a tape punch which would otherwise 
 be the default).</p>

@@ -68,9 +68,10 @@ public class CPU {
         
         if (Computer.debug) {
             System.out.println("CPU:");
-            System.out.println("  sleep time:   " + sleepPause);
-            System.out.println("  spin time:    " + spinPause);
+            System.out.println("  sleep time: " + sleepPause);
+            System.out.println("  spin time: " + spinPause);
             System.out.println("  pause method: " + (useSpin ? "spin" : "sleep"));
+            System.out.println("  cycle time: " + cycleNano/1000);
         }
     }
     
