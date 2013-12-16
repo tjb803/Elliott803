@@ -5,6 +5,7 @@
  */
 package elliott803.view;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -77,7 +78,21 @@ public class ComputerView extends JDesktopPane implements ActionListener {
     }
    
     // Layout all the windows in their default positions
-    public boolean defaultLayout() {        
+    public boolean defaultLayout() {   
+        // First some messiness related to the GTK+ look and feel on Linux.  This seems
+        // to want to add some sort of TaskBar at the bottom in a layer that overlays
+        // our windows (in the default layer).  If we can find something resembling this
+        // bar (in a non-default layer) we need to adjust our size to allow for it.
+        int extraY = 0, extraHeight = 0;
+        for (Component c: getComponents()) {
+            if (getLayer(c) != DEFAULT_LAYER) {
+                if (c.getY() == 0)      // TaskBar is at the top
+                    extraY = Math.max(extraY, c.getHeight());
+                else if (c.getY() < 0)  // TaskBar is at the bottom
+                    extraHeight = Math.max(extraHeight, c.getHeight()-1);
+            }
+        }
+
         int plotterX = pts.teletype.getWidth() - pts.teletype.getRootPane().getPreferredSize().width;
         int plotterY = pts.teletype.getHeight() - pts.teletype.getRootPane().getPreferredSize().height;
 
@@ -94,10 +109,10 @@ public class ComputerView extends JDesktopPane implements ActionListener {
         int max3Y = control.getHeight() + store.getHeight() + 2*pts.reader[0].getHeight() + 10;
         int maxY = Math.max(Math.max(max1Y, max2Y), max3Y);
 
-        int consoleX = 0, consoleY = 0;
-        int controlX = maxX - maxCX, controlY = 0;
-        int storeX = maxX - store.getWidth(), storeY = control.getHeight();
-        int cpuX = storeX - cpu.getWidth(), cpuY = control.getHeight();
+        int consoleX = 0, consoleY = extraY;
+        int controlX = maxX - maxCX, controlY = extraY;
+        int storeX = maxX - store.getWidth(), storeY = controlY + control.getHeight();
+        int cpuX = storeX - cpu.getWidth(), cpuY = controlY + control.getHeight();
 
         int teletypeX = 0, teletypeY = maxY - pts.teletype.getHeight();
         int punch2X = maxX - pts.punch[1].getWidth(), punch2Y = maxY - pts.punch[1].getHeight();
@@ -120,7 +135,7 @@ public class ComputerView extends JDesktopPane implements ActionListener {
         pts.reader[0].setLocation(reader1X, reader1Y);
         pts.reader[1].setLocation(reader2X, reader2Y);
 
-        Dimension size = new Dimension(maxX, maxY);
+        Dimension size = new Dimension(maxX, maxY+extraY+extraHeight);
         setPreferredSize(size);
         
         return false;       // Layout is incomplete (frame is unsized)
