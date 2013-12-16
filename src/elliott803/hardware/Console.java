@@ -33,17 +33,17 @@ public class Console extends Device {
     boolean busy;
     boolean step;
     boolean overflow, fpOverflow;
-    
+
     boolean speakerOn;          // Speaker on/off
     int speakerVol;             // Speaker volume (0 to 100)
-    
+
     public Console(Computer computer) {
         this.computer = computer;
         action = CONSOLE_READ;
     }
 
-    // Read the word generator as as device.  This will cause a wait if the 
-    // manual data mode is set.  
+    // Read the word generator as as device.  This will cause a wait if the
+    // manual data mode is set.
     public long read() {
         if (manualData) {
             suspend();
@@ -70,7 +70,7 @@ public class Console extends Device {
         if (bit > 0 && bit < 40) {
             wordGen |= 1L<<(bit-1);
             viewWordGen();
-        }    
+        }
     }
 
     // Clear a bit in the word generator, bit = 1 to 39
@@ -78,9 +78,9 @@ public class Console extends Device {
         if (bit > 0 && bit < 40) {
             wordGen &= ~(1L<<(bit-1));
             viewWordGen();
-        }    
+        }
     }
-    
+
     // Toggle a bit in the word generator, bit = 1 to 39
     public void toggleWordGenBit(int bit) {
         if (bit > 0 && bit < 40) {
@@ -88,18 +88,18 @@ public class Console extends Device {
             viewWordGen();
         }
     }
-    
+
     // Set manual data status
     public void setManualData(boolean isManualData) {
         manualData = isManualData;
     }
-    
-    // Set manual data on, but only after the next read 
+
+    // Set manual data on, but only after the next read
     public void setManualDataDelay() {
         manualData = false;
         manualDataDelay = true;
     }
-    
+
     // Set clear store status
     public void setClearStore(boolean isClearStore) {
         clearStore = isClearStore;
@@ -110,14 +110,17 @@ public class Console extends Device {
         if (blockTr != isBlockTr) {
             blockTr = isBlockTr;
             viewLights();
-        }    
+        }
     }
-    
+
     public void setBusy(boolean isBusy) {
         if (busy != isBusy) {
             busy = isBusy;
             viewLights();
-        }    
+            if (busy) {
+                soundSilence();
+            }    
+        }
     }
 
     public void setOverflow(boolean isOverflow, boolean isFpOver) {
@@ -125,16 +128,19 @@ public class Console extends Device {
             overflow = isOverflow;
             fpOverflow = isFpOver;
             viewLights();
-        }    
+        }
     }
 
     public void setStep(boolean isStep) {
         if (step != isStep) {
             step = isStep;
             viewLights();
-        }    
+            if (step) {
+                soundSilence();
+            }    
+        }
     }
-    
+
     // Enter a wait state until the Operate bar is pressed
     public void suspend() {
         deviceWait();
@@ -144,7 +150,7 @@ public class Console extends Device {
     public void reset() {
         computer.cpu.reset();
     }
-    
+
     // Set the next action to be performed
     public void setAction(int value) {
         computer.cpu.stop();
@@ -165,25 +171,30 @@ public class Console extends Device {
                 case CONSOLE_OBEY:   computer.run(Computer.ACT_STEP);  break;
                 case CONSOLE_NORMAL: computer.run(Computer.ACT_RUN);   break;
             }
-        }    
+        }
     }
-    
-    // Set speaker on/off 
+
+    // Set speaker on/off
     public void setSpeaker(boolean on) {
         speakerOn = on;
         viewVolume();
     }
-    
+
     // Set the speaker volume (from 0 to 100)
     public void setVolume(int volume) {
         speakerVol = Math.max(0, Math.min(100, volume));
         viewVolume();
     }
-    
+
     public int getVolume() {
         return speakerVol;
     }
     
+    // Make a sound on the speaker
+    public void speakerSound(boolean click, int cycles) {
+        soundClicks(click, cycles);
+    }
+
     // Mainly for debugging
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -194,7 +205,7 @@ public class Console extends Device {
     }
 
     /*
-     * GUI Visualisation
+     * GUI visualisation and sound
      */
 
     ConsoleView view;
@@ -213,15 +224,19 @@ public class Console extends Device {
         if (view != null)
             view.updateLights(step, blockTr, busy, overflow, fpOverflow);
     }
-    
+
     void viewVolume() {
         if (view != null)
             view.updateVolume(speakerOn, speakerVol);
     }
-    
-    // Sound the speaker
-    public void soundSpeaker(boolean click, int cycles) {
+
+    void soundClicks(boolean click, int cycles) {
         if (view != null)
             view.soundSpeaker(click, cycles);
     }
- }
+
+    void soundSilence() {
+        if (view != null)
+            view.silenceSpeaker();
+    }
+}

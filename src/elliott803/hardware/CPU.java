@@ -17,7 +17,7 @@ import elliott803.view.CpuView;
 
 /**
  * This is the Central Processor.  This fetches and executes instructions.
- * 
+ *
  * This class needs to be careful with multi-threaded access as the main 'execute'
  * methods will be run on one thread, whereas methods such as 'reset' and 'stop'
  * can be invoked asynchronously via a different GUI thread.  It is important that
@@ -45,16 +45,16 @@ public class CPU {
     AtomicBoolean running;
     boolean jump;
     Trace trace;
-    
+
     // Variables used to control instruction timing
     boolean useSpin;
     int cycleNano, cycles;
     long spinPause, sleepPause;
-    long busyStart; 
-    
+    long busyStart;
+
     // Variables used to calculate relative speed
     AtomicBoolean realTime;
-    AtomicLong cpuStart, cpuBusy, cpuCycles; 
+    AtomicLong cpuStart, cpuBusy, cpuCycles;
 
     public CPU(Computer computer) {
         this.computer = computer;
@@ -65,29 +65,29 @@ public class CPU {
         cpuCycles = new AtomicLong();
         setCycleTime(288);              // Default cycle time is 288us
         calibrate();
-        
+
         if (Computer.debug) {
             System.out.println("CPU:");
-            System.out.println("  sleep time: " + sleepPause);
-            System.out.println("  spin time: " + spinPause);
+            System.out.println("  sleep time: " + sleepPause + "ns");
+            System.out.println("  spin time: " + spinPause + "ns");
             System.out.println("  pause method: " + (useSpin ? "spin" : "sleep"));
-            System.out.println("  cycle time: " + cycleNano/1000);
+            System.out.println("  cycle time: " + cycleNano/1000 + "us");
         }
     }
-    
+
     // Set the basic cycle time in micro-seconds
     public void setCycleTime(int us) {
         cycleNano = us*1000;
     }
-    
+
     // Set the next instruction to be executed
     public void setInstruction(int instruction) {
         synchronized(this) {
             irx = Instruction.asInstr(instruction);
             viewState();
-        }    
+        }
     }
-  
+
     // Stop execution after the current instruction
     public void stop() {
         running.set(false);
@@ -108,61 +108,61 @@ public class CPU {
             overflow = fpOverflow = false;
         }
     }
-    
+
     // Exit execution.  Does not advance the instruction counter, so
     // execution can resume and restart the same instruction.
     public void exit() {
         stop();
         synchronized (this) {
             jump = true;
-        }    
+        }
     }
 
     // Normal execution, run instructions until told to stop.
     public void run() {
         computer.console.setStep(false);
-        
+
         cpuStart.set(System.currentTimeMillis());
         cpuBusy.set(0);
         cpuCycles.set(0);
 
         long now = System.nanoTime();
         long end = now;
-        
+
         running.set(true);
         while (running.get()) {
             synchronized (this) {
                 obey();
                 cpuCycles.addAndGet(cycles);
 
-                // It is hard to get timings exact in Java.  This logic assumes we 
-                // are running too fast and adds a delay when enough time has 
-                // accumulated to for a delay to get us back on track.  This means 
-                // that each instruction may not have an exact timing but the CPU 
+                // It is hard to get timings exact in Java.  This logic assumes we
+                // are running too fast and adds a delay when enough time has
+                // accumulated to for a delay to get us back on track.  This means
+                // that each instruction may not have an exact timing but the CPU
                 // should average out at the correct speed.
                 if (realTime.get()) {
                     // If the last instruction caused a 'busy' wait, timings will
                     // be messed up, so simply reset them.  There's no need to pause
-                    // as the busy wait will have more than covered the time. 
+                    // as the busy wait will have more than covered the time.
                     if (busyStart != 0) {
                         now = end = System.nanoTime();
                     } else {
                         end += cycles*cycleNano;
                         long pause = end-now;
                         if (pause > sleepPause) {
-                            try { 
+                            try {
                                 Thread.sleep(pause/1000000, (int)pause%1000000);
                             } catch (InterruptedException e) { }
                             now = System.nanoTime();
                         } else if (useSpin) {
-                            while (end-now > spinPause) { 
+                            while (end-now > spinPause) {
                                 now = System.nanoTime();
-                            }    
+                            }
                         }
-                    }    
+                    }
                 }
 
-                // Ensure the block transfer and busy lights are off when an instruction 
+                // Ensure the block transfer and busy lights are off when an instruction
                 // finally completes.  We have to do this here because we want the lights
                 // to remain on while an I/O operation/ occurs, including any delay added
                 // to simulate real-time speed.  This is a little bit of a hack.
@@ -172,13 +172,13 @@ public class CPU {
         }
     }
 
-    // Obey the next instruction. 
+    // Obey the next instruction.
     public void obey() {
         synchronized (this) {
             // Execute the instruction
             execute();
 
-            // Step to the next instruction, unless we had jump in which case the 
+            // Step to the next instruction, unless we had jump in which case the
             // new address will already be set in scr/scr2.
             if (!jump) {
                 if (scr2 == 0) {
@@ -188,13 +188,13 @@ public class CPU {
                     scr = Instruction.getAddr(scr + 1);
                 }
             }
-            
+
             // Fetch next instruction and display state
             fetch();
             viewState();
         }
     }
-    
+
     // Fetch the next instruction
     void fetch() {
         if (scr2 == 0) {
@@ -210,7 +210,7 @@ public class CPU {
                 ir = computer.core.fetch(scr);
                 irx = Word.getInstr2(ir);
             } else {
-                // B-line modification is applied to the original value of the 
+                // B-line modification is applied to the original value of the
                 // second instruction (even if it has been modified in store).
                 long b = computer.core.read(Instruction.getAddr(irx));
                 irx = Word.getInstr2(ir) + Word.getInstr2(b);
@@ -221,7 +221,7 @@ public class CPU {
         if (trace != null) {
             if (jump || scr2 == 0)
                 trace.trace(scr, scr2, ir, acc, overflow);
-        }  
+        }
     }
 
     // Execute a single instruction
@@ -230,25 +230,25 @@ public class CPU {
         int addr = Instruction.getAddr(irx);
 
         // Start the initial sound sample
-        computer.console.soundSpeaker(op > 037, 1);
-        
+        computer.console.speakerSound(op > 037, 1);
+
         // Perform the operation.  Default cycle time is 576us (2 cycles)
         busyStart = 0;
         jump = false;
         cycles = 2;
         switch (op >> 3) {
-            case 0: case 1: case 2: 
+            case 0: case 1: case 2:
             case 3: group0123(op, addr);  break;
             case 4: group4(op, addr);  break;
             case 5: group5(op, addr);  break;
             case 6: group6(op, addr);  break;
             case 7: group7(op, addr);  break;
         }
-        
+
         // Complete the sound sample unless we had a busy wait
         if (busyStart == 0) {
-            computer.console.soundSpeaker(false, cycles-1);
-        }    
+            computer.console.speakerSound(false, cycles-1);
+        }
 
         // Update console lights to track overflow states
         computer.console.setOverflow(overflow, fpOverflow);
@@ -312,7 +312,7 @@ public class CPU {
     // Execute a group5 logical/arithmetic instruction
     void group5(int op, int addr) {
         long n = computer.core.read(addr);
-        int s = addr & 0x7F;                // Shifts work with lower 7 bits only 
+        int s = addr & 0x7F;                // Shifts work with lower 7 bits only
         if ((op & 001) != 0) {
             switch (op & 007) {
                 case 1: acc = computer.alu.shr(acc, s); ar = 0; cycles = s+2; break;
@@ -331,7 +331,7 @@ public class CPU {
         }
         overflow |= computer.alu.isOverflow();
     }
-    
+
     // Returns the number of consecutive 1's or 0's at the left hand end (MSB)
     // of the accumulator - this is needed for some instruction timings.
     int y() {
@@ -380,7 +380,7 @@ public class CPU {
             case 0:
                 acc = computer.console.read();
                 break;
-                
+
             case 3:
                 // According to Bill Purvis (on his excellent web pages about the 803 Algol compiler),
                 // the 73 instruction puts the address in the upper and lower half of the storage word.
@@ -417,7 +417,7 @@ public class CPU {
     public void setRealTime(boolean rt) {
         realTime.set(rt);
     }
- 
+
     // Return the approximate CPU speed as a multiple of a real 803 CPU.
     // This method is expected to be called periodically.
     public float getSpeed() {
@@ -430,10 +430,10 @@ public class CPU {
             cpuStart.set(System.currentTimeMillis());
             cpuBusy.set(0);
             cpuCycles.set(0);
-        }  
+        }
         return factor;
     }
-    
+
     // Called to indicate start/end of 'busy' wait.  The time in busy
     // waits needs to be excluded when calculating CPU speed.
     public synchronized void busy(boolean start) {
@@ -442,7 +442,7 @@ public class CPU {
         } else {
             if (busyStart != 0) {
                 cpuBusy.addAndGet(System.currentTimeMillis() - busyStart);
-            }    
+            }
         }
     }
 
@@ -450,7 +450,7 @@ public class CPU {
     public synchronized void addDelay(int us) {
         cycles += (us*1000)/cycleNano;
     }
-    
+
     // Attempt to calibrate the CPU timings used for real-time operation
     void calibrate() {
         // We need to know roughly how long it takes to read the nanosecond
@@ -463,11 +463,11 @@ public class CPU {
             long t3 = System.nanoTime();
             nt += (t2-t1);
             st += (t3-t2);
-        }    
+        }
         spinPause = nt/5;
         sleepPause = st/5;
-        
-        // If the minimum thread sleep time is short enough to cover a few 
+
+        // If the minimum thread sleep time is short enough to cover a few
         // typical instructions (say 20 576us instructions) we can use sleeps
         // to control timing, otherwise we need to use spin loops.
         useSpin = (sleepPause > 20*2*cycleNano);
@@ -518,7 +518,7 @@ public class CPU {
             view.updateFlags(overflow, fpOverflow);
         }
     }
-    
+
     void viewTrace() {
         if (view != null) {
             view.updateTrace(trace != null);

@@ -38,7 +38,7 @@ import elliott803.view.MachineImage;
  * options:
  *   -look lookAndFeel: the Java UI look-and-feel (defaults to system look and feel)
  *   -volume volume: the initial volume (0 to 100, 0 means no sound)
- *   -debug: print diagnostic information 
+ *   -debug: print diagnostic information
  *
  * @author Baldwin
  */
@@ -49,27 +49,32 @@ public class Main implements Runnable {
         Args.Map options = Args.optionMap();
         options.put("look", "lookAndFeel");
         options.put("volume", "volume");
-        options.put("sound", "sampleRate");
+        options.put("sound", "sampleRate:bufferSize");
         options.put("debug");
         Args parms = new Args("elliott803.Main", "[machine]", args, options);
-        
+
         // Global debug flag
         Computer.debug = parms.getFlag("debug");
-        
-        // Sound sample rate, for experimentation
-        int sampleRate = parms.getInteger("sound");
-        if (sampleRate > 0)
-            Loudspeaker.sampleRate = Math.max(8000, sampleRate);
-        
+
+        // Sound sample rate and buffer size, for experimentation
+        String sound = parms.getOption("sound");
+        if (sound != null) {
+            String[] sp = sound.split(":");
+            if (sp.length > 0)
+                Loudspeaker.sampleRate = Math.max(8000, Integer.parseInt(sp[0]));
+            if (sp.length > 1)
+                Loudspeaker.bufferSize = Math.max(100, Integer.parseInt(sp[1]));
+        }
+
         // Set the Swing look and feel
         setLookAndFeel(parms.getOption("look"));
 
-        // Get machine image to restore 
+        // Get machine image to restore
         File imageFile = parms.getInputFile(1);
-        MachineImage image = null; 
+        MachineImage image = null;
         if (imageFile != null)
             image = MachineImage.readImage(imageFile);
-        
+
         // Get initial volume
         int volume = parms.getInteger("volume");
         volume = Math.max(-1, Math.min(10, volume));
@@ -79,7 +84,7 @@ public class Main implements Runnable {
         Computer computer = new Computer(volume);
         ComputerView view = new ComputerView(computer);
         computer.start();
-        
+
         // Fire up the GUI
         Main gui = new Main(computer, view, image);
         SwingUtilities.invokeLater(gui);
@@ -88,7 +93,7 @@ public class Main implements Runnable {
     // Try to set the Swing look and feel
     private static void setLookAndFeel(String look) throws Exception {
         String lafClass = null, lafTheme = null;
-        
+
         if (Computer.debug) {
             System.out.println("Look:");
             for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -96,7 +101,7 @@ public class Main implements Runnable {
                 if (name.equals("Metal"))
                     name += "/Steel/Ocean";
                 System.out.println("  " + name);
-            }    
+            }
         }
 
         if (look != null) {
@@ -105,7 +110,7 @@ public class Main implements Runnable {
                 lafTheme = look;
                 look= "Metal";
             }
-            
+
             // Look for an exact match first, then a likely match
             for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if (info.getName().equalsIgnoreCase(look)) {
@@ -128,20 +133,20 @@ public class Main implements Runnable {
             if (laf == null || laf.getID().equals("Metal"))
                 lafClass = UIManager.getSystemLookAndFeelClassName();
         }
-        
+
         // Set look and feel if found, otherwise leave as default
         if (lafClass != null) {
             // Set Metal theme if needed
             if (lafTheme != null) {
                 if (lafTheme.equalsIgnoreCase("Steel"))
                     MetalLookAndFeel.setCurrentTheme(new DefaultMetalTheme());
-                else if (lafTheme.equalsIgnoreCase("Ocean")) 
+                else if (lafTheme.equalsIgnoreCase("Ocean"))
                     MetalLookAndFeel.setCurrentTheme(new OceanTheme());
             }
 
             UIManager.setLookAndFeel(lafClass);
         }
-        
+
         JFrame.setDefaultLookAndFeelDecorated(true);
     }
 
@@ -153,25 +158,25 @@ public class Main implements Runnable {
     Computer computer;
     ComputerView computerView;
     boolean layout;
-    
+
     public Main(Computer computer, ComputerView view, MachineImage image) {
         this.computer = computer;
         this.computerView = view;
-        
+
         Image icon = Toolkit.getDefaultToolkit().createImage(getClass().getResource("icon/803-32.png"));
 
         frame = new JFrame(computer.name + " Simulation (v" + computer.version + ")");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setIconImage(icon);
         frame.setContentPane(view);
-        
+
         // Set the default window layout and then apply any saved image
         layout = view.defaultLayout();
         if (image != null) {
             layout = image.apply(computer, view);
-        }    
+        }
     }
- 
+
     public void run() {
         // If layout is not complete (ie from a restored machine image) we
         // need to pack the frame and position it in the centre of the screen.

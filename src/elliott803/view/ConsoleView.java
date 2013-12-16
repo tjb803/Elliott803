@@ -33,7 +33,7 @@ import elliott803.view.component.DisplayWord.Type;
  * This has all the buttons for the word generator and various other buttons for
  * operating the computer.  It is intended to look and work roughly like the real
  * console, but it is not meant to be a completely accurate simulation.
- * 
+ *
  * It also contains the loudspeaker that produces sounds by firing a pulse when
  * certain instructions are executed.
  */
@@ -46,7 +46,7 @@ public class ConsoleView extends JInternalFrame implements ActionListener, Focus
 
     Console console;
     Loudspeaker speaker;
-    
+
     ConsoleLights lights;
     ConsoleVolume volume;
     JButton operate;
@@ -57,15 +57,15 @@ public class ConsoleView extends JInternalFrame implements ActionListener, Focus
         this.console = console;
         setFocusable(true);
         addFocusListener(this);
-        
-        // Create the loudspeaker and tweak the CPU cycle speed to match 
+
+        // Create the loudspeaker and tweak the CPU cycle speed to match
         // the sound sample length to ensure the smoothest sound emulation.
         speaker = new Loudspeaker();
         speaker.setVolume(console.getVolume());
         volume = new ConsoleVolume(console);
         console.computer.cpu.setCycleTime(speaker.getCycleTime());
 
-        // Word generator 
+        // Word generator
         JPanel wg = new JPanel();
         wg.setLayout(new BoxLayout(wg, BoxLayout.Y_AXIS));
         wg.add(new ConsoleButtons("Function 1", FN_NAMES, 6, 39, console));
@@ -83,7 +83,7 @@ public class ConsoleView extends JInternalFrame implements ActionListener, Focus
 
         // Indicator lights
         lights = new ConsoleLights();
-        
+
         // Control buttons etc
         JPanel controls = new JPanel();
         controls.setLayout(new BoxLayout(controls, BoxLayout.Y_AXIS));
@@ -134,7 +134,7 @@ public class ConsoleView extends JInternalFrame implements ActionListener, Focus
     }
 
     /*
-     * GUI visualisation (and auralisation!)
+     * GUI visualisation and sound
      */
 
     public void updateWordGen(long value) {
@@ -148,13 +148,17 @@ public class ConsoleView extends JInternalFrame implements ActionListener, Focus
         lights.setOverflow(isOverflow);
         lights.setFpOverflow(isFpOver);
     }
-    
+
     public void updateVolume(boolean on, int vol) {
         speaker.setVolume(on ? vol : 0);
         volume.setEnabled(on);
     }
-    
+
     public void soundSpeaker(boolean click, int count) {
         speaker.sound(click, count);
+    }
+
+    public void silenceSpeaker() {
+        speaker.silence();
     }
 }
