@@ -1,4 +1,5 @@
 build/package
 build/tapes
+/package
 samples/assembler/tapes
 /temp

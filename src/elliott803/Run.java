@@ -17,6 +17,7 @@ import elliott803.hardware.PaperTapeStation;
 import elliott803.hardware.TapeDevice;
 import elliott803.machine.Computer;
 import elliott803.machine.Word;
+import elliott803.telecode.Telecode;
 import elliott803.telecode.TelecodeInputStream;
 import elliott803.telecode.TelecodeOutputStream;
 import elliott803.utils.Args;
@@ -32,8 +33,8 @@ import elliott803.utils.Args;
  *   entrypoint: address to enter after tape is loaded (ignored for a self-triggering tape)
  *
  * options:
- *   -reader1 or -sysreader1 inputtape: tape to load in reader 1 (after program tape is read)
- *   -reader2 or -sysreader2 inputtape: tape to load in reader 2
+ *   -reader1 inputtape: tape to load in reader 1 (after program tape is read)
+ *   -reader2 inputtape: tape to load in reader 2
  *   -punch1 outputtape: output tape file for punch 1
  *   -punch2 outputtape: output tape file for punch 2
  *   -teletype outputfile: output file for teletype (defaults to System.out)
@@ -50,10 +51,8 @@ public class Run {
     public static void main(String[] args) throws Exception {
         // Handle parameters
         Args.Map options = Args.optionMap();
-        options.put("reader1", "+or");
-        options.put("sysreader1", "inputtape");
-        options.put("reader2", "+or");
-        options.put("sysreader2", "inputtape");
+        options.put("reader1", "inputtape");
+        options.put("reader2", "inputtape");
         options.put("punch1", "outputtape");
         options.put("punch2", "outputtape");
         options.put("teletype", "outputfile");
@@ -66,8 +65,6 @@ public class Run {
 
         File inputFile1 = parms.getInputFile("reader1");
         File inputFile2 = parms.getInputFile("reader2");
-        File sysInputFile1 = parms.getInputFile("sysreader1");
-        File sysInputFile2 = parms.getInputFile("sysreader2");
         File outputFile1 = parms.getOutputFile("punch1");
         File outputFile2 = parms.getOutputFile("punch2");
         File outputFile3 = parms.getOutputFile("teletype");
@@ -88,15 +85,19 @@ public class Run {
         InputStream programTape = new FileInputStream(programFile);
 
         InputStream inputTape1 = null, inputTape2 = null;
-        if (inputFile1 != null)
-            inputTape1 = new FileInputStream(inputFile1);
-        else if (sysInputFile1 != null)
-            inputTape1 = new TelecodeInputStream(new FileReader(sysInputFile1));
-        
-        if (inputFile2 != null)
-            inputTape2 = new FileInputStream(inputFile2);
-        else if (sysInputFile2 != null)
-            inputTape2 = new TelecodeInputStream(new FileReader(sysInputFile2));
+        if (inputFile1 != null) {
+            if (Telecode.isTelecode(inputFile1))
+                inputTape1 = new FileInputStream(inputFile1);
+            else
+                inputTape1 = new TelecodeInputStream(new FileReader(inputFile1));
+        }    
+
+        if (inputFile2 != null) {
+            if (Telecode.isTelecode(inputFile2))
+                inputTape2 = new FileInputStream(inputFile2);
+            else
+                inputTape2 = new TelecodeInputStream(new FileReader(inputFile2));
+        }    
 
         OutputStream outputTape1 = null, outputTape2 = null, outputTeletype = null;
         if (outputFile1 != null)

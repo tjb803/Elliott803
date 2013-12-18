@@ -5,6 +5,10 @@
  */
 package elliott803.telecode;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+
 /**
  * Various Elliott telecode constants
  *
@@ -80,5 +84,23 @@ public abstract class Telecode {
 
     public static char asFigure(int tc) {
         return figureShift.charAt(tc & CHAR_MASK);
+    }
+    
+    /*
+     * Attempt to determine if a file is a 5-hole telecode tape or a 
+     * system file.
+     */
+    public static boolean isTelecode(File file) throws IOException {
+        boolean telecode = true;
+        byte[] buf = new byte[128];
+        FileInputStream in = new FileInputStream(file);
+        for (int i = 0; i < in.read(buf); i++) {
+            if (buf[i] > 31) {
+                telecode = false;
+                break;
+            }
+        }
+        in.close();
+        return telecode;
     }
 }

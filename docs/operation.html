@@ -332,7 +332,9 @@ running in <a href="#speed"><i>real time</i></a> mode.</p>
 <br clear="left">
 <h4 id="perfs">Important Performance Note</h4>
 <p>To generate accurate sounds a reasonably fast PC is needed.
-On a slower machine, if sound performance seems break up or stutter, it
+On a slower machine, particularly with a single core processor, it may be 
+necessary to minimize the CPU and Core Store windows to improve sound output.  
+If sound performance still seems break up or stutter, it
 is probably best to turn the sound off by setting the volume slider to 0 or
 starting the program with the<code> -volume 0 </code>parameter.</p> 
 <hr>
@@ -414,34 +416,39 @@ probably less useful for most people.</p>
 </pre></blockquote>
 <h4>Parameters</h4>
 <blockquote><dl>
-<dt><code>programtape</code></dt><dd>The binary program tape to be loaded by
-the initial instructions.</dd>
-<dt><code>entryaddress</code></dt><dd>The program entry point address to jump to
-after the tape is loaded.
+<dt><code>programtape</code></dt>
+<dd>The binary program tape to be loaded by the initial instructions.</dd>
+<dt><code>entryaddress</code></dt>
+<dd>The program entry point address to jump to after the tape is loaded.
 This will be ignored for a self-triggering program tape.</dd>
 </dl></blockquote>
 <h4>Options</h4>
 <blockquote><dl>
-<dt><code>-reader1</code> or <code>-sysreader1 <i>inputtape</i></code></dt>
-<dd>The tape to load in reader 1 (after program tape is read).
-The <code>reader</code> option expects a telecode encoded tape; 
-the <code>sysreader</code> option takes a standard system text file.</dd>
-<dt><code>-reader2</code> or <code>-sysreader2 <i>inputtape</i></code></dt>
-<dd>The tape to load in reader 2.
-The <code>reader</code> option expects a telecode encoded tape; 
-the <code>sysreader</code> option takes a standard system text file.</dd>
-<dt><code>-punch1 <i>outputtape</i></code></dt><dd>The output tape file for punch 1</dd>
-<dt><code>-punch2 <i>outputtape</i></code></dt><dd>The output tape file for punch 2</dd>
-<dt><code>-teletype <i>outputfile</i></code></dt><dd>The output file for teletype, defaults to standard out</dd>
-<dt><code>-wordgen <i>&quot;instruction&quot;</i></code></dt><dd>The value to set on the word 
-generator, formatted as an instruction e.g. <code>"70 1 : 00 1"</code>.</dd>
-<dt><code>-press <i>keynumber</i></code></dt><dd>A key to press if the system waits for keyboard input.
-The top-left key (the Function 1 &quot;40&quot; or sign bit) is keynumber 1, the bottom right key 
-(the Address 2 &quot;1&quot; bit) is keynumber 39.  
-Other typically useful keynumbers are 20 (the B-digit) and 21 (the Function 2 &quot;40&quot; bit).</dd>
-<dt><code>-ascii</code></dt><dd>Print using only US-ASCII characters</dd>
-<dt><code>-dump</code></dt><dd>Produce a system dump on exit</dd>
-<dt><code>-trace</code></dt><dd>Produce a full instruction trace</dd>
+<dt><code>-reader1 <i>inputtape</i></code></dt>
+<dd>The tape to load in reader 1 (after program tape is read).</dd>
+<dt><code>-reader2 <i>inputtape</i></code></dt>
+<dd>The tape to load in reader 2.</dd>
+<dt><code>-punch1 <i>outputtape</i></code></dt>
+<dd>The output tape file for punch 1</dd>
+<dt><code>-punch2 <i>outputtape</i></code></dt>
+<dd>The output tape file for punch 2</dd>
+<dt><code>-teletype <i>outputfile</i></code></dt>
+<dd>The output file for teletype, defaults to standard out</dd>
+<dt><code>-wordgen <i>&quot;instruction&quot;</i></code></dt>
+<dd>The value to set on the word generator, formatted as an instruction 
+e.g. <code>"70 1 : 00 1"</code>.</dd>
+<dt><code>-press <i>keynumber</i></code></dt>
+<dd>A key to press if the system waits for keyboard input.
+The top-left key (the Function 1 &quot;40&quot; or sign bit) is keynumber 1, 
+the bottom right key (the Address 2 &quot;1&quot; bit) is keynumber 39.  
+Other typically useful keynumbers are 20 (the B-digit) and 21 (the 
+Function 2 &quot;40&quot; bit).</dd>
+<dt><code>-ascii</code></dt>
+<dd>Print using only US-ASCII characters</dd>
+<dt><code>-dump</code></dt>
+<dd>Produce a system dump on exit</dd>
+<dt><code>-trace</code></dt>
+<dd>Produce a full instruction trace</dd>
 </dl></blockquote>
 <p>As an example the sample <a href="samples.html#charset">Character Set</a> program
 can be run with this command.
@@ -474,6 +481,8 @@ program has been compiled to a sample dump tape and can be run with this command
 <blockquote><pre>
 <code>java elliott803.Run -press 21 tapes/samples/trig.dump.tape</code>
 </pre></blockquote> 
+<p>The program will end in a spin loop, you will need to press <i>Ctrl-C</i>
+to end the process.</p>  
 <br/><table border="1" frame="above" rules="none" width="100%">
 <tr><td align="left">Tim Baldwin<br>December 2013
 <br><a href="mailto:tjb803@tinymail.co.uk">tjb803@tinymail.co.uk</a></td>

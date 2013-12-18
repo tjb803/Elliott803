@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import elliott803.hardware.Reader;
+import elliott803.telecode.Telecode;
 import elliott803.telecode.TelecodeInputStream;
 import elliott803.view.component.DeviceMode;
 
@@ -40,7 +41,7 @@ public class ReaderView extends TapeDeviceView {
             try {
                 // Check the tape format, if AUTO mode was selected
                 if (fmode.equals(DeviceMode.MODE_AUTO)) {
-                    fmode = checkMode(file);
+                    fmode = (Telecode.isTelecode(file) ? DeviceMode.MODE_ELLIOTT : DeviceMode.MODE_SYSTEM);
                     mode.setMode(fmode);
                 }
 
@@ -55,21 +56,5 @@ public class ReaderView extends TapeDeviceView {
                 System.err.println(e);
             }
         }
-    }
-
-    // Check the input file for either Elliott or System format tape
-    String checkMode(File file) throws IOException {
-        String mode = DeviceMode.MODE_ELLIOTT;
-        byte[] buf = new byte[128];
-        FileInputStream in = new FileInputStream(file);
-        int size = in.read(buf);
-        for (int i = 0; i < size; i++) {
-            if (buf[i] > 31) {
-                mode = DeviceMode.MODE_SYSTEM;
-                break;
-            }
-        }
-        in.close();
-        return mode;
     }
 }
