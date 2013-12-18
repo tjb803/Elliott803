@@ -1,23 +1,10 @@
 Elliott 803 Simulation - Possible New Features
 ==============================================
 
-The v1.1.0 release contains pretty much all the function I had originally
+The v1.2.0 release contains near enough all the function I had originally
 intended to implement in this project.  The following is a list of 
 possible enhancements - some large, some small - that could be added or
 have been suggested by people who have used the program.
-
-  Sound
-  -----
-  Sound was a important aspect of the real 803 and was produced by 
-  pulsing a speaker in the operator console with the top bit from 
-  each instruction executed - therefore the sequence of instructions and
-  the instruction timings (which vary depending on opcode) cause 
-  recognisable sounds to be produced.
-  
-  It should be possible to emulate something very close to this using 
-  Java classes from the javax.sound.sampled package.  Producing correct
-  sounds will need the simulation to run at approximately the same speed
-  as a real 803 - see next feature ...  
   
   Tape Readers and Punches
   ------------------------
@@ -55,7 +42,7 @@ have been suggested by people who have used the program.
   device framework already in the code with a thought to implementing them but
   it is not complete and there is no actual film handler implementation.
   
-  It wouldn't be too hard to do - it's basically just a big store - although
+  It shouldn't be too hard to do - it's basically just a big store - although
   I'm not actually sure how useful it would be.  Storing things on paper tapes
   is not really a problem when the 'tapes' are really just disk files!  
  
@@ -85,4 +72,4 @@ If anyone is interested in working on any of these or other enhancements
 please drop me an email at tjb803@tinymail.co.uk.
 
 Tim Baldwin
-June 2012  
+December 2013  

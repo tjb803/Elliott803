@@ -15,6 +15,7 @@ hardware elements:
  - CPU, ALU and FPU
  - Core Store
  - Operator's Console 
+ - Loudspeaker Output
  - Paper Tape Readers and Punches
  - Output Teletype
  - Graph Plotter
@@ -62,6 +63,11 @@ Latest Improvements
 The latest release will always include various minor bug fixes.  In 
 addition the following are notable improvements:
 
+v1.2.0:
+ - Added authentic sounds from the console loudspeaker
+ - Reworked the Console window to look more like the real thing
+ - Added a scan of the Elliott 803 Facts booklet
+
 v1.1.0:
  - Added correct instruction and device I/O timimgs to allow the
    option of running programs at the original machine speed
@@ -83,7 +89,6 @@ Future Work
 The following items (and probably more) are currently missing from
 the simulation and can hopefully be added in a future release:
 
- - Sound
  - Film Handlers
 
 Acknowledgements
@@ -95,6 +100,7 @@ and debugging:
    Bill Purvis
    Peter Onion
    Bob Firth
+   Andrew Lyner
 
 Release History
 ---------------
@@ -103,6 +109,7 @@ v0.6.0  December 2009    Includes Algol compiler and samples
 v0.7.0  June 2010        Bug fixes and small improvements
 v1.0.0  August 2010      Initial intended function fully complete
 v1.1.0  June 2012        Add correct instruction and I/O timings
+v1.2.0  December 2013    Add loudspeaker and sounds; remodel console window
 
 ===========
 Tim Baldwin

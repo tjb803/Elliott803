@@ -51,3 +51,9 @@ v1.1.0
     - Add 'control' window to set real-time mode and display CPU speed    
     - Remove Paper Tape Station view (it wasn't very useful)
     - Add a 'cursor' to the teletype to show the print head position 
+    
+v1.2.0
+------
+  Improvements:
+    - Add loudspeaker output for authentic 803 sounds     
+    - Rework the console window to look more like the real thing
