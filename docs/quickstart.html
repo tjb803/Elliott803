@@ -40,21 +40,21 @@ prompt:
 <blockquote><pre>
 <code>java -jar elliott803-n.n.n.jar</code>
 </pre></blockquote>    
-<p>on some systems (such as Windows) you should also be able to double-click
-on the JAR file to to launch the application.</p>
+<p>on some systems you should also be able to double-click on the JAR file to 
+launch the application.</p>
 <p>The simulator should start and display a window containing several smaller
 windows something like this:</p>
 <table frame="void" rules="none">
 <tr>
-<td valign="middle" width="100">Top left is the operator's console</td>
+<td align="left" valign="middle" width="100">Top left is the operator's console</td>
 <td rowspan="3"><img src="image/qs1.jpg" alt="Main Frame"/></td>
 <td align="right" valign="middle" width="100">Top right is the simulation 
 control window and a view of the workings of the CPU and storage</td>
 </tr>
 <tr><td><br><br><br></td></tr>
 <tr>
-<td valign="middle" width="100">Bottom left are the teletype and graph plotter
-output displays</td>
+<td align="left" valign="middle" width="100">Bottom left are the teletype 
+and graph plotter output displays</td>
 <td align="right" valign="middle" width="100">Bottom right are the paper tape 
 readers and punches</td>
 </tr> 
@@ -99,9 +99,9 @@ matter as it will not get executed.</p>
 then load the program in the tape reader, we use the operation buttons at the bottom right 
 (shown in the green circle above).</p>
 <p>First ensure the <i>Read</i> button is selected and then press the <i>Operate</i>
-key.
+button.
 This reads the instruction on the word generator into the CPU ready to be run.</p>
-<p>Next select the <i>Normal</i> button and press the <i>Operate</i> key again.
+<p>Next select the <i>Normal</i> button and press the <i>Operate</i> button again.
 This sets the CPU running normally and it executes instructions starting with
 the one we just loaded.
 We therefore do a jump to location zero and the hard-wired initial instructions 
@@ -109,7 +109,11 @@ take over.
 These read the tape, load the program into store and jump to its entry point.</p>
 <p>If all is correct you should see a message printed to the output teletype.
 While the program loads and runs you should also hear some fairly random sounding
-noises coming from the speaker.</p>
+noises coming from the speaker.
+If the speaker sounds appear to break-up or stutter it may be that your PC is
+not quite powerful enough to correctly emulate the 803 sounds - see the
+<a href="operation.html#sound">sound performance notes</a> - in these cases it
+may be best to set the volume slider on the console to 0 to disable sound.</p>
 <center><img src="image/optele.jpg" alt="Teletype"/></center>
 <p>If you want to run the program again, you should first press the <i>Reset</i>
 key on the console, reload the program tape in the reader and re-execute the 
