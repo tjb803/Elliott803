@@ -38,6 +38,7 @@ import elliott803.view.MachineImage;
  * options:
  *   -look lookAndFeel: the Java UI look-and-feel (defaults to system look and feel)
  *   -volume volume: the initial volume (0 to 100, 0 means no sound)
+ *   -sound sampleRate:bufferSize: sound sample rate and buffer size (experimental)
  *   -debug: print diagnostic information
  *
  * @author Baldwin
@@ -56,14 +57,14 @@ public class Main implements Runnable {
         // Global debug flag
         Computer.debug = parms.getFlag("debug");
 
-        // Sound sample rate and buffer size, for experimentation
+        // Sound sample rate, buffer size and delay - for experimentation
         String sound = parms.getOption("sound");
         if (sound != null) {
             String[] sp = sound.split(":");
-            if (sp.length > 0)
+            if (sp.length > 0 && sp[0].length() > 0)
                 Loudspeaker.sampleRate = Math.max(8000, Integer.parseInt(sp[0]));
-            if (sp.length > 1)
-                Loudspeaker.bufferSize = Math.max(100, Integer.parseInt(sp[1]));
+            if (sp.length > 1 && sp[1].length() > 0)
+                Loudspeaker.bufferSize = Math.max(0, Integer.parseInt(sp[1]));
         }
 
         // Set the Swing look and feel

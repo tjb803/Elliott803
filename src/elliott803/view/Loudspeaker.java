@@ -39,8 +39,8 @@ public class Loudspeaker {
      * or 'quiet' (frame is all zeros).  Therefore a constant stream of 'pulses'
      * should make a tone of about 3.5kHz.
      */
-    public static int sampleRate = 44100;   // Default sample frequency
-    public static int bufferSize = 250;     // Default buffer size (in ms)
+    public static int sampleRate = 44100;   // Sample frequency
+    public static int bufferSize = 0;       // Buffer size (0 = use default)
 
     int frame, cycle;
     byte[] pulse, quiet;
@@ -60,15 +60,14 @@ public class Loudspeaker {
         pulse = new byte[frame];
         quiet = new byte[frame];
 
-        int bufSize = 0;
         try {
-            // Create the line with a buffer for about 1/4s of sound so it starts
-            // and stops near enough when requested, but not so small it runs out
-            // of buffered frames too often.
-            bufSize = (((sampleRate*bufferSize)/1000)/frame)*frame;
             AudioFormat af = new AudioFormat(sampleRate, 8, 1, false, false);
             line = AudioSystem.getSourceDataLine(af);
-            line.open(af, bufSize);
+            if (bufferSize > 0) {     
+                line.open(af, (bufferSize/frame)*frame);
+            } else {
+                line.open();
+            }
         } catch (Throwable e) {
             System.err.println(e);  // Ignore all errors trying to get sound
             line = null;            // No sound available;
@@ -76,11 +75,14 @@ public class Loudspeaker {
 
         if (Computer.debug) {
             System.out.println("Speaker:");
-            System.out.println("  sample rate: " + sampleRate + "Hz");
-            System.out.println("  buffer size: " + bufferSize + "ms");
-            System.out.println("  frame length: " + frame);
-            System.out.println("  buffer length: " + bufSize);
-            System.out.println("  cycle time: " + cycle + "us");
+            if (line != null) {
+                System.out.println("  sample rate: " + line.getFormat().getFrameRate()/1000 + "kHz");
+                System.out.println("  frame length: " + frame);
+                System.out.println("  buffer size: " + line.getBufferSize());
+                System.out.println("  cycle time: " + cycle + "us");
+            } else {
+                System.out.println("  not available");
+            }
         }
     }
 
