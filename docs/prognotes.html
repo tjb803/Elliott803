@@ -19,11 +19,11 @@ of the simulator.</p>
 contains the full Java source for the project classes.</p></li>
 <li>Download the source directly from the SourceForge SVN code repository
 listed below.
-Read-only access to the code in SVN should be available to anyone, if 
-you want ot update the code you will need a SourceForge ID and you will
-need to be added to project. 
+Anonymous read-only access to the code in SVN should be available to anyone, if 
+you want to be able to commit changes to the code you will need a SourceForge 
+ID and you will need to be added to project. 
 <blockquote><pre>
-https://svn.code.sf.net/p/elliott803/code
+http://svn.code.sf.net/p/elliott803/code
 </pre></blockquote>
 <p>The SVN repository is structured in the usual way - the latest version of
 the code can be found in the &quot;trunk&quot; stream with previous releases
@@ -57,7 +57,7 @@ the CPU, the tape readers, the teletype etc.</dd>
 <dt><code><b>elliott.hardware.device</b></code></dt>
 <dd>Some base classes that provide general support common to all of the hardware
 devices, in particular those that can signal 'busy' conditions and respond to 
-the 7x instruction opcodes.</dd>
+the group 7 instruction opcodes.</dd>
 <dt><code><b>elliott.machine</b></code></dt>
 <dd>The more abstract classes relating to the core emulation that are not related
 to specific pieces of real hardware.</dd>
@@ -67,23 +67,22 @@ but do not represent function present on a real 803, for example the random numb
 generator.</dd>
 <dt><code><b>elliott803.view</b></code></dt>
 <dd>The GUI 'view' classes.
-All of the visuals are contained withing these classes (and the component 
-sub-package) and there is only a simple and well defined split between the view
+All of the visuals are contained within these classes (and the component 
+sub-package) and there is a simple and well defined split between the view
 code and the core emulation code.</dd> 
 <dt><code><b>elliott803.view.component</b></code></dt>
-<dd>These are simple (generally, expect maybe the DisplayPlot one!) and often 
-reusable components used to build the GUI views.  
+<dd>These are simple and often reusable components used to build the GUI views.  
 They are used whenever there is not a standard Swing component that is suitable.</dd>
 <dt><code><b>elliott803.telecode</b></code></dt>
 <dd>These classes handle all the conversion from Java characters to Elliott
-Telecode characters and <i>vice-versa</i>.
+telecode characters and <i>vice-versa</i>.
 There are simple character converters and more complex conversion input and 
 output streams which fit in nicely with the Java I/O models.</dd>
 <dt><code><b>elliott803.utils</b></code></dt>
 <dd>All of the additional utility programs, including the simple assembler.</dd>
 <dt><code><b>elliott803.icon</b></code></dt>
 <dd>Some icons in various formats that are used internally and also packaged as
-part of the distrubtion ZIP for others to use.</dd> 
+part of the distribution ZIP for others to use.</dd> 
 </dl>
 <br><p>More details to come ... probably</p><br>
 <h3>Contributing To The Project</h3>
