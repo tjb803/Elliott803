@@ -45,7 +45,7 @@ import elliott803.telecode.Telecode;
  *
  * Directives: 
  *     =addr   means load at address addr (loads at top of store if omitted)
- *     @addr   means add trigger to entry point addr (can be a label name)
+ *     $addr   means add trigger to entry point addr (can be a label name)
  *
  * ConstantSequence:  Constant [,ConstantSequence]
  *
@@ -53,7 +53,7 @@ import elliott803.telecode.Telecode;
  *
  * Integer:  [+|-]nnnn
  * 
- * Float:  [+|-]nnn.nnn[e|E[+|-]nnn]
+ * Float:  [+|-]nnn.nnn[@[+|-]nnn]
  *
  * String:  'xxxxxxx'
  *     becomes a sequence of characters (including any necessary shifts)
@@ -66,7 +66,7 @@ import elliott803.telecode.Telecode;
  *    * Simple Hello World program
  *    *
  *             =8160                * Load program starting at address 8160 
- *             @entry               * Define the entry address
+ *             $entry               * Define the entry address
  *      
  *    begin:                                                 
  *    loop:   22 index / 30 hello   * Get next character 
@@ -83,7 +83,7 @@ import elliott803.telecode.Telecode;
  *    index:  0                     * Index into string 
  *    hello: 'Hello World?'         * Text - will be {LS}HELLO WORLD{FS}? in telecode
  *            0                     * Zero marks end of string 
- *    m1:    -1, +4, 1.5, 0.1e-3    * A few constant values (not all used!) 
+ *    m1:    -1, +4, 1.5, 0.1@-3    * A few constant values (not all used!) 
  *
  * TODO:
  *   Add constant symbols and simple arithmetic expressions to support e.g.
@@ -131,7 +131,7 @@ public class Assembler {
     private static final String COMMENT_CHAR = "*";
     private static final String LABEL_CHAR = ":";
     private static final String ADDRESS_CHAR = "=";
-    private static final String TRIGGER_CHAR = "@";
+    private static final String TRIGGER_CHAR = "\\$";
     private static final String STRING_CHAR = "'";
 
     private static final String OP_PATTERN = "([0-7]{2})";
@@ -139,7 +139,7 @@ public class Assembler {
     private static final String B_PATTERN = "([:/])";
     private static final String LABEL_PATTERN = "([A-Za-z]\\w*)";
     private static final String INTEGER_PATTERN = "([+-]?\\d+)";
-    private static final String FLOAT_PATTERN = "([+-]?((\\d+\\.\\d*)|(\\d*\\.\\d+))([eE][+-]?\\d+)?)";
+    private static final String FLOAT_PATTERN = "([+-]?((\\d+\\.\\d*)|(\\d*\\.\\d+))(@[+-]?\\d+)?)";
     private static final String CONSTANT_PATTERN = "(" + INTEGER_PATTERN + "|" + FLOAT_PATTERN + "|" + LABEL_PATTERN + ")";
     private static final String VALUE_PATTERN = "(" + LABEL_PATTERN + "|" + ADDRESS_PATTERN + ")";
     private static final String LOAD_PATTERN = "(" + ADDRESS_CHAR + ADDRESS_PATTERN + ")";
@@ -265,7 +265,7 @@ public class Assembler {
     private void setLoadAndEntryAddress() {
         // Check for load address.  If not present we load into the top of store.
         if (loadDirective != null) {
-            loadAddress = Integer.parseInt(loadDirective.source.substring(1));
+            loadAddress = Instruction.parseAddr(loadDirective.source.substring(1));
         } else {
             loadAddress = 8192 - sourceCode.size();
         }
@@ -279,7 +279,7 @@ public class Assembler {
         if (triggerDirective != null) {
             String addr = triggerDirective.source.substring(1);
             if (addr.matches(ADDRESS_PATTERN)) {
-                triggerAddress = Integer.parseInt(addr);
+                triggerAddress = Instruction.parseAddr(addr);
             } else {
                 if (symbols.containsKey(addr)) {
                     triggerAddress = symbols.get(addr);
@@ -297,11 +297,10 @@ public class Assembler {
             long value = 0;
             if (source.matches(CONSTANT_LINE)) {
                 if (source.matches(INTEGER_PATTERN)) {
-                    value = Long.parseLong(source.startsWith("+") ? source.substring(1) : source);
+                    value = Word.parseInteger(source);
                 } else if (source.matches(FLOAT_PATTERN)) {
-                    double d = Double.parseDouble(source);
-                    value = Word.asFloat(d);
-                    if (value == Word.NOTHING || (value == 0 && d != 0)) { 
+                    value = Word.parseFloat(source);
+                    if (value == Word.NOTHING) { 
                         error(sourceLine.lineNo, "Float value out of range: " + source);
                     }    
                 } else {
@@ -334,10 +333,10 @@ public class Assembler {
     private int parseInstruction(int lineNo, String instruction) {
         int op = 0, addr = 0;
         StringTokenizer t = new StringTokenizer(instruction, " \t");
-        op = Integer.parseInt(t.nextToken(), 8);
+        op = Instruction.parseOp(t.nextToken());
         String target = t.nextToken();
         if (target.matches(ADDRESS_PATTERN)) {
-            addr = Integer.parseInt(target);
+            addr = Instruction.parseAddr(target);
         } else {
             if (symbols.containsKey(target)) {
                 addr = symbols.get(target);

@@ -58,7 +58,7 @@ public class Store {
     // Read store
     // Used for reading data, returns 0 if used to read initial instructions
     public long read(int addr) {
-        addr &= Instruction.ADDR_MASK;
+        addr = Instruction.asAddr(addr);
         if (addr >= STORE_START) {
             return store[addr];
         } else {
@@ -69,13 +69,13 @@ public class Store {
     // Fetch store
     // Used for reading instructions, returns initial instructions
     public long fetch(int addr) {
-        addr &= Instruction.ADDR_MASK;
+        addr = Instruction.asAddr(addr);
         return store[addr];
     }
 
     // Write store, cannot overwrite initial instructions
     public void write(int addr, long value) {
-        addr &= Instruction.ADDR_MASK;
+        addr = Instruction.asAddr(addr);
         if (addr >= STORE_START) {
             store[addr] = value;
             lastAddr = addr;

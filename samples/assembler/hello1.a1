@@ -12,7 +12,7 @@
 * This program will be loaded into the high-end of store and after loading
 * will automatically jump to the entry point address to run the code.
 **
-        @entry                  * Entry point
+        $entry                  * Entry point
 
 entry:
 loop:   22 index / 30 hello     * Get next character

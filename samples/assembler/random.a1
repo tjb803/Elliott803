@@ -9,7 +9,7 @@
 *
 * Writes random values to random storage locations
 **
-                @entry
+                $entry
 
 start:          start                   * Marks the start of this program
 abits:          8191                    * Address bits mask

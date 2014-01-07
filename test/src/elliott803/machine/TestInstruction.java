@@ -96,13 +96,13 @@ public class TestInstruction extends TestCase {
     
     // Build a 19 bit instruction from the test format
     int makeInstruction(String ibits) {
-        return makeOpcode(ibits) | makeAddress(ibits);
+        return (makeOpcode(ibits)<<13) | makeAddress(ibits);
     }
     
     int makeOpcode(String ibits) {
         String[] ss = ibits.split("-");
         int op = packBits(ss[0]);
-        return (op<<13);
+        return op;
     }
     
     int makeAddress(String ibits) {

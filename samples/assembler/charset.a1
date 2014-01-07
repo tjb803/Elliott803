@@ -10,7 +10,7 @@
 * Prints the character set to the teletype
 **
 
-        @entry                  * Entry point
+        $entry                  * Entry point
 
 entry:  00   LS / 74  4096      * Print letter shift
         73 link : 40 chars      * Procedure call to write characters

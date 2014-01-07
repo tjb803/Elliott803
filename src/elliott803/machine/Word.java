@@ -57,6 +57,10 @@ public abstract class Word {
         result.setCharAt(0, ' ');
         return result.toString();
     }
+    
+    public static final long parseWord(String s) {
+        return asWord(Long.parseLong(s));
+    }
 
     /*
      * Handle word as a pair of instructions
@@ -131,6 +135,10 @@ public abstract class Word {
         result.append((value > 0) ? "+" : "").append(text);
         return result.toString();
     }
+    
+    public static final long parseInteger(String s) {
+        return asInteger(Long.parseLong(s.startsWith("+") ? s.substring(1) : s));
+    }
 
     /*
      * Handle word as floating point
@@ -171,7 +179,7 @@ public abstract class Word {
         if (word != 0) {
             // Sign extend the 39 bits and extract the Elliott 30-bit mantissa and 9-bit exponent
             // as signed ints.
-            word = Word.getLong(word);
+            word = getLong(word);
             int em = (int)(word >> 9);
             int ee = (int)(word & FP_EXP_MASK) - 256;
 
@@ -226,7 +234,7 @@ public abstract class Word {
             // Set the result, checking for overflow if the final exponent needs more
             // than 9 bits or underflow if the value is too small to represent.
             if (b > 511) {
-                result = Word.NOTHING;          // Overflow
+                result = NOTHING;               // Overflow
             } else if (b < 0) {
                 result = 0;                     // Underflow
             } else {
@@ -237,6 +245,12 @@ public abstract class Word {
     }
 
     public static final String toFloatString(long word) {
-        return String.format("%+.8e", getDouble(word));
+        return String.format("%+.8e", getDouble(word)).replace('e','@');
+    }
+    
+    public static final long parseFloat(String s) {
+        double d = Double.parseDouble(s.replace('@', 'e'));
+        long result = asFloat(d);
+        return (result == 0 && d != 0) ? NOTHING : result;
     }
 }
