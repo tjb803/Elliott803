@@ -28,7 +28,8 @@ file is on the Java CLASSPATH.</p>
 <hr><h2 id="asm">Simple Assembler</h2>
 <h3>Command</h3>
 <blockquote><pre>
-<code>java <b>elliott803.utils.Assembler</b> inputfile outputtape</code>
+   <code>java <b>elliott803.Assemble</b> inputfile outputtape</code>
+<i>or</i> <code>java <b>elliott803.utils.Assembler</b> inputfile outputtape</code>
 </pre></blockquote>
 <h4>Parameters</h4>
 <blockquote><dl>
@@ -52,8 +53,8 @@ will assign the address of the next instruction to that label.</li>
 <br>where <b>op1</b> and <b>op2</b> are two digit octal instruction op-codes and 
 <b>addr1</b> and <b>addr2</b> are either integer storage addresses or labels.
 <b>b</b> is either the character &quot;:&quot; or &quot;/&quot;.</li>
-<li>A line may contain one or more constants which are a positive or negative
-integers separated by commas.
+<li>A line may contain one or more constants which are positive or negative
+integers or floating point numbers separated by commas.
 Each constant is placed in subsequent words of store.</li>
 <li>A line may contain a string in 'single quote' characters which will be
 turned into a sequence of telecode characters (including any necessary 
@@ -89,7 +90,7 @@ Look at the <a href="samples.html">sample assembler programs</a> for further exa
      index:  0                     * Index into string 
      hello: 'Hello World?'         * Text - will be {LS}HELLO WORLD{FS}? in telecode
              0                     * Zero marks end of string 
-     m1:    -1, 2, +4              * A few constant values (not all used!) 
+     m1:    -1, +4, 1.5, 0.1e-3    * A few constant values (not all used!) 
 </pre>
 <p>Note: This example uses the <a href="extras.html#control">simulator control</a> 
 instruction <b><code>72&nbsp;8191</code></b> to cause the simulation to stop.</p>
@@ -187,12 +188,13 @@ of store.
 To save space any consecutive words with the same value are omitted.</p>
 <p>Each storage word will be output something like this:</p>
 <pre><code>
- 742:    00  553 : 63 6766   [0004245475156]   (+580287086)       ".BEGIN"
+ 742:    00  553 : 63 6766   [0004245475156]   (+2.36659325e-47)   ".BEGIN"
  743:    00    0 : 00    6   [0000000000006]   (+6)   'F ='
 </code></pre> 
 <p>This shows the address of the word followed by its value as a pair of
 instructions, its value in octal (in square brackets) and its value in 
-decimal (in round brackets).  
+decimal (in round brackets, formatted as either an integer or a floating point
+number). 
 For values that might represent a single telecode character the character
 in letter-shift and figure-shift form is displayed in single quotes,
 for values that might represent packed text characters the possible 
@@ -288,10 +290,10 @@ Defaults to standard out.</dd>
 It will show the saved window positions (if present) and will optionally
 show the saved core store.</p>
 <br><table border="1" frame="above" rules="none" width="100%">
-<tr><td align="left">Tim Baldwin<br>June 2012
+<tr><td align="left">Tim Baldwin<br>December 2013
 <br><a href="mailto:tjb803@tinymail.co.uk">tjb803@tinymail.co.uk</a></td>
 <td align="right">Return to <a href="index.html">index</a>
-<br><br>&copy; Tim Baldwin 2009,2012</td></tr>
+<br><br>&copy; Tim Baldwin 2009,2013</td></tr>
 </table>
 </body>
 </html>

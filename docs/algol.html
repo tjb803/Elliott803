@@ -48,6 +48,8 @@ for example:<blockquote><table frame="void" rules="none">
 <li>The final END keyword must be followed by an apostrophe.</li>
 <li>All identifiers are distinguished only by their first 6 characters.</li>
 <li>All labels used must be declared in a SWITCH statement</li>
+<li>In a block, all variable declarations must come before any procedure 
+declarations</li> 
 <li>There were special PRINT and READ statements to perform I/O to and from the 
 tape punches, tape readers and output teletype.</li>
 <li>... and several others</li>
@@ -57,25 +59,26 @@ and in the Elliott format:</p>
 <table frame="box" rules="all" cellpadding="3" width="100%">
 <col width="50%"><col width="50%">
 <tr><th>ALGOL reference language</th><th>Elliott Representation</th></tr>
-<tr><td><pre><code><br></br><b>begin</b> <b>integer</b> i;  <b>real</b> x;  
-      <b>real</b> <b>array</b> y[1:12];
+<tr><td><pre><code>
+ <b>begin</b> <b>integer</b> i;  <b>real</b> x;  
+       <b>real</b> <b>array</b> y[1:12];
       
-      i := 1;  x := 0;
-  s1: y[i] := sin((x/180 x 3.14159);
-      <b>comment</b> No I/O functions are defined in Algol;
-      i := i + 1;  x := x + 30;
-      <b>if</b> i &le; 12 <b>then</b> <b>go to</b> s1;      
-<b>end</b></code></pre></td>
-<td><pre><code>CALCULATE SOME SINE VALUES'
-BEGIN INTEGER I'  REAL X'  
-      REAL ARRAY Y(1:12)'
-      SWITCH SS := S1'
-      I := 1'  X := 0'
-  S1: Y(I) := SIN(X/180 * 3.14159)'
-      PRINT X, SAMELINE, Y(I)'
-      I := I + 1'  X := X + 30'
-      IF I LESSEQ 12 THEN GOTO S1'
-END'</code></pre></td></tr>
+       i := 1;  x := 0;
+   s1: y[i] := sin((x/180 x 3.14159);
+       <b>comment</b> No I/O functions are defined in ALGOL;
+       i := i + 1;  x := x + 30;
+       <b>if</b> i &le; 12 <b>then</b> <b>go to</b> s1;      
+ <b>end</b></code></pre></td>
+<td><pre><code> CALCULATE SOME SINE VALUES'
+ BEGIN INTEGER I'  REAL X'  
+       REAL ARRAY Y(1:12)'
+       SWITCH SS := S1'
+       I := 1'  X := 0'
+   S1: Y(I) := SIN(X/180 * 3.14159)'
+       PRINT X, SAMELINE, &pound; SIN(X)=?, Y(I)'
+       I := I + 1'  X := X + 30'
+       IF I LESSEQ 12 THEN GOTO S1'
+ END'</code></pre></td></tr>
 </table>
 <hr>
 <h2 id="using">Running ALGOL Programs</h2>
@@ -188,13 +191,13 @@ ALGOL Library Program A104</a> reference manual.</p>
 <tr><td><b>Source Code</b></td>
 <td><a href="../samples/algol/hello.algol"><samp>samples/algol/hello.algol</samp></a></td></tr>
 </table>
-<p>This is a very simple algol &quot;hello world&quot; program.
+<p>This is a very simple ALGOL &quot;hello world&quot; program.
 It just prints a short message to the output teletype.</p>
 <p>The source code for this program uses only characters from the
 standard Elliott telecode character set, so it looks exactly like a
 genuine 803 ALGOL program, with the slight exception that it uses the 
-# (number sign) in place of the &pound; (GB pound sign) as this can cause 
-problems with PC character encodings. 
+# (number sign) in place of the &pound; (GB pound sign), as the GB pound
+sign can cause problems with PC character encodings. 
 Note that it is all in uppercase and has apostrophes (rather than semicolons) 
 as statement separators and uses the # and ? characters as string quotes.
 The <code>PUNCH(3)</code> command on the <code>PRINT</code> statement directs
@@ -280,16 +283,29 @@ algorithm was invented by
 <a href="http://en.wikipedia.org/wiki/C._A._R._Hoare">Tony Hoare</a>
 and it was the same Tony Hoare who was responsible for much of the 
 implementation of the Elliott 803 ALGOL compiler.</p>
-<h3 id="plot">Sine Wave Plot</h3>
+<h3 id="qsort2">Original QuickSort</h3>
+<table frame="box" rules="all" border="1" cellpadding="4">
+<tr><td><b>Source Code</b></td>
+<td><a href="../samples/algol/sortacm.algol"><samp>samples/algol/sortacm.algol</samp></a></td></tr>
+</table>
+<p>This is a variation on the previous <i>Quicksort</i> program but it is
+coded using the exact algorithms originally published in the 
+<i>Communications of the ACM</i>, Volume 4, Issue 7 from July 1961.
+These algorithms (number 63 "Partition" and number 64 "Quicksort" from page 321)
+were published as ALGOL 60 programs, so have simply been copied from the
+original journal (and re-formatted a little to help with readability).</p>
+<p>In addtion this one is written using only Elliott telecode characters,
+so looks exactly as an original 803 ALGOL source program would look.</p> 
+<h3 id="plot">Sine and Cosine Plot</h3>
 <table frame="box" rules="all" border="1" cellpadding="4">
 <tr><td><b>Source Code</b></td>
 <td><a href="../samples/algol/plot.algol"><samp>samples/algol/plot.algol</samp></a></td></tr>
 </table>
 <p>This program demonstrates a simple use of the graph plotter to draw
-an approximate sine-wave.
+approximate sine and cosine functions.
 The mechanism used to draw lines on the plotter is deliberately done in
 a very simple manner, but it seems perfectly adequate for this application.</p>
-<p>Note that <code>ELLIOTT()</code> statements are used to insert specific
+<p>The <code>ELLIOTT()</code> statements are used to insert specific
 machine code instructions to drive the plotter.
 The plotter had paper that was 11 inches wide and a pen that could be 
 moved in steps of 1/100 inch in any of 8 directions using special machine
@@ -313,6 +329,12 @@ output, draw lines and various other options - including directing the output
 of PRINT statements to the plotter to add text and labels to graphs.
 The sample program however does not use the plotter package, mostly because I
 simply can't remember exactly how it all worked!</p>
+<p>Note that the <i>plotFn()</i> procedure in this sample exploits the ALGOL 60
+parameter convention of 
+<a href="http://en.wikipedia.org/wiki/Evaluation_strategy#Call_by_name">call by name</a> 
+and makes use of a technique known as
+<a href="http://en.wikipedia.org/wiki/Jensen%27s_Device">Jensen's Device</a>
+to provide the function whose output is to be plotted.</p>
 <hr>
 <h2 id="contrib">Contributed Programs</h2>
 <p>These are some rather more complex example ALGOL programs that have been 

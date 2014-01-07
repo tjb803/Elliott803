@@ -1,23 +1,24 @@
-Sine Wave;
+Sine And Cosine Plot;
 
 BEGIN
-    COMMENT **                      **;
-    COMMENT * Elliott 803B simulator *;
-    COMMENT *                        *;
-    COMMENT * (C) Tim Baldwin 2010   *;
-    COMMENT **                      **;
+    COMMENT **                         **;
+    COMMENT * Elliott 803B simulator    *;
+    COMMENT *                           *;
+    COMMENT * (C) Tim Baldwin 2010,2013 *;
+    COMMENT **                         **;
 
-    COMMENT **                               **;
-    COMMENT * Draw a sine wave on the plotter *;
-    COMMENT **                               **;
+    COMMENT **                                             **;
+    COMMENT * Draw sine and cosine functions on the plotter *;
+    COMMENT **                                             **;
 
-    INTEGER orgX, orgY, scaleX, scaleY;
-    INTEGER lastX, lastY;
+    INTEGER orgX, orgY, lastX, lastY; 
+    REAL scaleX, scaleY;
 
     COMMENT Set plot origin and the X and Y scaling factor;
-    PROCEDURE setOrigin(x, y, sx, sy);  
-              VALUE x, y, sx, sy;  INTEGER x, y, sx, sy;
-    BEGIN INTEGER i;
+    PROCEDURE setOrigin(x, y, sx, sy);  VALUE x, y, sx, sy;  
+            INTEGER x, y;  REAL sx, sy;
+    BEGIN 
+        INTEGER i;
         scaleX := sx;  scaleY := sy;
         orgX := x;  orgY := y;
         lastX := lastY := 0;
@@ -31,86 +32,91 @@ BEGIN
         as it just uses the legs of a right angle triangle.  It only really
         works if lines are truly horizontal or vertical or are very short.
         This just happens to be the case for all output from this program.;
-    PROCEDURE plotTo(x, y);  
-              VALUE x, y;  INTEGER x, y;
-    BEGIN INTEGER i, w, h;
-          INTEGER sw, sh, pw, ph;
+    PROCEDURE plotTo(x, y);  VALUE x, y;  REAL x, y;
+    BEGIN 
+        INTEGER ix, iy, i, w, h;
+        INTEGER sw, sh, pw, ph;
 
-          COMMENT calculate the lengths of the triangle legs;
-          x := x*scaleX + orgX;  y := y*scaleY + orgY;
-          w := x - lastX;  h := y - lastY;
+        COMMENT calculate the lengths of the triangle legs;
+        ix := x*scaleX + orgX;  iy := y*scaleY + orgY;
+        w := ix - lastX;  h := iy - lastY;
 
-          COMMENT set the plotter movement details;
-          sw := IF w LESS 0 THEN -w ELSE w;
-          pw := IF w LESS 0 THEN 7170 ELSE 7169;
-          sh := IF h LESS 0 THEN -h ELSE h;
-          ph := IF h LESS 0 THEN 7176 ELSE 7172;
+        COMMENT set the plotter movement details;
+        sw := IF w LESS 0 THEN -w ELSE w;
+        pw := IF w LESS 0 THEN 7170 ELSE 7169;
+        sh := IF h LESS 0 THEN -h ELSE h;
+        ph := IF h LESS 0 THEN 7176 ELSE 7172;
 
-          COMMENT plot trying to be smart about which direction to move first;
-          IF (y GR 0 AND h GR 0) OR (y LESS 0 AND h LESS 0) THEN BEGIN
-              IF sh GR 0 THEN
-                  FOR i := 1 STEP 1 UNTIL sh DO ELLIOTT(0,0,ph, 1, 7,2,0);
-              IF sw GR 0 THEN
-                  FOR i := 1 STEP 1 UNTIL sw DO ELLIOTT(0,0,pw, 1, 7,2,0);
-          END ELSE BEGIN
-              IF sw GR 0 THEN
-                  FOR i := 1 STEP 1 UNTIL sw DO ELLIOTT(0,0,pw, 1, 7,2,0);
-              IF sh GR 0 THEN
-                  FOR i := 1 STEP 1 UNTIL sh DO ELLIOTT(0,0,ph, 1, 7,2,0);
-          END;
+        COMMENT plot trying to be smart about which direction to move first;
+        IF (y GR 0 AND h GR 0) OR (y LESS 0 AND h LESS 0) THEN BEGIN
+            IF sh GR 0 THEN
+                FOR i := 1 STEP 1 UNTIL sh DO ELLIOTT(0,0,ph, 1, 7,2,0);
+            IF sw GR 0 THEN
+                FOR i := 1 STEP 1 UNTIL sw DO ELLIOTT(0,0,pw, 1, 7,2,0);
+        END ELSE BEGIN
+            IF sw GR 0 THEN
+                FOR i := 1 STEP 1 UNTIL sw DO ELLIOTT(0,0,pw, 1, 7,2,0);
+            IF sh GR 0 THEN
+                FOR i := 1 STEP 1 UNTIL sh DO ELLIOTT(0,0,ph, 1, 7,2,0);
+        END;
 
-          COMMENT save final position;
-          lastX := x;  lastY := y;
+        COMMENT save final position;
+        lastX := ix;  lastY := iy;
     END plotTo;
 
     COMMENT Move pen to new location;
-    PROCEDURE moveTo(x, y);  
-              VALUE x, y;  INTEGER x, y;
-    BEGIN ELLIOTT(7,2,7184, 0, 0,0,0);
-          plotTo(x, y);
+    PROCEDURE moveTo(x, y);  VALUE x, y;  REAL x, y;
+    BEGIN 
+        ELLIOTT(7,2,7184, 0, 0,0,0);
+        plotTo(x, y);
     END moveTo;
 
     COMMENT Draw line to new location;
-    PROCEDURE drawTo(x, y);  
-              VALUE x, y;  INTEGER x, y;
-    BEGIN ELLIOTT(7,2,7200, 0, 0,0,0);
-          plotTo(x, y);
+    PROCEDURE drawTo(x, y);  VALUE x, y;  REAL x, y;
+    BEGIN 
+        ELLIOTT(7,2,7200, 0, 0,0,0);
+        plotTo(x, y);
     END drawTo;
 
     COMMENT Main program;
-    BEGIN
-        INTEGER maxY;
-        INTEGER i, tick;  REAL pi, y;
-        BOOLEAN PROCEDURE divides(a, b);  VALUE a, b;  INTEGER a, b;
-            divides := (a DIV b)*b = a;
-
-        pi := 3.14159;
-        maxY := 300;
+    BEGIN 
+        REAL theta;
         
-        PRINT PUNCH(3), #Plotting Sine Wave#L??;
-
-        COMMENT Set origin;
-        setOrigin(150, 0, 2, 1);
-        moveTo(0, 0);
-
-        COMMENT Draw the axes;
-        moveTo(0, -maxY);
-        drawTo(0, maxY);
-        moveTo(0, 0);
-        drawTo(360, 0);
-        FOR i := 15 STEP 15 UNTIL 360 DO BEGIN
-            tick := IF divides(i,90) THEN 20 ELSE 
-                    IF divides(i,30) THEN 10 ELSE 5;
-            moveTo(i, 0);
-            drawTo(i, tick);
+        PROCEDURE plotFn(x, fn);  REAL x, fn;
+        BEGIN 
+            INTEGER i;
+            BOOLEAN PROCEDURE divides(a, b);  VALUE a, b;  INTEGER a, b;
+                divides := (a DIV b)*b = a;
+            REAL PROCEDURE radians(d);  VALUE d;  INTEGER d;
+                radians := d/180 * 3.141592;    
+        
+            COMMENT Draw the axes;
+            moveTo(0, -1);
+            drawTo(0, 1);
+            moveTo(0, 0);
+            drawTo(360, 0);
+            FOR i := 360 STEP -15 UNTIL 15 DO BEGIN
+                moveTo(i, 0);
+                drawTo(i, IF divides(i,90) THEN 0.1 ELSE
+                              IF divides(i,30) THEN 0.05 ELSE 0.025);
+            END;
+            
+            COMMENT Draw the function;
+            x := radians(0);
+            moveTo(0, fn);
+            FOR i := 1 STEP 1 UNTIL 360 DO BEGIN
+                x := radians(i); 
+                drawTo(i, fn);
+            END;
+            moveTo(0, 0);
         END;
-        moveTo(0, 0);
-
-        COMMENT Draw the sine curve;
-        FOR i := 0 STEP 1 UNTIL 360 DO BEGIN
-            y := sin((i/180)*pi) * maxY;
-            drawTo(i, y);
-        END;
-        moveTo(0, 0);
+    
+        PRINT PUNCH(3), #Plotting Sine Function#L??;
+        setOrigin(100, 0, 1, 200);
+        plotFn(theta, sin(theta));
+        
+        PRINT PUNCH(3), #Plotting Cosine Function#L??;
+        setOrigin(650, 0, 1, 200);
+        plotFn(theta, cos(theta));
     END;
 END program;

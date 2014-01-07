@@ -72,6 +72,7 @@ docs/utilities.html -text
 samples/algol/hello.algol -text
 samples/algol/plot.algol -text
 samples/algol/sort.algol -text
+samples/algol/sortacm.algol -text
 samples/algol/trig.algol -text
 samples/assembler/charset.a1 -text
 samples/assembler/hello1.a1 -text
@@ -82,6 +83,7 @@ samples/assembler/random.a1 -text
 samples/extra/factorial4.algol -text
 samples/extra/pi4.algol -text
 samples/machines/algol.803 -text
+src/elliott803/Assemble.java -text
 src/elliott803/Main.java -text
 src/elliott803/Run.java -text
 src/elliott803/hardware/ALU.java -text

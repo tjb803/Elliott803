@@ -11,8 +11,8 @@ import java.util.StringTokenizer;
  * Constants and utility functions to manipulate the 39-bit words.
  * 
  * In general:
- *    getXxxx() methods will extract various values from a word
- *    asXxxx() methods will turn various values into a word
+ *    getXxxx() methods will extract various values from a 39-bit word
+ *    asXxxx() methods will turn various values into a 39-bit word
  *
  * @author Baldwin
  */
@@ -34,8 +34,8 @@ public abstract class Word {
         return (word & WORD_MASK);
     }
 
-    public static final long asWord(long word) {
-        return (word & WORD_MASK);
+    public static final long asWord(long value) {
+        return (value & WORD_MASK);
     }
 
     public static final String toOctalString(long word) {
@@ -166,14 +166,14 @@ public abstract class Word {
     static final long IEEE_HIDDEN_BIT = 0x10000000000000L;
     static final long IEEE_TOP_BITS = 0x30000000000000L;
 
-    public static final double getDouble(long value) {
+    public static final double getDouble(long word) {
         double result= 0;
-        if (value != 0) {
+        if (word != 0) {
             // Sign extend the 39 bits and extract the Elliott 30-bit mantissa and 9-bit exponent
             // as signed ints.
-            value = Word.getLong(value);
-            int em = (int)(value >> 9);
-            int ee = (int)(value & FP_EXP_MASK) - 256;
+            word = Word.getLong(word);
+            int em = (int)(word >> 9);
+            int ee = (int)(word & FP_EXP_MASK) - 256;
 
             // Build the s, a and b values for the IEEE double.  Start with the sign and
             // if it is negative take the two's complement of the mantissa.
@@ -236,7 +236,7 @@ public abstract class Word {
         return result;
     }
 
-    public static final String toFloatString(long value) {
-        return Double.toString(getDouble(value));
+    public static final String toFloatString(long word) {
+        return String.format("%+.8e", getDouble(word));
     }
 }

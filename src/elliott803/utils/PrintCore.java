@@ -1,7 +1,7 @@
 /**
  * Elliott Model 803B Simulator
  *
- * (C) Copyright Tim Baldwin 2009
+ * (C) Copyright Tim Baldwin 2009,2013
  */
 package elliott803.utils;
 
@@ -27,6 +27,8 @@ import elliott803.telecode.Telecode;
  * @author Baldwin
  */
 public class PrintCore {
+    
+    private static final int MAX_INT = 1<<19;
 
     public static void main(String[] args) throws Exception {
         // Handle parameters
@@ -92,8 +94,9 @@ public class PrintCore {
             if (i == addr+length-1 || word != lastWord) {
                 if (duplicates > 0) {
                     if (duplicates < 5 || (lastWord != 0 && duplicates < 8)) {
-                        while (duplicates-- > 0) {
+                        while (duplicates > 0) {
                             printLine(i-duplicates, lastWord);
+                            duplicates -= 1;
                         }
                     } else {
                         output.println("         ...");
@@ -120,30 +123,35 @@ public class PrintCore {
             } else {
                 text += " " + Word.toInstrString(word) + "   ";
                 text += "[" + Word.toOctalString(word) + "]   ";
-                text += "(" + Word.toIntegerString(word) + ")";
+                if (Word.getLong(word) > -MAX_INT && Word.getLong(word) < MAX_INT) {
+                    text += "(" + Word.toIntegerString(word) + ")";
+                } else { 
+                    text += "(" + Word.toFloatString(word) + ")";
+                }    
                 if (word > 1 && word < 32) {
                     int ch = (int)word;
                     if (ch < 10) text += " ";
                     switch (ch) {
-                    case 27: text += "    FS"; break;
-                    case 28: text += "   SPC"; break;
-                    case 29: text += "   CR"; break;
-                    case 30: text += "   LF"; break;
-                    case 31: text += "   LS"; break;
-                    default: text += "  '" + Telecode.asLetter(ch) + " " + Telecode.asFigure(ch) + "'";
+                        case 27: text += "    FS"; break;
+                        case 28: text += "   SPC"; break;
+                        case 29: text += "   CR"; break;
+                        case 30: text += "   LF"; break;
+                        case 31: text += "   LS"; break;
+                        default: text += "  '" + Telecode.asLetter(ch) + " " + Telecode.asFigure(ch) + "'";
                     }
                 } else if (word > 63) {
                     char[] pt = new char[6];
                     for (int i = 5; i >= 0; i--) {
                         int ch = (int)word & Telecode.CHAR_MASK;
                         int sh = (int)word & (Telecode.CHAR_MASK+1);
-                        if (ch > 0 && (ch < Telecode.TELE_FS || ch == Telecode.TELE_SP))
+                        if (ch > 0 && (ch < Telecode.TELE_FS || ch == Telecode.TELE_SP)) {
                             pt[i] = (sh != 0) ? Telecode.asLetter(ch) : Telecode.asFigure(ch);
-                        else
+                        } else {
                             pt[i] = '.';
+                        }    
                         word >>= 6;
                     }
-                    for (int i = text.length(); i < 65; i++) text += " ";
+                    for (int i = text.length(); i < 67; i++) text += " ";
                     text += "\"" + new String(pt) + "\"";
                 }
             }

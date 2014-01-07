@@ -7,9 +7,9 @@ BEGIN
     COMMENT * (C) Tim Baldwin 2009   *;
     COMMENT **                      **;
 
-    COMMENT **                                           **;
-    COMMENT * A implementation of the QuickSort algorithm *;
-    COMMENT **                                           **;
+    COMMENT **                                             **; 
+    COMMENT * An implementation of the QuickSort algorithm. *;
+    COMMENT **                                             **;
 
     INTEGER size, repeat;
 

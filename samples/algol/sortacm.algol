@@ -1,0 +1,145 @@
+QUICKSORT FROM CACM, JULY 1961'
+
+BEGIN
+    COMMENT **                      **'
+    COMMENT * ELLIOTT 803B SIMULATOR *'
+    COMMENT *                        *'
+    COMMENT * (C) TIM BALDWIN 2013   *'
+    COMMENT **                      **'
+
+    COMMENT **                                                             **'
+    COMMENT * AN IMPLEMENTATION OF THE QUICKSORT ALGORITHM.                 *'
+    COMMENT *                                                               *'
+    COMMENT * THE IMPLEMENTATION OF THE PROCEDURES QUICKSORT AND PARTITION  *'
+    COMMENT * ARE EXACTLY AS PRESENTED IN THE ORIGINAL JULY 1961 EDITION OF *'
+    COMMENT * THE COMMUNICATIONS OF THE ACM, VOLUME 4, ISSUE 7.             *'
+    COMMENT **                                                             **'
+
+    INTEGER SEED, SIZE, REPEAT'
+
+
+    INTEGER PROCEDURE RANDOM(M,N)'  VALUE M,N'  INTEGER M,N'
+        COMMENT RETURNS A PSUEDO-RANDOM INTEGER BETWEEN M AND N.'
+    BEGIN
+        INTEGER PROCEDURE MOD(P,Q)'  VALUE P,Q'  INTEGER P,Q'
+            MOD := P - (P DIV Q * Q)'
+        SEED := MOD(SEED*31421 + 6927, 65536)'
+        RANDOM := MOD(SEED, N-M) + M'
+    END RANDOM'
+
+
+    PROCEDURE EXCHANGE(X,Y)'  INTEGER X,Y'
+        COMMENT EXCHANGE THE TWO VALUES X AND Y'
+    BEGIN
+        INTEGER Z'
+        Z := X'  X := Y'  Y := Z'
+    END EXCHANGE'
+
+
+    PROCEDURE PARTITION(A,M,N,I,J)'  VALUE M,N'
+            INTEGER ARRAY A'  INTEGER M,N,I,J'
+        COMMENT I AND J ARE OUTPUT VARIABLES, AND A IS THE ARRAY (WITH
+                SUBSCRIPT BOUNDS M:N) WHICH IS OPERATED UPON BY THIS
+                PROCEDURE. PARTITION TAKES THE VALUE X OF A RANDOM ELEMENT
+                OF THE ARRAY A, AND REARRANGES THE VALUES OF THE ELEMENTS
+                OF THE ARRAY IN SUCH A WAY THAT THERE EXIST INTEGERS I AND J
+                WITH THE FOLLOWING PROPERTIES:
+                  M LESSEQ J LESS I LESSEQ N PROVIDED M LESS N
+                  A(R) LESSEQ X FOR M LESSEQ R LESSEQ J
+                  A(R) = X FOR J LESS R LESS I
+                  A(R) GREQ X FOR I LESSEQ R LESSEQ N
+                THE PROCEDURE USES AN INTEGER PROCEDURE RANDOM(M,N) WHICH
+                CHOOSES EQUIPROBABLY A RANDOM INTEGER F BETWEEN M AND N, AND
+                ALSO A PROCEDURE EXCHANGE, WHICH EXCHANGES THE VALUES OF ITS
+                TWO PARAMETERS'
+    BEGIN
+        INTEGER X'  INTEGER F'
+        SWITCH SS := UP,DOWN,CHANGE'
+
+        F := RANDOM(M,N)'  X := A(F)'
+        I := M'  J := N'
+     UP:
+        FOR I := I STEP 1 UNTIL N DO
+            IF X LESS A(I) THEN GOTO DOWN'
+        I := N'
+     DOWN:
+        FOR J := J STEP -1 UNTIL M DO
+            IF A(J) LESS X THEN GOTO CHANGE'
+        J := M'
+     CHANGE:
+        IF I LESS J THEN BEGIN
+             EXCHANGE(A(I),A(J))'
+             I := I + 1'  J := J - 1'
+             GOTO UP'
+        END
+        ELSE IF I LESS F THEN BEGIN
+             EXCHANGE(A(I),A(F))'
+             I := I + 1'
+        END
+        ELSE IF F LESS J THEN BEGIN
+             EXCHANGE(A(F),A(J))'
+             J := J - 1'
+        END
+    END PARTITION'
+
+
+    PROCEDURE QUICKSORT(A,M,N)'  VALUE M,N'
+            INTEGER ARRAY A'  INTEGER M,N'
+        COMMENT QUICKSORT IS A VERY FAST AND CONVENIENT METHOD OF
+                SORTING AN ARRAY IN THE RANDOM-ACCESS STORE OF A COMPUTER.
+                THE ENTIRE CONTENTS OF THE STORE MAY BE SORTED, SINCE NO
+                EXTRA SPACE IS REQUIRED. THE AVERAGE NUMBER OF COMPARISONS
+                MADE IS 2(M-N)LN(N-M), AND THE AVERAGE NUMBER OF EXCHANGES
+                IS ONE SIXTH THIS AMOUNT. SUITABLE REFINEMENTS OF THIS
+                METHOD WILL BE DESIRABLE FOR ITS IMPLEMENTATION ON ANY
+                ACTUAL COMPUTER'
+    BEGIN
+        INTEGER I, J'
+        IF M LESS N THEN BEGIN
+            PARTITION(A,M,N,I,J)'
+            QUICKSORT(A,M,J)'
+            QUICKSORT(A,I,N)'
+        END
+    END QUICKSORT'
+
+
+    PROCEDURE PRINTDATA(S,DATA,SIZE)'  VALUE SIZE'
+            STRING S'  INTEGER SIZE'  INTEGER ARRAY DATA'
+        COMMENT PRINT DATA VALUES'
+    BEGIN
+        INTEGER I'
+        PRINT S'
+        FOR I := 1 STEP 1 UNTIL SIZE DO
+            PRINT PREFIX(# ?), DIGITS(3), DATA(I)'
+    END PRINTDATA'
+
+
+    READ SEED, REPEAT, SIZE'
+
+    BEGIN
+        INTEGER I'  INTEGER ARRAY DATA(1:SIZE)'
+
+        PUNCH(3)'
+
+        FOR REPEAT := REPEAT STEP -1 UNTIL 1 DO BEGIN
+
+            COMMENT GENERATE SOME RANDOM NUMBERS FROM 1 TO 999, PRINT IN THE
+                    ORIGINAL ORDER, SORT AND PRINT AGAIN IN SORTED ORDER'
+
+            FOR I := 1 STEP 1 UNTIL SIZE DO
+                DATA(I) := RANDOM(1,999)'
+            PRINTDATA(##L?ORIGINAL DATA:?,DATA,SIZE)'
+
+            QUICKSORT(DATA,1,SIZE)'
+            PRINTDATA(##L?SORTED DATA:  ?,DATA,SIZE)'
+
+            PRINT ##L2??'
+        END'
+    END'
+END'
+
+SEED 123
+REPEAT 3 TIMES WITH 12 VALUES
+SEED 654
+REPEAT 4 TIMES WITH 10 VALUES
+

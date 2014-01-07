@@ -33,49 +33,57 @@ import elliott803.telecode.Telecode;
  *    inputfile: is the assembler source input file name
  *    outputtape: is the binary tape output file name
  *
- * Assembler syntax is a sequence of lines.  Each line can have a label which corresponds to
- * the address of that line and then one of:
+ * Assembler syntax is a sequence of lines.  Each line can have a one or more labels which 
+ * correspond to the address of that line and then one of:
  *  - a directive
  *  - a constant or sequence of constants
  *  - a string
- *  - an instruction
+ *  - an instruction or instruction pair
  *  Anything after a * is a comment and is ignored.  Whitespace is also largely ignored.
  *
- * Label:  axxxx:   (ie some text starting with a letter followed by a colon)
+ * Label:  axxxx:  (ie some text starting with a letter followed by a colon)
  *
- * Directives: =addr
- *                means load at address addr (loads at top of store if omitted)
- *             @addr
- *                means add trigger to entry point addr
+ * Directives: 
+ *     =addr   means load at address addr (loads at top of store if omitted)
+ *     @addr   means add trigger to entry point addr (can be a label name)
  *
- * Constant:   [+/-]nnnn or label
- * 
  * ConstantSequence:  Constant [,ConstantSequence]
  *
+ * Constant:  Integer or Float or Label name
+ *
+ * Integer:  [+|-]nnnn
+ * 
+ * Float:  [+|-]nnn.nnn[e|E[+|-]nnn]
+ *
  * String:  'xxxxxxx'
- *             becomes a sequence of characters (including any necessary shifts)
+ *     becomes a sequence of characters (including any necessary shifts)
  *
- * Instruction:  op1 addr1 b op2 addr2
- *
- *             op is a octal opcode, addr is a decimal address or label, b is : or /
+ * Instruction:  op1 addr1 [b op2 addr2]
+ *     op is a octal opcode, addr is a decimal address or label name, b is : or /
  *
  * e.g.
- *       *
- *       * Simple Hello World program
- *       *
- *                =128                 * Load starting at address 128
- *
- *       loop:   22 index / 30 hello   * Get next character
- *               42 end   : 20 char    * Check for zero at end of string or save character
- *               00 char  / 74 4096    * Write character to teletype
- *               40 loop               * Loop until done  
- *       end:    74 4125  : 74 4126    * Write a CR and LF
- *               72 8191               * And exit
- *
- *       char:    0                    * Character workspace
- *       index:  -1                    * index into string
- *       hello:  'Hello World?'        * Text - will be {LS}HELLO WORLD{FS}? in telecode
- *                0                    * zero marks end of string
+ *    * 
+ *    * Simple Hello World program
+ *    *
+ *             =8160                * Load program starting at address 8160 
+ *             @entry               * Define the entry address
+ *      
+ *    begin:                                                 
+ *    loop:   22 index / 30 hello   * Get next character 
+ *            42 end   : 40 write   * Check for zero at end of string or write char 
+ *    write:  20 char  / 74 4096    * Write character to teletype
+ *            40 loop               * Loop back to next character  
+ *    end:    74 4125  : 74 4126    * Write CR and LF to finish line   
+ *    done:   72 8191               * Exit when finished     
+ *    
+ *    entry:  30 m1    : 20 index   * Program entry point
+ *            40 begin              * Initialize 'index' and begin output     
+ *             
+ *    char:   0                     * Character workspace
+ *    index:  0                     * Index into string 
+ *    hello: 'Hello World?'         * Text - will be {LS}HELLO WORLD{FS}? in telecode
+ *            0                     * Zero marks end of string 
+ *    m1:    -1, +4, 1.5, 0.1e-3    * A few constant values (not all used!) 
  *
  * TODO:
  *   Add constant symbols and simple arithmetic expressions to support e.g.
@@ -92,7 +100,7 @@ public class Assembler {
 
     public static void main(String[] args) throws Exception {
         // Handle parameters
-        Args parms = new Args("Assembler", "inputfile outputtape", args, null);
+        Args parms = new Args("elliott803.Assemble", "inputfile outputtape", args, null);
         File inputFile = parms.getInputFile(1);
         File outputFile = parms.getOutputFile(2);
 
@@ -126,22 +134,23 @@ public class Assembler {
     private static final String TRIGGER_CHAR = "@";
     private static final String STRING_CHAR = "'";
 
-    private static final String LABEL_PATTERN = "[A-Za-z]\\w*";
-    private static final String NUMBER_PATTERN = "\\d+";
-    private static final String CONSTANT_PATTERN = "[\\+-]?" + NUMBER_PATTERN;
-    private static final String VALUE_PATTERN = "((" + LABEL_PATTERN + ")|(" + NUMBER_PATTERN + "))";
-    private static final String LOAD_PATTERN = ADDRESS_CHAR + NUMBER_PATTERN;
-    private static final String TRIGGER_PATTERN = TRIGGER_CHAR + VALUE_PATTERN;
-    private static final String OP_PATTERN = "[01234567]{2}";
-    private static final String B_PATTERN = "[:/]";
-    private static final String INSTR_PATTERN = OP_PATTERN + "\\s+" + VALUE_PATTERN;
+    private static final String OP_PATTERN = "([0-7]{2})";
+    private static final String ADDRESS_PATTERN = "([0-9]{1,4})";
+    private static final String B_PATTERN = "([:/])";
+    private static final String LABEL_PATTERN = "([A-Za-z]\\w*)";
+    private static final String INTEGER_PATTERN = "([+-]?\\d+)";
+    private static final String FLOAT_PATTERN = "([+-]?((\\d+\\.\\d*)|(\\d*\\.\\d+))([eE][+-]?\\d+)?)";
+    private static final String CONSTANT_PATTERN = "(" + INTEGER_PATTERN + "|" + FLOAT_PATTERN + "|" + LABEL_PATTERN + ")";
+    private static final String VALUE_PATTERN = "(" + LABEL_PATTERN + "|" + ADDRESS_PATTERN + ")";
+    private static final String LOAD_PATTERN = "(" + ADDRESS_CHAR + ADDRESS_PATTERN + ")";
+    private static final String TRIGGER_PATTERN = "(" + TRIGGER_CHAR + VALUE_PATTERN + ")";
+    private static final String INSTR_PATTERN = "(" + OP_PATTERN + "\\s+" + VALUE_PATTERN + ")";
 
     private static final String LABEL_LINE = LABEL_PATTERN + "\\s*" + LABEL_CHAR + ".*";
-    private static final String DIRECTIVE_LINE = "((" + LOAD_PATTERN + ")|(" + TRIGGER_PATTERN + "))";
-    private static final String CONSTANT_LINE = "((" + CONSTANT_PATTERN + ")|(" + LABEL_PATTERN + "))";
-    private static final String CONSTANT_SEQ_LINE = "(" + CONSTANT_LINE + ")?(\\s*,\\s*" + CONSTANT_LINE + ")*";
+    private static final String DIRECTIVE_LINE = LOAD_PATTERN + "|" + TRIGGER_PATTERN;
+    private static final String CONSTANT_LINE = CONSTANT_PATTERN + "(\\s*,\\s*" + CONSTANT_PATTERN + ")*";
     private static final String STRING_LINE = STRING_CHAR + ".*" + STRING_CHAR;
-    private static final String CODE_LINE = INSTR_PATTERN + "(\\s*" + B_PATTERN + "(\\s*" + INSTR_PATTERN + ")?)?";
+    private static final String CODE_LINE = INSTR_PATTERN + "(\\s*" + B_PATTERN + "\\s*" + INSTR_PATTERN + ")?";
 
     private LineNumberReader input;
     private OutputStream output;
@@ -191,11 +200,7 @@ public class Assembler {
                     // Have a label, add the current address offset to the symbol table
                     i = line.indexOf(LABEL_CHAR);
                     String label = line.substring(0, i).trim();
-                    if (!symbols.containsKey(label)) {
-                        symbols.put(label, sourceCode.size());
-                    } else {    
-                        error(0, "Symbol defined more than once: " + label);
-                    }
+                    addSymbol(label, sourceCode.size());
 
                     // Re-process the line, without the label
                     line = line.substring(i+1);
@@ -219,7 +224,7 @@ public class Assembler {
                     } else {
                         error(0, "Incorrect directive: " + line);
                     }
-                } else if (line.matches(CONSTANT_SEQ_LINE)) {
+                } else if (line.matches(CONSTANT_LINE)) {
                     // Have a sequence of one or more constants
                     StringTokenizer t = new StringTokenizer(line, ",");
                     while (t.hasMoreTokens()) {
@@ -246,6 +251,15 @@ public class Assembler {
             line = input.readLine();
         }
     }
+    
+    // Add a symbol to the symbol table
+    private void addSymbol(String label, int value) {
+        if (!symbols.containsKey(label)) {
+            symbols.put(label, value);
+        } else {    
+            error(0, "Symbol defined more than once: " + label);
+        }
+    }    
 
     // Generate load address and entry address
     private void setLoadAndEntryAddress() {
@@ -264,7 +278,7 @@ public class Assembler {
         // Set the trigger entry point address, if present
         if (triggerDirective != null) {
             String addr = triggerDirective.source.substring(1);
-            if (addr.matches(NUMBER_PATTERN)) {
+            if (addr.matches(ADDRESS_PATTERN)) {
                 triggerAddress = Integer.parseInt(addr);
             } else {
                 if (symbols.containsKey(addr)) {
@@ -282,8 +296,14 @@ public class Assembler {
             String source = sourceLine.source;
             long value = 0;
             if (source.matches(CONSTANT_LINE)) {
-                if (source.matches(CONSTANT_PATTERN)) {
+                if (source.matches(INTEGER_PATTERN)) {
                     value = Long.parseLong(source.startsWith("+") ? source.substring(1) : source);
+                } else if (source.matches(FLOAT_PATTERN)) {
+                    double d = Double.parseDouble(source);
+                    value = Word.asFloat(d);
+                    if (value == Word.NOTHING || (value == 0 && d != 0)) { 
+                        error(sourceLine.lineNo, "Float value out of range: " + source);
+                    }    
                 } else {
                     if (symbols.containsKey(source)) {
                         value = symbols.get(source);
@@ -316,7 +336,7 @@ public class Assembler {
         StringTokenizer t = new StringTokenizer(instruction, " \t");
         op = Integer.parseInt(t.nextToken(), 8);
         String target = t.nextToken();
-        if (target.matches(NUMBER_PATTERN)) {
+        if (target.matches(ADDRESS_PATTERN)) {
             addr = Integer.parseInt(target);
         } else {
             if (symbols.containsKey(target)) {
@@ -324,6 +344,9 @@ public class Assembler {
             } else {
                 error(lineNo, "Unresolved symbol: " + target);
             }
+        }
+        if (addr < 0 || addr > 8191) {
+            error(lineNo, "Address out of range: " + addr);
         }
         return Instruction.asInstr(op, addr);
     }
@@ -348,7 +371,7 @@ public class Assembler {
 
         // Write a warning if there is too much padding
         if (pad > 12) {
-            System.out.println("WARNING: will need " + pad + " blanks words for trigger.");
+            System.out.println("WARNING: will need " + pad + " blank words for trigger.");
             System.out.println("Suggest loading code at address " + (8192-objectCode.size()));
         }
 
