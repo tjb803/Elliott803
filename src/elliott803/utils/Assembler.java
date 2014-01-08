@@ -45,7 +45,7 @@ import elliott803.telecode.Telecode;
  *
  * Directives: 
  *     =addr   means load at address addr (loads at top of store if omitted)
- *     $addr   means add trigger to entry point addr (can be a label name)
+ *     @addr   means add trigger to entry point addr (can be a label name)
  *
  * ConstantSequence:  Constant [,ConstantSequence]
  *
@@ -66,7 +66,7 @@ import elliott803.telecode.Telecode;
  *    * Simple Hello World program
  *    *
  *             =8160                * Load program starting at address 8160 
- *             $entry               * Define the entry address
+ *             @entry               * Define the entry address
  *      
  *    begin:                                                 
  *    loop:   22 index / 30 hello   * Get next character 
@@ -91,7 +91,7 @@ import elliott803.telecode.Telecode;
  *        74 4096+CR      * Print CR
  *
  * Note: the syntax of this assembler is loosely based on my faded memory of a real 803
- *        assembler, but has various changes and additions to make it easier to use.  Its
+ *        assembler, but has many changes and additions to make it easier to use.  Its
  *        main purpose is to allow simple binary tapes of test programs to be produced.
  *
  * @author Baldwin
@@ -100,7 +100,7 @@ public class Assembler {
 
     public static void main(String[] args) throws Exception {
         // Handle parameters
-        Args parms = new Args("elliott803.Assemble", "inputfile outputtape", args, null);
+        Args parms = new Args("Assemble", "inputfile outputtape", args, null);
         File inputFile = parms.getInputFile(1);
         File outputFile = parms.getOutputFile(2);
 
@@ -131,7 +131,7 @@ public class Assembler {
     private static final String COMMENT_CHAR = "*";
     private static final String LABEL_CHAR = ":";
     private static final String ADDRESS_CHAR = "=";
-    private static final String TRIGGER_CHAR = "\\$";
+    private static final String TRIGGER_CHAR = "@";
     private static final String STRING_CHAR = "'";
 
     private static final String OP_PATTERN = "([0-7]{2})";

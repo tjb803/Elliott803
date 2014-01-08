@@ -62,7 +62,7 @@ shift characters) one character per subsequent words or store.</li>
 <li>A directive <b>=nnnn</b> (where <i>nnnn</i> is a storage address) can be used to 
 define the load address of the program.
 If this is omitted the program will be loaded into the high end of store.</li>
-<li>A directive <b>$addr</b> (where <i>addr</i> is either a storage address or label) 
+<li>A directive <b>@addr</b> (where <i>addr</i> is either a storage address or label) 
 can be used to define an entry point.
 A trigger will be generated at the end of the tape to jump to the entry point.</li>
 </ul>
@@ -73,7 +73,7 @@ Look at the <a href="samples.html">sample assembler programs</a> for further exa
      * Simple Hello World program
      *
               =8160                * Load program starting at address 8160 
-              $entry               * Define the entry address
+              @entry               * Define the entry address
        
      begin:                                                 
      loop:   22 index / 30 hello   * Get next character 

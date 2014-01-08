@@ -13,7 +13,7 @@
 * is found.
 **
 
-       $entry               * Entry point
+       @entry               * Entry point
 
 entry: 06    0 : 20 char    * Set ACC and workspace to zero
 skip:  71 2048 : 42 skip    * Skip leading blanks

@@ -10,7 +10,7 @@
 * This forces the console speaker to produce something that 
 * approximates to a simple tune!
 **
-            $entry
+            @entry
             
 * Wait for the user to change the sign bit before playing the tune
 

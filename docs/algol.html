@@ -290,10 +290,15 @@ implementation of the Elliott 803 ALGOL compiler.</p>
 </table>
 <p>This is a variation on the previous <i>Quicksort</i> program but it is
 coded using the exact algorithms originally published in the 
-<i>Communications of the ACM</i>, Volume 4, Issue 7 from July 1961.
+<a href="http://cacm.acm.org/magazines/1961/7"><i>Communications of the ACM</i>, 
+Volume 4, Issue 7</a> from July 1961.
 These algorithms (number 63 "Partition" and number 64 "Quicksort" from page 321)
 were published as ALGOL 60 programs, so have simply been copied from the
 original journal (and re-formatted a little to help with readability).</p>
+<p>The random numbers are generated using the infamous
+<a href="http://en.wikipedia.org/wiki/RANDU">RANDU</a> function (limited here to 19
+bits to avoid integer overflows) which was a common algorithm in the early 1960's,
+but has since been shown to produce very poor random numbers.</p>
 <p>In addtion this one is written using only Elliott telecode characters,
 so looks exactly as an original 803 ALGOL source program would look.</p> 
 <h3 id="plot">Sine and Cosine Plot</h3>
