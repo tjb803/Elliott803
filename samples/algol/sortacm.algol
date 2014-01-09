@@ -23,8 +23,8 @@ BEGIN
     BEGIN
         INTEGER PROCEDURE MOD(P,Q)'  VALUE P,Q'  INTEGER P,Q'
             MOD := P - (P DIV Q * Q)'
-        SEED := MOD(SEED*1027, 524288)'
-        RANDOM := MOD(SEED, N-M) + M'
+        SEED := MOD(SEED*4099, 8388608)'
+        RANDOM := MOD(SEED, (N-M)+1) + M'
     END RANDOM'
 
 
