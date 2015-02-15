@@ -105,15 +105,17 @@ public class Loudspeaker {
 
     // Silence the speaker
     public void silence() {
-        line.stop();
-        line.flush();
+        if (on.get()) {
+            line.stop();
+            line.flush();
+        }    
     }
 
     // Set the volume from 0 to 100.  Volume 0 means switch off the speaker.
     public void setVolume(int volume) {
         if (volume == 0) {
-            on.set(false);
             silence();
+            on.set(false);
         } else if (line != null) {
             volume = (255*volume*volume)/(100*100); // Scale in a non-linear curve
             Arrays.fill(pulse, 0, frame/2, (byte)volume);
@@ -121,8 +123,13 @@ public class Loudspeaker {
         }
     }
 
+    // Is speaker available
+    public boolean isEnabled() {
+        return (line != null);
+    }
+    
     // Is queue full - mostly used by tests
     public boolean isFull() {
-        return (line.available() < frame);
+        return (line != null && line.available() < frame);
     }
 }
