@@ -1,4 +1,4 @@
-Sine And Cosine Plot;
+Sine And Root Sine Plot;
 
 BEGIN
     COMMENT **                         **;
@@ -7,9 +7,10 @@ BEGIN
     COMMENT * (C) Tim Baldwin 2010,2013 *;
     COMMENT **                         **;
 
-    COMMENT **                                             **;
-    COMMENT * Draw sine and cosine functions on the plotter *;
-    COMMENT **                                             **;
+    COMMENT **                                 **;
+    COMMENT * Draw sine and square root of sine *;
+    COMMENT * functions on the plotter          *;
+    COMMENT **                                 **;
 
     INTEGER orgX, orgY, lastX, lastY; 
     REAL scaleX, scaleY;
@@ -115,8 +116,8 @@ BEGIN
         setOrigin(100, 0, 1, 200);
         plotFn(theta, sin(theta));
         
-        PRINT PUNCH(3), #Plotting Cosine Function#L??;
+        PRINT PUNCH(3), #Plotting Square Root of Sine Function#L??;
         setOrigin(650, 0, 1, 200);
-        plotFn(theta, cos(theta));
+        plotFn(theta, sign(sin(theta))*sqrt(abs(sin(theta))));
     END;
 END program;
