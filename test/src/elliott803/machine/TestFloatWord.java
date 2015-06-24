@@ -44,6 +44,7 @@ public class TestFloatWord extends TestCase {
     // These are non-normalised Elliott values that should still convert to IEEE form
     static String[][] nonnormalfp = {
         { "000000000000000000000000000000-000000000", "0-00000000000-0000000000000000000000000000000000000000000000000000" }, // 0
+        { "000000000000000000000000000000-100000000", "0-00000000000-0000000000000000000000000000000000000000000000000000" }, // Also 0
         { "001010101010101010101010101010-100000000", "0-01111111101-0101010101010101010101010100000000000000000000000000" }, // 1/3 (not normalized)
         { "110101010101010101010101010101-100000000", "1-01111111101-0101010101010101010101010110000000000000000000000000" }, // -1/3 (not normalized)
     };
@@ -143,7 +144,7 @@ public class TestFloatWord extends TestCase {
             assertEquals(Word.NOTHING, e);
         }
     }
-
+    
     // Build floating point values from string representation
     long makeElliott(String sbits) {
         String[] ss = sbits.split("-");

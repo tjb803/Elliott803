@@ -182,25 +182,26 @@ public abstract class Word {
             word = getLong(word);
             int em = (int)(word >> 9);
             int ee = (int)(word & FP_EXP_MASK) - 256;
-
-            // Build the s, a and b values for the IEEE double.  Start with the sign and
-            // if it is negative take the two's complement of the mantissa.
-            long s = (em > 0) ? 0 : 1;
-            if (em < 0)
-                em = -em;
-
-            // Now shift the mantissa left until there is a one in the sign bit location.
-            // This will become the hidden 1 bit in the IEEE representation, so we take the
-            // remaining 29 bits and put them in the top 52 bits of the IEEE fraction.  Each
-            // shift left is a double so we also need to decrease the exponent on each shift.
-            while ((em & FP_FRAC_SIGN) == 0) {
-                em <<= 1;
-                ee -= 1;
-            }
-            long a = (long)(em & FP_FRAC_BITS) << 23;
-            long b = (long)((ee + 1023) & IEEE_EXP_MASK);
-
-            result = Double.longBitsToDouble((s<<63) | (b<<52) | (a));
+            if (em != 0) {
+                // Build the s, a and b values for the IEEE double.  Start with the sign and
+                // if it is negative take the two's complement of the mantissa.
+                long s = (em > 0) ? 0 : 1;
+                if (em < 0)
+                    em = -em;
+    
+                // Now shift the mantissa left until there is a one in the sign bit location.
+                // This will become the hidden 1 bit in the IEEE representation, so we take the
+                // remaining 29 bits and put them in the top 52 bits of the IEEE fraction.  Each
+                // shift left is a double so we also need to decrease the exponent on each shift.
+                while ((em & FP_FRAC_SIGN) == 0) {
+                    em <<= 1;
+                    ee -= 1;
+                }
+                long a = (long)(em & FP_FRAC_BITS) << 23;
+                long b = (long)((ee + 1023) & IEEE_EXP_MASK);
+    
+                result = Double.longBitsToDouble((s<<63) | (b<<52) | (a));
+            }        
         }
         return result;
     }
