@@ -44,7 +44,7 @@ BEGIN
         INTEGER i;
         PRINT s;
         FOR i:=1 STEP 1 UNTIL size DO
-            PRINT prefix(# ?), digits(3), data[i];
+            PRINT prefix({ }), digits(3), data[i];
     END printData;
 
     COMMENT Decrement a variable;
@@ -66,12 +66,12 @@ BEGIN
             data[i]:=d;
         END;
 
-        printData(##L?Original Data:?, data, size);
+        printData({{L}Original Data:}, data, size);
 
         quickSort(data, 1, size);
 
-        printData(##L?Sorted Data:  ?, data, size);
-        PRINT ##L2??;
+        printData({{L}Sorted Data:  }, data, size);
+        PRINT {{L2}};
 
         IF dec(repeat) GR 0 THEN GOTO next;
     END;

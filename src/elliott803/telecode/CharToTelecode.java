@@ -14,9 +14,9 @@ package elliott803.telecode;
  * - accept ' or ; for figure-shift 9
  * - accept ( or [ for figure-shift 17
  * - accept ) or ] for figure-shift 18
- * - accept ? or ! for figure-shift 20
+ * - accept ? or ! or } for figure-shift 20
  * - accept / or \ for figure-shift 23
- * - accept # or GB-pound sign for figure-shift 26
+ * - accept # or GB-pound sign or { for figure-shift 26
  * - accept _ for blank characters (ie character 0).
  * Any other characters are ignored.
  *
@@ -26,6 +26,7 @@ public class CharToTelecode extends Telecode {
 
     static final String figureShift = "12*4$=78',+:-.%0()3?56/@9" + Character.toString(GBP);
     static final String figureAlt   = "    &   ;       [] !  \\  " + Character.toString(NUM);
+    static final String figureAlt2  = "                   }     {";
     static final String letterUpper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     static final String letterLower = "abcdefghijklmnopqrstuvwxyz";
 
@@ -90,6 +91,9 @@ public class CharToTelecode extends Telecode {
         int i = figureShift.indexOf(ch);
         if (i == -1 && ch != ' ') {
             i = figureAlt.indexOf(ch);
+            if (i == -1) {
+                i = figureAlt2.indexOf(ch);
+            }
         }
         return i + 1;
     }

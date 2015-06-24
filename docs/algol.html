@@ -301,13 +301,13 @@ bits to avoid integer overflows) which was a common algorithm in the early 1960'
 but has since been shown to produce very poor random numbers.</p>
 <p>In addtion this one is written using only Elliott telecode characters,
 so looks exactly as an original 803 ALGOL source program would look.</p> 
-<h3 id="plot">Sine and Cosine Plot</h3>
+<h3 id="plot">Waveform Plots</h3>
 <table frame="box" rules="all" border="1" cellpadding="4">
 <tr><td><b>Source Code</b></td>
 <td><a href="../samples/algol/plot.algol"><samp>samples/algol/plot.algol</samp></a></td></tr>
 </table>
 <p>This program demonstrates a simple use of the graph plotter to draw
-approximate "sine" and "sqaure-root-of-sine" functions.
+some approximate plots of a selection of waveforms.
 The mechanism used to draw lines on the plotter is deliberately done in
 a very simple manner, but it seems perfectly adequate for this application.</p>
 <p>The <code>ELLIOTT()</code> statements are used to insert specific
@@ -339,7 +339,9 @@ parameter convention of
 <a href="http://en.wikipedia.org/wiki/Evaluation_strategy#Call_by_name">call by name</a> 
 and makes use of a technique known as
 <a href="http://en.wikipedia.org/wiki/Jensen%27s_Device">Jensen's Device</a>
-to provide the function whose output is to be plotted.</p>
+to provide the function whose output is to be plotted.
+The four examples show a variety of perhaps not entirely obvious ways this
+function can be exploited.</p>
 <hr>
 <h2 id="contrib">Contributed Programs</h2>
 <p>These are some rather more complex example ALGOL programs that have been 

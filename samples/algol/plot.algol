@@ -1,4 +1,4 @@
-Sine And Root Sine Plot;
+Waveform Plots;
 
 BEGIN
     COMMENT **                         **;
@@ -6,11 +6,10 @@ BEGIN
     COMMENT *                           *;
     COMMENT * (C) Tim Baldwin 2010,2013 *;
     COMMENT **                         **;
-
-    COMMENT **                                 **;
-    COMMENT * Draw sine and square root of sine *;
-    COMMENT * functions on the plotter          *;
-    COMMENT **                                 **;
+    COMMENT **                        **;
+    COMMENT * Draw various waveform    *;
+    COMMENT * functions on the plotter *;
+    COMMENT **                        **;
 
     INTEGER orgX, orgY, lastX, lastY; 
     REAL scaleX, scaleY;
@@ -81,7 +80,20 @@ BEGIN
 
     COMMENT Main program;
     BEGIN 
-        REAL theta;
+        REAL theta, pi;
+        
+        REAL PROCEDURE charge(x);  VALUE x;  REAL x;
+        BEGIN
+            BOOLEAN rise;
+            REAL y, z;
+            
+            rise := x LESS pi;
+            y := IF rise THEN x ELSE x-pi;
+            
+            z := 2*(1-exp(-y*2)) - 1;
+            
+            charge := IF rise THEN z ELSE 0-z;
+        END;  
         
         PROCEDURE plotFn(x, fn);  REAL x, fn;
         BEGIN 
@@ -89,7 +101,7 @@ BEGIN
             BOOLEAN PROCEDURE divides(a, b);  VALUE a, b;  INTEGER a, b;
                 divides := (a DIV b)*b = a;
             REAL PROCEDURE radians(d);  VALUE d;  INTEGER d;
-                radians := d/180 * 3.141592;    
+                radians := d/180 * pi;    
         
             COMMENT Draw the axes;
             moveTo(0, -1);
@@ -111,13 +123,24 @@ BEGIN
             END;
             moveTo(0, 0);
         END;
-    
-        PRINT PUNCH(3), #Plotting Sine Function#L??;
-        setOrigin(100, 0, 1, 200);
-        plotFn(theta, sin(theta));
         
-        PRINT PUNCH(3), #Plotting Square Root of Sine Function#L??;
+        COMMENT Define constant PI for use in several places;
+        pi := arccos(-1);
+    
+        PRINT PUNCH(3), {Plotting Cosine Function{L}};
+        setOrigin(100, 0, 1, 200);
+        plotFn(theta, cos(theta));
+        
+        PRINT PUNCH(3), {Plotting Square Root of Sine Function{L}};
         setOrigin(650, 0, 1, 200);
         plotFn(theta, sign(sin(theta))*sqrt(abs(sin(theta))));
+        
+        PRINT PUNCH(3), {Plotting Ramp Function{L}};
+        setOrigin(100, -500, 1, 200);
+        plotFn(theta, IF theta LESS pi THEN 2*theta/pi-1 ELSE 2*theta/pi-3);
+        
+        PRINT PUNCH(3), {Plotting Exponential Charge/Discharge Function{L}};
+        setOrigin(650, 0, 1, 200);
+        plotFn(theta, charge(theta));
     END;
 END program;
