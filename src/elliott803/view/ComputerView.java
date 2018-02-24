@@ -1,11 +1,10 @@
 /**
  * Elliott Model 803B Simulator
  *
- * (C) Copyright Tim Baldwin 2009, 2012
+ * (C) Copyright Tim Baldwin 2009, 2015
  */
 package elliott803.view;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,6 +12,7 @@ import java.io.File;
 
 import javax.swing.JDesktopPane;
 import javax.swing.JFileChooser;
+import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 
 import elliott803.machine.Computer;
@@ -20,14 +20,18 @@ import elliott803.machine.Computer;
 /**
  * A visual representation of the full computer.  This is a frame that contains the
  * visuals for the various computer hardware elements.
- *
- * @author Baldwin
  */
 public class ComputerView extends JDesktopPane implements ActionListener {
     private static final long serialVersionUID = 1L;
+    
+    static {    // Improve appearance on GTK look-and-feel
+        UIManager.put("InternalFrame.useTaskBar", Boolean.FALSE);
+    }
 
     static final String IMAGE_LOAD = "Load...";
     static final String IMAGE_SAVE = "Save...";
+    
+    public static boolean isMac = false;
 
     public ControlView control;
     public ConsoleView console;
@@ -79,17 +83,6 @@ public class ComputerView extends JDesktopPane implements ActionListener {
 
     // Layout all the windows in their default positions
     public boolean defaultLayout() {
-        // First some messiness related to the GTK+ look and feel on Linux.  This seems
-        // to want to add a TaskBar at the bottom in a layer that overlays our windows
-        // (in the default layer).  If we can find something resembling this bar (in the
-        // non-default layer) we need to adjust our size to allow for it.
-        int extraY = 0;
-        for (Component c: getComponents()) {    // Only handle TaskBar at the bottom
-            if (getLayer(c) > DEFAULT_LAYER && c.getY() < 0) {
-                extraY = Math.max(extraY, c.getHeight()-1);
-            }
-        }
-
         int plotterX = pts.teletype.getWidth() - pts.teletype.getRootPane().getPreferredSize().width;
         int plotterY = pts.teletype.getHeight() - pts.teletype.getRootPane().getPreferredSize().height;
 
@@ -132,7 +125,7 @@ public class ComputerView extends JDesktopPane implements ActionListener {
         pts.reader[0].setLocation(reader1X, reader1Y);
         pts.reader[1].setLocation(reader2X, reader2Y);
 
-        Dimension size = new Dimension(maxX, maxY + extraY);
+        Dimension size = new Dimension(maxX, maxY);
         setPreferredSize(size);
 
         return false;       // Layout is incomplete (frame is unsized)

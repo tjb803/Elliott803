@@ -28,7 +28,7 @@ import elliott803.view.component.DisplayWord;
  * 
  * @author Baldwin
  */
-public class StoreView extends JInternalFrame {
+public class StoreView extends ViewFrame {
     private static final long serialVersionUID = 1L;
 
     Store store;
@@ -38,7 +38,7 @@ public class StoreView extends JInternalFrame {
     DisplayAddress lastAddr;
 
     public StoreView(Store store) {
-        super("Core Store", false, false, false, true);
+        super("Core Store", false);
         this.store = store;
 
         coreStore = new DisplayCore();

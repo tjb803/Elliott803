@@ -25,7 +25,7 @@ import elliott803.hardware.Plotter;
  * The plotter needs to retain enough detail to be able to redraw the entire
  * output if the window needs to be repainted.
  */
-public class PlotterView extends JInternalFrame implements ActionListener {
+public class PlotterView extends ViewFrame implements ActionListener {
     private static final long serialVersionUID = 1L;
     
     static final String PLOT_CLEAR = "Clear";
@@ -35,7 +35,7 @@ public class PlotterView extends JInternalFrame implements ActionListener {
     PlotterPaper paper;
 
     public PlotterView(Plotter plotter) {
-        super("Plotter", true, false, true, true);
+        super("Plotter", true);
         this.plotter = plotter;
         
         paper = new PlotterPaper();

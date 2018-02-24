@@ -69,6 +69,7 @@ public class Main implements Runnable {
 
         // Set the Swing look and feel
         setLookAndFeel(parms.getOption("look"));
+        ComputerView.isMac = "Mac".equals(UIManager.getLookAndFeel().getID());
 
         // Get machine image to restore
         File imageFile = parms.getInputFile(1);

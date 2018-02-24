@@ -28,7 +28,7 @@ import elliott803.view.component.DisplaySpeed;
  * This is used to implement simulator control functions that are not 
  * part of any of the real hardware devices.
  */
-public class ControlView extends JInternalFrame implements ActionListener {
+public class ControlView extends ViewFrame implements ActionListener {
     private static final long serialVersionUID = 1L;
     
     Computer computer;
@@ -38,7 +38,7 @@ public class ControlView extends JInternalFrame implements ActionListener {
     JCheckBox realTime;
     
     public ControlView(Computer computer, ComputerView computerView) {
-        super("Simulation Control", false, false, false, true);
+        super("Simulation Control", false);
         this.computer = computer;
         
         // Load/Save of machine image

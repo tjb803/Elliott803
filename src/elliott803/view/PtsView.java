@@ -27,7 +27,7 @@ import elliott803.hardware.PaperTapeStation;
  *
  * @author Baldwin
  */
-public class PtsView  extends JInternalFrame implements ActionListener {
+public class PtsView  extends ViewFrame implements ActionListener {
     private static final long serialVersionUID = 1L;
     
     public static final String SWAP_READER = "Reader Select";
@@ -41,7 +41,7 @@ public class PtsView  extends JInternalFrame implements ActionListener {
     JCheckBox swapReader, swapPunch;
 
     public PtsView(PaperTapeStation pts) {
-        super("PaperTape Station", false, false, false, true);
+        super("PaperTape Station", false);
         this.pts = pts;
         
         // Create the views of the tape readers 

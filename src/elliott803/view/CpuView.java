@@ -29,7 +29,7 @@ import elliott803.view.component.PushButton;
  *
  * Shows the contents of the various CPU registers
  */
-public class CpuView extends JInternalFrame implements ActionListener {
+public class CpuView extends ViewFrame implements ActionListener {
     private static final long serialVersionUID = 1L;
 
     CPU cpu;
@@ -45,7 +45,7 @@ public class CpuView extends JInternalFrame implements ActionListener {
     JCheckBox trace;
     
     public CpuView(CPU cpu) {
-        super("CPU", false, false, false, true);
+        super("CPU", false);
         this.cpu = cpu;
 
         acc = new DisplayWord("ACC", DisplayWord.Type.OCTAL);

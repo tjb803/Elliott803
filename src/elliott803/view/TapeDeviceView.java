@@ -34,7 +34,7 @@ import elliott803.view.component.DisplayLight;
  *
  * @author Baldwin
  */
-public abstract class TapeDeviceView extends JInternalFrame implements ActionListener, FocusListener {
+public abstract class TapeDeviceView extends ViewFrame implements ActionListener, FocusListener {
     private static final long serialVersionUID = 1L;
 
     static final String DEV_EJECT = "Eject";
@@ -52,7 +52,7 @@ public abstract class TapeDeviceView extends JInternalFrame implements ActionLis
 
     // Simple view used by Teletype
     public TapeDeviceView(String name) {
-        super(name, true, false, true, true);
+        super(name, true);
 
         file = new JLabel();
         mode = new DeviceMode(DeviceMode.MODE_SYSTEM);
@@ -66,7 +66,7 @@ public abstract class TapeDeviceView extends JInternalFrame implements ActionLis
 
     // Default view used for readers and punches
     public TapeDeviceView(String name, String type, String operation, int id) {
-        super(name + " " + id, false, false, false, true);
+        super(name + " " + id, false);
         setFocusable(true);
         addFocusListener(this);
 

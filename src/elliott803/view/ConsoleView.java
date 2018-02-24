@@ -37,7 +37,7 @@ import elliott803.view.component.DisplayWord.Type;
  * It also contains the loudspeaker that produces sounds by firing a pulse when
  * certain instructions are executed.
  */
-public class ConsoleView extends JInternalFrame implements ActionListener, FocusListener {
+public class ConsoleView extends ViewFrame implements ActionListener, FocusListener {
     private static final long serialVersionUID = 1L;
 
     static final String CONSOLE_OPERATE = "Operate";
@@ -53,7 +53,7 @@ public class ConsoleView extends JInternalFrame implements ActionListener, Focus
     DisplayWord wordgen;
 
     public ConsoleView(Console console) {
-        super("Operator Console", false, false, false, true);
+        super("Operator Console", false);
         this.console = console;
         setFocusable(true);
         addFocusListener(this);
